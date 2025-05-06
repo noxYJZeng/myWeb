@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Xilu Zeng - Web</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  
+</head>
+<body>
+
+<!-- MATRIX RAIN LOADER -->
+<div id="loader">
+  <canvas id="matrixCanvas"></canvas>
+</div>
+
+<!-- SIDE NAVIGATION -->
+<nav id="side-nav">
+    <ul>
+      <li><a href="#about" class="nav-link">About Me</a></li>
+      <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#projects" class="nav-link">Projects</a></li>
+      <li><a href="#contact" class="nav-link">Contact Me</a></li>
+    </ul>
+  </nav>
+  
+<!-- MAIN CONTENT -->
+<div id="main-content" style="display: none;">
+  <section id="hero">
+    <div class="overlay">
+        <h1>Hi, I am Nox.</h1>
+        <h2><span id="typed-role"></span></h2>        
+    </div>
+  </section>
+
+  <main>
+    <section id="about">
+        <h2>About Me</h2>
+        <p>
+          I’m Xilu Zeng, an undergraduate Computer Science student at Georgia Tech, pursuing the <strong>Intelligence and Media</strong> thread. 
+          I enjoy exploring the connections between computing, design, and communication, and I’m always eager to learn and build along the way.
+        </p>
+      </section>
+      
+
+    <section id="skills">
+        <h2>Skills</h2>
+      
+        <h3>Languages</h3>
+        <ul>
+          <li><i class="fab fa-java"></i> Java</li>
+          <li><i class="fab fa-python"></i> Python</li>
+          <li><i class="fab fa-js"></i> JavaScript</li>
+          <li><i class="fab fa-html5"></i> HTML</li>
+          <li><i class="fab fa-css3-alt"></i> CSS</li>
+          <li><i class="fas fa-c"></i> C</li>
+          <li><i class="fas fa-code"></i> MATLAB</li>
+
+        </ul>
+      
+        <h3>Frameworks & Tools</h3>
+        <ul>
+          <li><i class="fab fa-react"></i> React Native (Expo)</li>
+          <li><i class="fab fa-node-js"></i> Node.js</li>
+          <li><i class="fas fa-fire"></i> Firebase</li>
+          <li><i class="fas fa-database"></i> MongoDB Atlas</li>
+          <li><i class="fab fa-docker"></i> Docker</li>
+          <li><i class="fas fa-chart-line"></i> MPAndroidChart</li>
+        </ul>
+      
+        <h3>Design Patterns</h3>
+        <ul>
+          <li><i class="fas fa-cube"></i> MVVM Architecture</li>
+          <li><i class="fas fa-project-diagram"></i> Factory, Singleton</li>
+          <li><i class="fas fa-sync-alt"></i> Observer, Decorator</li>
+          <li><i class="fas fa-history"></i> Memento</li>
+        </ul>
+      
+        <h3>Dev & Collaboration</h3>
+        <ul>
+          <li><i class="fab fa-git-alt"></i> Git & GitHub</li>
+          <li><i class="fas fa-terminal"></i> VSCode • Terminal • Agile</li>
+          <li><i class="fas fa-users"></i> Team-Based Feature Development</li>
+        </ul>
+      </section>
+      
+    
+
+      <section id="projects">
+        <h2>Projects</h2>
+        <div class="projects-grid">
+          <a href="https://noxyjzeng.github.io/HealthTracker.github.io/" target="_blank" class="project-card">
+            <img src="assets/healthtracker.png" alt="HealthTracker Screenshot">
+            <h3>HealthTracker</h3>
+            <p>HealthTracker is a personal wellness app designed to help users monitor calories, log workouts, and join community challenges. With a clean UI and role-based features, it empowers individuals to set and achieve their fitness goals while fostering a sense of progress and accountability.
+            </p>
+          </a>
+      
+          <a href="https://noxyjzeng.github.io/ATLSFW_App_Enhancement/" target="_blank" class="project-card">
+            <img src="assets/atlsfw.png" alt="ATLSFW App Screenshot">
+            <h3>ATLSFW App</h3>
+            <p>A mobile app that connects users with sustainable fashion by showcasing upcoming events, curated articles, and local ethical brands. Includes user roles for admins and vendors, enabling dynamic content creation and community interaction.
+            </p>
+          </a>
+      
+          <a href="https://github.com/noxYJZeng/lbm-generating-obstacles-randomly" target="_blank" class="project-card">
+            <img src="assets/lbm.png" alt="LBM AI Screenshot">
+            <h3>LBM</h3>
+            <p> Extends a 2D LBM fluid solver with randomized obstacle generation and new shapes. Enables diverse simulation outputs for machine learning training using timestamped .npz files. 
+                Built for generalization testing and Lat-Net compatibility.</p>
+          </a>
+      
+          <a href="https://github.com/noxYJZeng/gba-pacman" target="_blank" class="project-card">
+            <img src="assets/pacman.jpg" alt="Pacman Game Screenshot">
+            <h3>Pacman GBA</h3>
+            <p>Custom Pacman game for GBA using low-level DMA and sprite engine. Built from scratch in C, with animation, idle timer, real-time UI, and Super Mario Bros theme music on the start screen.</p>
+          </a>
+        </div>
+      </section>
+      
+      
+
+      <section id="contact">
+        <h2>Contact Me</h2>
+        <ul class="contact-icons">
+          <li><a href="mailto:xzeng97@gatech.edu" target="_blank"><i class="fas fa-envelope"></i></a></li>
+          <li><a href="https://www.linkedin.com/in/nox-zeng-2a6161294/" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+          <li><a href="https://github.com/noxYJZeng" target="_blank"><i class="fab fa-github"></i></a></li>
+        </ul>
+      
+        <div class="contact-image">
+          <img src="assets/banner.jpg" alt="my thoughts" />
+          <p class="quote">“Code calculates, but meaning — like light on leaves — is something we bring.”</p>
+        </div>
+      </section>
+      
+      
+      
+      
+      
+  </main>
+
+  <footer>
+    <p>Copyright © 2025 Nox Zeng. All Rights Reserved.</p>
+  </footer>
+</div>
+
+<script src="js/matrix.js"></script>
+<script src="js/typed.js"></script>
+<script src="js/navHighlight.js"></script>
+
+
+<script>
+
+
+  window.onload = () => {
+    setTimeout(() => {
+      document.getElementById('loader').style.opacity = 0;
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        document.body.classList.add("show-main");
+
+        initTyped();
+      }, 1000);
+    }, 5000);
+  };
+</script>
+<script>
+  
+    window.addEventListener("scroll", () => {
+      const heroHeight = document.getElementById("hero").offsetHeight;
+      if (window.scrollY > heroHeight - 100) {
+        document.body.classList.add("show-nav");
+      } else {
+        document.body.classList.remove("show-nav");
+      }
+    });
+  </script>
+  
+</body>
+</html>
