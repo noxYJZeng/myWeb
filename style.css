@@ -1,4 +1,3 @@
-/* RESET + BASE */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -27,7 +26,6 @@ footer {
   font-size: 0.9rem;
 }
 
-/* HERO */
 #hero {
   height: 100vh;
   display: flex;
@@ -70,7 +68,6 @@ footer {
   display: block;
 }
 
-/* SIDE NAVIGATION */
 #side-nav {
     position: fixed;
     top: 250px;
@@ -103,23 +100,20 @@ footer {
     text-shadow: 0 0 8px #00ffaa, 0 0 14px #00ffaa;
   }
   
-  /* Smooth scroll behavior */
   html {
     scroll-behavior: smooth;
   }
   
-    /* Hide side-nav initially with fade + slide */
 #side-nav {
     opacity: 0;
-    transform: translateY(20px);   /* 初始下移 */
+    transform: translateY(20px);
     pointer-events: none;
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
   
-  /* Show side-nav after scroll */
   body.show-nav #side-nav {
     opacity: 1;
-    transform: translateY(0);      /* 滑回原位 */
+    transform: translateY(0);
     pointer-events: auto;
   }
   
