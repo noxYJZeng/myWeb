@@ -281,3 +281,7 @@ body.show-main #hero .overlay h2 {
     }
   }
   
+  body:not(.show-main) #side-nav {
+    display: none !important;
+  }
+  
