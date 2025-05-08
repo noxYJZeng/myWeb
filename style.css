@@ -301,6 +301,12 @@ img, video, iframe {
 }
 
 @media (max-width: 800px) {
+  #side-nav {
+    left: 10px; /* 💡 靠左边一些，防止挤进文本区 */
+    width: 140px;
+    padding-left: 0;
+  }
+  
   main {
     margin-left: 100px;
     padding: 20px 10px;
