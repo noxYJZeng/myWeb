@@ -71,7 +71,7 @@ footer {
 #side-nav {
     position: fixed;
     top: 250px;
-    left: 60px;
+    left: 20px;
     width: 140px;
     z-index: 10000;
   }
@@ -227,5 +227,47 @@ body.show-main #hero .overlay h2 {
     font-style: italic;
     color: #dddddd;
     font-family: 'Courier New', monospace;
+  }
+  
+
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+    }
+  
+    main {
+      margin-left: 150px;
+      padding: 20px 10px;
+      max-width: calc(100% - 180px);
+    }
+  
+    #hero h1 {
+      font-size: 1.4rem;
+      padding: 0 10px;
+    }
+  
+    #typed-role {
+      font-size: 1rem;
+    }
+  
+    .project-card img {
+      height: 180px;
+    }
+  
+    .contact-icons {
+      gap: 30px;
+      font-size: 1.6rem;
+      flex-wrap: wrap;
+    }
+  
+    .contact-image img {
+      max-height: 180px;
+      width: 95%;
+    }
+  
+    .contact-image .quote {
+      font-size: 0.95rem;
+      margin: 15px;
+    }
   }
   
