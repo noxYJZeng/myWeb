@@ -2,6 +2,9 @@ const sections = document.querySelectorAll("section");
 const navLinks = document.querySelectorAll("#side-nav a");
 
 window.addEventListener("scroll", () => {
+  const isVisible = document.getElementById("main-content").style.display === "block";
+  if (!isVisible) return;
+
   let current = "";
   sections.forEach((section) => {
     const sectionTop = section.offsetTop - 100;
