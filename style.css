@@ -302,7 +302,7 @@ img, video, iframe {
 
 @media (max-width: 800px) {
   main {
-    margin-left: 200px;
+    margin-left: 100px;
     padding: 20px 10px;
     max-width: calc(100% - 220px);
   }
