@@ -79,6 +79,11 @@ footer {
 }
 
   
+body:not(.show-main) #side-nav {
+  display: none !important;
+}
+
+  
   #side-nav ul {
     list-style: none;
     padding: 0;
@@ -280,8 +285,3 @@ body.show-main #hero .overlay h2 {
       margin: 15px;
     }
   }
-  
-  body:not(.show-main) #side-nav {
-    display: none !important;
-  }
-  
