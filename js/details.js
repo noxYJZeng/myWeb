@@ -115,34 +115,264 @@
     box(ctx, 128, 129, 2, 4, "#bb9a61");
   }
   function camera(ctx, t) {
-    const cycle = t % 7;
-    const drop = Math.min(20, Math.floor(cycle * 5));
-    box(ctx, 85, 84 + drop, 62, 47, "#cdd2b5");
-    box(ctx, 91, 90 + drop, 50, 29, "#285337");
+    const center = 110;
+    const slot = { x: center - 35, y: 94, width: 70, height: 8, exitY: 97 };
+    const paper = { x: center - 26, width: 52, height: 56 };
+    const cycle = t % 9;
+    const eject = Math.min(1, Math.max(0, (cycle - 0.55) / 2.8));
+    const visiblePaper = Math.round(eject * paper.height);
+    const photoY = slot.exitY - paper.height + visiblePaper;
+    const photoOpacity = 1 - Math.min(1, Math.max(0, (cycle - 7.7) / 1.1));
+    const develop = Math.min(1, Math.max(0, (cycle - 2) / 3));
+
+    // One straight-on view. Horizontal edges stay level, and every part of
+    // the folding body, film slot, and photograph shares the same center.
     polygon(
       ctx,
       [
-        [91, 115 + drop],
-        [106, 98 + drop],
-        [119, 110 + drop],
-        [128, 101 + drop],
-        [141, 115 + drop],
+        [48, 88],
+        [172, 88],
+        [180, 96],
+        [180, 103],
+        [40, 103],
+        [40, 96],
       ],
-      "#658b62",
+      "#91a99a",
     );
-    box(ctx, 126, 94 + drop, 5, 5, "#ccbc80");
-    box(ctx, 57, 42, 113, 61, "#446c4d");
-    box(ctx, 64, 25, 99, 24, "#b6bda0");
-    box(ctx, 64, 49, 99, 43, "#759476");
-    box(ctx, 78, 99, 75, 6, "#101e14");
-    box(ctx, 99, 47, 44, 43, "#1a3222");
-    box(ctx, 105, 53, 32, 31, "#8db59a");
-    box(ctx, 110, 58, 22, 22, "#163729");
-    box(ctx, 115, 63, 12, 12, "#327057");
-    box(ctx, 115, 62, 4, 4, "#9ccab0");
-    box(ctx, 76, 33, 20, 8, "#354e35");
-    box(ctx, 139, 31, 15, 10, cycle < 0.2 ? "#ccb880" : "#60715a");
-    box(ctx, 68, 59, 12, 7, "#c2ad77");
+    polygon(
+      ctx,
+      [
+        [49, 88],
+        [62, 50],
+        [78, 63],
+        [78, 88],
+      ],
+      "#10251b",
+    );
+    polygon(
+      ctx,
+      [
+        [171, 88],
+        [158, 50],
+        [142, 63],
+        [142, 88],
+      ],
+      "#10251b",
+    );
+    line(ctx, 62, 51, 50, 88, "#91ae98", 2);
+    line(ctx, 158, 51, 170, 88, "#91ae98", 2);
+    for (let i = 0; i < 3; i++) {
+      const y = 65 + i * 7;
+      line(ctx, 60 - i * 2, y, 76, y + 3, "#304a36", 1);
+      line(ctx, 160 + i * 2, y, 144, y + 3, "#304a36", 1);
+    }
+
+    // Brown leather deck and the ribbed bellows behind the lens standard.
+    polygon(
+      ctx,
+      [
+        [62, 52],
+        [158, 52],
+        [172, 69],
+        [48, 69],
+      ],
+      "#b4c3b2",
+    );
+    polygon(
+      ctx,
+      [
+        [67, 55],
+        [153, 55],
+        [163, 65],
+        [57, 65],
+      ],
+      "#96755a",
+    );
+    polygon(
+      ctx,
+      [
+        [85, 39],
+        [135, 39],
+        [143, 65],
+        [77, 65],
+      ],
+      "#0b1b13",
+    );
+    for (let i = 0; i < 4; i++) {
+      const inset = 85 - i * 2;
+      box(ctx, inset, 44 + i * 5, (center - inset) * 2, 2, "#304431");
+    }
+
+    // Raised leather-covered finder, centered rather than skewed to one side.
+    polygon(
+      ctx,
+      [
+        [83, 16],
+        [137, 16],
+        [149, 37],
+        [145, 44],
+        [75, 44],
+        [71, 37],
+      ],
+      "#a8bca9",
+    );
+    polygon(
+      ctx,
+      [
+        [87, 20],
+        [133, 20],
+        [141, 35],
+        [79, 35],
+      ],
+      "#ac805b",
+    );
+    line(ctx, 87, 20, 133, 20, "#c29970", 1);
+    box(ctx, 76, 38, 68, 6, "#c4d0ba");
+    box(ctx, 78, 38, 64, 2, "#e0dfc5");
+    box(ctx, 78, 43, 64, 1, "#657c68");
+
+    // Flat chrome front panel, one lens, red release, and a small exposure dial.
+    polygon(
+      ctx,
+      [
+        [55, 62],
+        [165, 62],
+        [169, 66],
+        [169, 91],
+        [165, 95],
+        [55, 95],
+        [51, 91],
+        [51, 66],
+      ],
+      "#bdcbb7",
+    );
+    box(ctx, 56, 66, 108, 25, "#9aaf9d");
+    box(ctx, 57, 63, 106, 2, "#d5dbc2");
+    box(ctx, 57, 91, 106, 2, "#c9d3bd");
+    for (let x = 101; x < 121; x += 4) box(ctx, x, 61, 2, 3, "#314c38");
+    polygon(
+      ctx,
+      [
+        [102, 63],
+        [118, 63],
+        [125, 70],
+        [125, 84],
+        [118, 91],
+        [102, 91],
+        [95, 84],
+        [95, 70],
+      ],
+      "#597a65",
+    );
+    polygon(
+      ctx,
+      [
+        [104, 66],
+        [116, 66],
+        [122, 72],
+        [122, 82],
+        [116, 88],
+        [104, 88],
+        [98, 82],
+        [98, 72],
+      ],
+      "#0a1b13",
+    );
+    polygon(
+      ctx,
+      [
+        [106, 70],
+        [114, 70],
+        [118, 74],
+        [118, 80],
+        [114, 84],
+        [106, 84],
+        [102, 80],
+        [102, 74],
+      ],
+      "#3b6c55",
+    );
+    box(ctx, 106, 74, 8, 7, "#102e23");
+    box(ctx, 103, 68, 4, 4, "#b7d1b4");
+    box(ctx, 117, 81, 2, 2, "#7ca58b");
+    polygon(
+      ctx,
+      [
+        [69, 73],
+        [77, 73],
+        [81, 77],
+        [81, 83],
+        [77, 87],
+        [69, 87],
+        [65, 83],
+        [65, 77],
+      ],
+      "#64765b",
+    );
+    polygon(
+      ctx,
+      [
+        [70, 76],
+        [76, 76],
+        [78, 78],
+        [78, 82],
+        [76, 84],
+        [70, 84],
+        [68, 82],
+        [68, 78],
+      ],
+      "#b96952",
+    );
+    box(ctx, 70, 76, 5, 2, "#dc9977");
+    box(ctx, 146, 69, 10, 12, "#58715d");
+    box(ctx, 148, 71, 6, 8, "#263e2b");
+    box(ctx, 151, 71, 2, 2, "#a7b997");
+    if (cycle < 0.28) box(ctx, 105, 68, 4, 3, "#e6d7a2");
+
+    box(ctx, 42, 95, 136, 9, "#9eb3a0");
+    box(ctx, 44, 104, 132, 2, "#54715a");
+    box(ctx, slot.x, slot.y, slot.width, slot.height, "#0a1c13");
+
+    // The lower edge of the paper leads. Its top stays clipped inside the
+    // black slot, then passes in front of the lower casing without a gap.
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(paper.x, slot.exitY, paper.width, paper.height);
+    ctx.clip();
+    ctx.globalAlpha = photoOpacity;
+    box(ctx, paper.x, photoY, paper.width, paper.height, "#dddcc3");
+    box(ctx, paper.x + 7, photoY + 5, 38, 38, "#263a30");
+    ctx.globalAlpha = photoOpacity * develop;
+    box(ctx, paper.x + 7, photoY + 5, 38, 38, "#3a6650");
+    polygon(
+      ctx,
+      [
+        [91, photoY + 41],
+        [102, photoY + 19],
+        [113, photoY + 33],
+        [121, photoY + 25],
+        [129, photoY + 41],
+      ],
+      "#819974",
+    );
+    box(ctx, 119, photoY + 12, 4, 4, "#d4bd82");
+    ctx.globalAlpha = photoOpacity;
+    if (visiblePaper > 0)
+      box(
+        ctx,
+        paper.x,
+        slot.exitY,
+        paper.width,
+        Math.min(2, visiblePaper),
+        "#9ba88c",
+      );
+    ctx.restore();
+
+    // Only the upper roller overlaps the print; black slot ends remain visible.
+    box(ctx, slot.x, slot.y, slot.width, 2, "#597b60");
+    box(ctx, slot.x, slot.exitY - 1, slot.width, 1, "#07140d");
+
+    // A separate roll of 35 mm film for the film-photography interest.
     box(ctx, 187, 60, 20, 42, "#526844");
     box(ctx, 190, 55, 14, 5, "#9da57c");
     box(ctx, 190, 71, 14, 19, "#c0aa70");

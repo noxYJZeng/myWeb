@@ -48,6 +48,8 @@ sections.forEach((section) => observer.observe(section));
   let count = 0;
   let deleting = false;
   let timer = null;
+  let introPending =
+    document.documentElement.classList.contains("intro-active");
 
   function draw() {
     heading.dataset.kind = messageIndex === 0 ? "greeting" : "phrase";
@@ -71,7 +73,7 @@ sections.forEach((section) => observer.observe(section));
   }
   function schedule(delay = 140) {
     clearTimeout(timer);
-    if (!reduced && visible && !document.hidden)
+    if (!introPending && !reduced && visible && !document.hidden)
       timer = setTimeout(step, delay);
   }
   function commonPrefixLength(current, next) {
@@ -122,6 +124,14 @@ sections.forEach((section) => observer.observe(section));
     schedule();
   }).observe(document.querySelector(".hero-copy"));
   document.addEventListener("visibilitychange", () => schedule());
+  document.addEventListener(
+    "intro:reveal",
+    () => {
+      introPending = false;
+      schedule(160);
+    },
+    { once: true },
+  );
   if (reduced) showStatic();
   else draw();
   schedule(350);
