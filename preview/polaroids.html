@@ -2170,199 +2170,177 @@ figcaption > span:last-child {
   letter-spacing: 1px;
   text-align: right;
 }
+/* A small illustrated atlas: every city is a native, always-visible button. */
 .photo-toolbar {
-  position: relative;
-  margin-bottom: 8px;
-  z-index: 20;
+  margin-bottom: 10px;
 }
 .gallery-page:not(.album-enhanced) .photo-toolbar {
   display: none;
 }
 .location-picker {
-  position: relative;
-}
-.location-summary {
-  display: grid;
-  grid-template-columns: 28px 1fr auto 12px;
-  align-items: center;
-  gap: 16px;
-  min-height: 62px;
-  padding: 8px 16px;
-  list-style: none;
-  background: linear-gradient(100deg, #1a2c2080, #17271c20);
-  border-block: 1px solid #4e624348;
-  color: #c5cbb2;
-}
-.location-summary::-webkit-details-marker {
-  display: none;
-}
-.location-summary::marker {
-  content: "";
-}
-.location-summary:hover,
-.location-picker[open] .location-summary {
-  background: linear-gradient(100deg, #26352680, #17271c20);
-}
-.location-summary[aria-disabled="true"] {
-  opacity: 0.6;
-}
-.location-sign {
-  width: 28px;
-  height: 28px;
-  fill: #a4b38a;
-}
-.location-selection {
-  display: grid;
-  gap: 1px;
-}
-.location-label {
-  color: #839579;
-  font: 8px/1.6 var(--mono);
-  letter-spacing: 1.6px;
-}
-.location-current {
-  color: #e0d8b9;
-  font: 13px/1.5 var(--mono);
-}
-.location-total {
-  color: #97a78a;
-  font: 9px/1.8 var(--mono);
-  letter-spacing: 0.8px;
-}
-.location-current-count {
-  color: #d5c7a0;
-}
-.location-chevron {
-  width: 12px;
-  height: 8px;
-  fill: #b8bf9b;
-  transition: transform 140ms ease;
-}
-.location-picker[open] .location-chevron {
-  transform: rotate(180deg);
-}
-.location-panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  inset-inline: 0;
-  z-index: 1;
-  padding: 14px 24px 20px;
+  width: min(100%, 760px);
+  margin: 0 auto 12px;
+  padding: 8px 12px 10px;
+  color: #314a36;
   background:
-    radial-gradient(#b0bc8910 0.6px, transparent 0.6px) 0 0 / 7px 7px,
-    #0c1912;
-  border-block: 1px solid #7e8461;
-  box-shadow: 0 18px 36px #0009;
+    radial-gradient(#546d3810 0.6px, transparent 0.6px) 0 0 / 5px 5px,
+    #d0d1ae;
+  clip-path: polygon(
+    0 6px,
+    7px 6px,
+    7px 0,
+    calc(100% - 10px) 0,
+    calc(100% - 10px) 4px,
+    100% 4px,
+    100% calc(100% - 8px),
+    calc(100% - 5px) calc(100% - 8px),
+    calc(100% - 5px) 100%,
+    6px 100%,
+    6px calc(100% - 4px),
+    0 calc(100% - 4px)
+  );
 }
-.location-panel-top {
+.location-map-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 10px;
+  min-height: 34px;
+  padding: 0 9px;
+  gap: 16px;
 }
-.location-panel-note {
-  color: #74876b;
-  font: 8px/1.5 var(--mono);
-  letter-spacing: 1.3px;
+.location-status {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 0;
+  font: 10px/1.6 var(--mono);
+}
+.location-current {
+  color: #293e2b;
+  font-weight: 600;
+}
+.location-current-count {
+  margin-left: 5px;
+  color: #61704d;
+}
+.location-status > span:last-child {
+  color: #61704d;
+  font-size: 9px;
 }
 .photo-filter {
   border: 0;
-  color: #a9b99e;
-  font: 10px/1.7 var(--mono);
-}
-.filter-count {
-  margin-left: 5px;
-  font-size: 8px;
-  opacity: 0.65;
+  font-family: var(--mono);
 }
 .location-reset {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 5px 10px;
+  justify-content: center;
+  gap: 5px;
+  min-width: 48px;
+  min-height: 34px;
+  padding: 0 8px;
+  color: #405a40;
   background: transparent;
+  font-size: 10px;
+  border-radius: 3px;
 }
 .location-reset svg {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   fill: currentColor;
 }
-.location-reset .filter-count {
-  margin-left: 2px;
-}
 .location-reset[aria-pressed="true"] {
-  background: #a8ac7a12;
-  color: #e1cea2;
+  color: #e7e2be;
+  background: #3b5a42;
 }
-.location-route + .location-route {
-  margin-top: 12px;
+.location-reset:hover {
+  box-shadow: inset 0 0 0 1px #6f825a;
 }
-.location-region {
-  margin: 0 0 5px;
-  color: #91a382;
-  font: 9px/1.6 var(--mono);
-  letter-spacing: 1.7px;
-  text-transform: uppercase;
-}
-.location-stations {
-  position: relative;
+.location-map-surface {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px 0;
+  grid-template-columns: 0.78fr 1.22fr;
+  align-items: center;
+  gap: 10px;
 }
-.location-stations[data-region="us"] {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.location-map-sheet {
+  position: relative;
+  min-width: 0;
 }
-.location-road {
+.location-map-sheet--west {
+  height: 140px;
+}
+.location-map-sheet--east {
+  height: 190px;
+}
+.location-map-art {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  fill: none;
+  object-fit: fill;
+  image-rendering: pixelated;
   pointer-events: none;
+  opacity: 0.9;
 }
-.location-road-bed {
-  stroke: #203426;
-  stroke-width: 5px;
-}
-.location-road-dashes {
-  stroke: #738364;
-  stroke-width: 1px;
-  stroke-dasharray: 3 5;
-}
-.location-stop {
-  position: relative;
-  min-width: 0;
-  min-height: 60px;
-  padding: 27px 3px 6px;
-  background: transparent;
-  text-align: center;
-  white-space: nowrap;
-}
-.location-station-mark {
+.location-city {
   position: absolute;
-  top: 12px;
-  left: calc(50% - 4px);
-  width: 8px;
-  height: 8px;
-  border: 1px solid #8c9a78;
-  background: #13271a;
+  left: var(--pin-x);
+  top: var(--pin-y);
+  translate: -50% -50%;
+  display: grid;
+  align-items: center;
+  min-width: 48px;
+  min-height: 38px;
+  padding: 0 2px;
+  color: #243c2a;
+  background: transparent;
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 1.5;
 }
-.photo-filter[aria-pressed="true"],
-.photo-filter:hover {
-  color: #e2d2a9;
+.location-city::before {
+  content: "";
+  position: absolute;
+  left: calc(50% - 2px);
+  top: 0;
+  width: 4px;
+  height: 6px;
+  background: #466a4c;
+  box-shadow:
+    -2px 0 #466a4c,
+    2px 0 #466a4c,
+    0 2px #466a4c;
 }
-.location-stop[aria-pressed="true"] .location-station-mark {
-  background: #d5bd87;
-  border-color: #e8dbb1;
-  box-shadow: 0 0 0 3px #c8b77825;
+.location-city-name {
+  position: relative;
+  padding: 2px 4px;
+  background: #eee9c8db;
+  border-radius: 2px;
+  box-shadow: 1px 1px #6f82564a;
 }
-.location-stop:hover .location-station-mark {
-  border-color: #e8dbb1;
+.location-city:hover .location-city-name {
+  background: #f2edcf;
+  box-shadow: 0 1px #46694b;
+}
+.location-city[aria-pressed="true"] .location-city-name {
+  background: #2e5940;
+  color: #f0e9c9;
+  box-shadow: 1px 2px #1c3e2a55;
+}
+.location-city[aria-pressed="true"]::before {
+  background: #b47d57;
+  box-shadow:
+    -2px 0 #b47d57,
+    2px 0 #b47d57,
+    0 2px #b47d57;
+}
+.location-city:focus-visible,
+.location-reset:focus-visible {
+  outline: 2px solid #375c3f;
+  outline-offset: 1px;
 }
 .photo-filter:disabled {
-  opacity: 0.55;
+  opacity: 0.6;
 }
 .album {
   position: relative;
@@ -2839,16 +2817,6 @@ figcaption > span:last-child {
     font-size: 8px;
     letter-spacing: 0.4px;
   }
-  .location-summary {
-    gap: 10px;
-    padding-inline: 10px;
-  }
-  .location-panel {
-    padding-inline: 12px;
-  }
-  .location-stations[data-region="china"] {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
   .photo-filter {
     font-size: 9px;
   }
@@ -2887,11 +2855,6 @@ figcaption > span:last-child {
     font-size: 14px;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .location-chevron {
-    transition: none;
-  }
-}
 @media (max-width: 360px) {
   .album-margin-art--moths {
     width: 48px;
@@ -2900,6 +2863,40 @@ figcaption > span:last-child {
   .album-margin-art--waxwing {
     width: 66px;
     height: 44px;
+  }
+}
+
+@media (max-width: 620px) {
+  .location-picker {
+    padding-inline: 6px;
+  }
+  .location-map-header {
+    padding-inline: 6px;
+  }
+  .location-map-surface {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .location-map-sheet--west {
+    height: 96px;
+  }
+  .location-map-sheet--east {
+    height: 198px;
+  }
+  .location-city[data-place="bellevue"],
+  .location-city[data-place="atlanta"] {
+    --pin-mobile-y: 75%;
+  }
+  .location-city {
+    top: var(--pin-mobile-y, var(--pin-y));
+    min-height: 44px;
+    font-size: 10px;
+  }
+  .location-reset {
+    min-height: 44px;
+  }
+  .location-city-name {
+    padding-inline: 3px;
   }
 }
 
@@ -2928,72 +2925,47 @@ figcaption > span:last-child {
         <div class="photo-archive-note">MAY 2025 — OCT 2026<br />13 PLACES</div>
       </div>
       <div class="photo-toolbar">
-        <details class="location-picker" hidden>
-          <summary class="location-summary">
-            <svg class="location-sign" viewBox="0 0 28 28" shape-rendering="crispEdges" aria-hidden="true"><path d="M3 5h7v7H3zm15 11h7v7h-7zM9 8h9v2H9zm7 0h2v12h-2zm0 10h5v2h-5z"/></svg>
-            <span class="location-selection"><span class="location-label">LOCATION</span><span class="location-current">All places</span></span>
-            <span class="location-total"><span class="location-current-count">30</span> PHOTOS</span>
-            <svg class="location-chevron" viewBox="0 0 12 8" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h2v2h2v2h4V2h2V0h2v2h-2v2H8v2H4V4H2V2H0z"/></svg>
-          </summary>
-          <div class="photo-filters location-panel" role="group" aria-label="Filter photographs by location">
-            <div class="location-panel-top"><button class="photo-filter location-reset" type="button" data-place="all" data-label="All places" aria-pressed="true">
-      <svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path d="M1 1h5v5H1zm9 0h5v5h-5zM1 10h5v5H1zm9 0h5v5h-5z"/></svg>
-      <span>All places</span><span class="filter-count">30</span>
-    </button><span class="location-panel-note">13 STOPS</span></div>
-            <section class="location-route" aria-label="United States">
-          <h2 class="location-region">United States</h2>
-          <div class="location-stations" data-region="us">
-            <svg class="location-road" aria-hidden="true" preserveAspectRatio="none"><path class="location-road-bed"/><path class="location-road-dashes"/></svg>
-            <button class="photo-filter location-stop" type="button" data-place="new-york" data-label="New York" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">New York</span><span class="filter-count">01</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="bellevue" data-label="Bellevue" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Bellevue</span><span class="filter-count">03</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="seattle" data-label="Seattle" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Seattle</span><span class="filter-count">02</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="atlanta" data-label="Atlanta" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Atlanta</span><span class="filter-count">08</span>
+        <section class="location-picker" aria-label="Filter photographs by city" hidden>
+          <div class="location-map-header">
+            <p class="location-status" role="status"><span class="location-current">All places</span><span class="location-current-count">30</span><span>photos</span></p>
+            <button class="photo-filter location-reset" type="button" data-place="all" data-label="All places" aria-label="Show all photographs" aria-pressed="true">
+              <svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><path d="M1 1h5v5H1zm9 0h5v5h-5zM1 10h5v5H1zm9 0h5v5h-5z"/></svg><span>All</span>
             </button>
           </div>
-        </section><section class="location-route" aria-label="China">
-          <h2 class="location-region">China</h2>
-          <div class="location-stations" data-region="china">
-            <svg class="location-road" aria-hidden="true" preserveAspectRatio="none"><path class="location-road-bed"/><path class="location-road-dashes"/></svg>
-            <button class="photo-filter location-stop" type="button" data-place="luoyang" data-label="Luoyang" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Luoyang</span><span class="filter-count">01</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="xian" data-label="Xi’an" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Xi’an</span><span class="filter-count">01</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="yuncheng" data-label="Yuncheng" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Yuncheng</span><span class="filter-count">01</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="taiyuan" data-label="Taiyuan" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Taiyuan</span><span class="filter-count">02</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="xianyang" data-label="Xianyang" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Xianyang</span><span class="filter-count">02</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="beijing" data-label="Beijing" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Beijing</span><span class="filter-count">02</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="xiangtan" data-label="Xiangtan" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Xiangtan</span><span class="filter-count">01</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="shenyang" data-label="Shenyang" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Shenyang</span><span class="filter-count">02</span>
-            </button><button class="photo-filter location-stop" type="button" data-place="changsha" data-label="Changsha" aria-pressed="false">
-              <i class="location-station-mark" aria-hidden="true"></i>
-              <span class="location-station-name">Changsha</span><span class="filter-count">04</span>
+          <div class="location-map-surface"><div class="location-map-sheet location-map-sheet--west">
+          <img class="location-map-art" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMzAgMTYwIiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPjxwYXRoIGQ9Ik00MCAyMiBMNjYgMjIgTDY2IDE0IEwxMDQgMTQgTDEwNCAyMCBMMTYyIDIwIEwxNjIgMTYgTDIyOCAxNiBMMjI4IDI0IEwyNzYgMjQgTDI3NiAzNCBMMjk4IDM0IEwyOTggNTIgTDI4NiA1MiBMMjg2IDcwIEwyNzYgNzAgTDI3NiA4OCBMMjU2IDg4IEwyNTYgMTEyIEwyMjggMTEyIEwyMjggMTI2IEwxODIgMTI2IEwxODIgMTM2IEwxMzAgMTM2IEwxMzAgMTI2IEw5OCAxMjYgTDk4IDExMCBMNzggMTEwIEw3OCA5NCBMNjYgOTQgTDY2IDY4IEw1MiA2OCBMNTIgNDYgTDQwIDQ2IFoiIGZpbGw9IiNhNmIzOGIiIHN0cm9rZT0iIzhiOWY3YiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHBhdGggZD0iTTggMzIgTDM0IDMyIEwzNCA1MiBMNDYgNTIgTDQ2IDg4IEw1OCA4OCBMNTggMTE4IEw3OCAxMTggTDc4IDE0MCBMOCAxNDAgWiIgZmlsbD0iIzkxYjNhYSIvPjxwYXRoIGQ9Ik0xODggMjggTDIwOCAyOCBMMjA4IDMyIEwyMjYgMzIgTDIyNiA0MCBMMjA2IDQwIEwyMDYgMzYgTDE4OCAzNiBaIiBmaWxsPSIjOTFiM2FhIi8+PHJlY3QgeD0iMjUyIiB5PSI3OCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjQ0IiB5PSIyNCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE3OCIgeT0iNzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxMDAiIHk9IjcwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iNDQiIHk9IjI4IiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjIwIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE4NiIgeT0iMTAiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxMzYiIHk9IjQyIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzIwIiB5PSI2NiIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjgwIiB5PSIzMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI2IiB5PSIxNDIiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNDIiIHk9IjQ2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzQiIHk9IjUyIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjM4IiB5PSI0NiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjMwMiIgeT0iMTE0IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjMyIiB5PSIxMjYiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxOTIiIHk9IjQ4IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjU0IiB5PSI5OCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI3MiIgeT0iNzAiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNTgiIHk9IjE1MCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE4MCIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSI2NiIgeT0iODQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSI1MCIgeT0iODQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNTIiIHk9IjEzOCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE4IiB5PSI4MCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI5MCIgeT0iMTQ2IiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iOCIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNTgiIHk9IjMyIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjI0IiB5PSIxMTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSI4IiB5PSI1NCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE0IiB5PSI1NiIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjEwNiIgeT0iOTIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxODQiIHk9IjE4IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iNDgiIHk9IjgyIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjQ0IiB5PSIxMzAiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzMTIiIHk9IjEwMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI1OCIgeT0iNDgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNDYiIHk9IjYyIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTEyIiB5PSIxMzgiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNzgiIHk9IjIyIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjQ4IiB5PSIyOCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE3MCIgeT0iODYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSI2MCIgeT0iMTEwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTEyIiB5PSI1MCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE4IiB5PSI1NCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjMwNCIgeT0iMTQwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzIiIHk9IjY0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTEwIiB5PSIzMiIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI4NiIgeT0iMTIwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjY0IiB5PSI2MCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjEwNCIgeT0iNDgiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxMzAiIHk9IjE0MCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE3MiIgeT0iMTA0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iNDAiIHk9IjcwIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzA2IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9Ijc0IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI4NiIgeT0iMzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSI3NiIgeT0iODYiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNTYiIHk9IjkyIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjg0IiB5PSIxMDQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSI0MCIgeT0iMTM0IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjU0IiB5PSI4NCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjEyMCIgeT0iMTQyIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjkyIiB5PSI2OCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE4NiIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNTgiIHk9IjUwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTQ0IiB5PSIxMTQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxMDAiIHk9IjM2IiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjgwIiB5PSIxOCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjEzMCIgeT0iNzQiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSI4NiIgeT0iNzAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyOTgiIHk9IjExOCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE0OCIgeT0iMTQ0IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzYiIHk9IjEyNCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjUwIiB5PSI3MCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxwYXRoIGQ9Ik0xMDcgNjAgTDExMSA2MCBMMTExIDU0IEwxMTUgNTQgTDExNSA0OCBMMTE5IDQ4IEwxMTkgNDIgTDEyMyA0MiBMMTIzIDQ4IEwxMjcgNDggTDEyNyA1NCBMMTMxIDU0IEwxMzEgNjAgTDEzNSA2MCBaIiBmaWxsPSIjOTY5NjdhIi8+PHBhdGggZD0iTTExNSA1MiBMMTE5IDUyIEwxMTkgNDYgTDEyMyA0NiBMMTIzIDUyIEwxMjcgNTIgTDEyNyA1NiBMMTIxIDU0IEwxMTUgNTYgWiIgZmlsbD0iI2UyZGVjMCIvPjxwYXRoIGQ9Ik0xMjcgNzYgTDEzMSA3NiBMMTMxIDcwIEwxMzUgNzAgTDEzNSA2NCBMMTM5IDY0IEwxMzkgNTggTDE0MyA1OCBMMTQzIDY0IEwxNDcgNjQgTDE0NyA3MCBMMTUxIDcwIEwxNTEgNzYgTDE1NSA3NiBaIiBmaWxsPSIjOTY5NjdhIi8+PHBhdGggZD0iTTEzNSA2OCBMMTM5IDY4IEwxMzkgNjIgTDE0MyA2MiBMMTQzIDY4IEwxNDcgNjggTDE0NyA3MiBMMTQxIDcwIEwxMzUgNzIgWiIgZmlsbD0iI2UyZGVjMCIvPjxwYXRoIGQ9Ik0xMDAgOTYgTDEwNCA5NiBMMTA0IDkwIEwxMDggOTAgTDEwOCA4NCBMMTEyIDg0IEwxMTIgNzggTDExNiA3OCBMMTE2IDg0IEwxMjAgODQgTDEyMCA5MCBMMTI0IDkwIEwxMjQgOTYgTDEyOCA5NiBaIiBmaWxsPSIjOTY5NjdhIi8+PHBhdGggZD0iTTEwOCA4OCBMMTEyIDg4IEwxMTIgODIgTDExNiA4MiBMMTE2IDg4IEwxMjAgODggTDEyMCA5MiBMMTE0IDkwIEwxMDggOTIgWiIgZmlsbD0iI2UyZGVjMCIvPjxyZWN0IHg9IjE3MiIgeT0iNjEiIHdpZHRoPSIyIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNTg3NjUzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTcwIiB5PSI2MyIgd2lkdGg9IjYiIGhlaWdodD0iNCIgZmlsbD0iIzcxOTU2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjE2OCIgeT0iNjciIHdpZHRoPSIxMCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmM4YjYzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTgxIiB5PSI2NiIgd2lkdGg9IjIiIGhlaWdodD0iMTIiIGZpbGw9IiM1ODc2NTMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxNzkiIHk9IjY4IiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiBmaWxsPSIjNzE5NTZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTc3IiB5PSI3MiIgd2lkdGg9IjEwIiBoZWlnaHQ9IjQiIGZpbGw9IiM2YzhiNjMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxOTAiIHk9IjU5IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMiIgZmlsbD0iIzU4NzY1MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjE4OCIgeT0iNjEiIHdpZHRoPSI2IiBoZWlnaHQ9IjQiIGZpbGw9IiM3MTk1NmIiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxODYiIHk9IjY1IiB3aWR0aD0iMTAiIGhlaWdodD0iNCIgZmlsbD0iIzZjOGI2MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjIyMiIgeT0iOTIiIHdpZHRoPSIyIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNTg3NjUzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjIwIiB5PSI5NCIgd2lkdGg9IjYiIGhlaWdodD0iNCIgZmlsbD0iIzcxOTU2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjIxOCIgeT0iOTgiIHdpZHRoPSIxMCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmM4YjYzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjMxIiB5PSI5NyIgd2lkdGg9IjIiIGhlaWdodD0iMTIiIGZpbGw9IiM1ODc2NTMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIyMjkiIHk9Ijk5IiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiBmaWxsPSIjNzE5NTZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjI3IiB5PSIxMDMiIHdpZHRoPSIxMCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmM4YjYzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjQwIiB5PSI5MCIgd2lkdGg9IjIiIGhlaWdodD0iMTIiIGZpbGw9IiM1ODc2NTMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIyMzgiIHk9IjkyIiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiBmaWxsPSIjNzE5NTZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjM2IiB5PSI5NiIgd2lkdGg9IjEwIiBoZWlnaHQ9IjQiIGZpbGw9IiM2YzhiNjMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIyOTIiIHk9IjE4IiB3aWR0aD0iMTIiIGhlaWdodD0iMiIgZmlsbD0iIzY2OGY4OSIgb3BhY2l0eT0iMC41Ii8+PHJlY3QgeD0iMjk2IiB5PSIyMiIgd2lkdGg9IjE0IiBoZWlnaHQ9IjIiIGZpbGw9IiNiNGNjYmEiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjMwNyIgeT0iMTM2IiB3aWR0aD0iMTIiIGhlaWdodD0iMiIgZmlsbD0iIzY2OGY4OSIgb3BhY2l0eT0iMC41Ii8+PHJlY3QgeD0iMzExIiB5PSIxNDAiIHdpZHRoPSIxNCIgaGVpZ2h0PSIyIiBmaWxsPSIjYjRjY2JhIiBvcGFjaXR5PSIwLjciLz48cmVjdCB4PSIxMCIgeT0iMTM4IiB3aWR0aD0iMTIiIGhlaWdodD0iMiIgZmlsbD0iIzY2OGY4OSIgb3BhY2l0eT0iMC41Ii8+PHJlY3QgeD0iMTQiIHk9IjE0MiIgd2lkdGg9IjE0IiBoZWlnaHQ9IjIiIGZpbGw9IiNiNGNjYmEiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjE2NSIgeT0iMTM4IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMCIgZmlsbD0iIzhhOTM2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjE2MSIgeT0iMTQyIiB3aWR0aD0iMTAiIGhlaWdodD0iMiIgZmlsbD0iIzhhOTM2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjE2NSIgeT0iMTQyIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZTRkZmJlIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTQ2IiB5PSI4IiB3aWR0aD0iMTIiIGhlaWdodD0iNCIgZmlsbD0iI2VmZWJkNSIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjE0MSIgeT0iMTIiIHdpZHRoPSIyNyIgaGVpZ2h0PSI1IiBmaWxsPSIjZWZlYmQ1IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMTQ1IiB5PSIxNyIgd2lkdGg9IjE4IiBoZWlnaHQ9IjIiIGZpbGw9IiNiYWJkYTAiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjI4MSIgeT0iOTUiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0IiBmaWxsPSIjZWZlYmQ1IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMjc2IiB5PSI5OSIgd2lkdGg9IjI3IiBoZWlnaHQ9IjUiIGZpbGw9IiNlZmViZDUiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSIyODAiIHk9IjEwNCIgd2lkdGg9IjE4IiBoZWlnaHQ9IjIiIGZpbGw9IiNiYWJkYTAiIG9wYWNpdHk9IjAuNyIvPjwvc3ZnPg==" alt="" aria-hidden="true" />
+          <button class="photo-filter location-city" type="button" data-place="new-york" data-label="New York" aria-label="New York, 1 photographs" aria-pressed="false" style="--pin-x:76%;--pin-y:25%">
+              <span class="location-city-name">New York</span>
+            </button><button class="photo-filter location-city" type="button" data-place="bellevue" data-label="Bellevue" aria-label="Bellevue, 3 photographs" aria-pressed="false" style="--pin-x:24%;--pin-y:67%">
+              <span class="location-city-name">Bellevue</span>
+            </button><button class="photo-filter location-city" type="button" data-place="seattle" data-label="Seattle" aria-label="Seattle, 2 photographs" aria-pressed="false" style="--pin-x:24%;--pin-y:25%">
+              <span class="location-city-name">Seattle</span>
+            </button><button class="photo-filter location-city" type="button" data-place="atlanta" data-label="Atlanta" aria-label="Atlanta, 8 photographs" aria-pressed="false" style="--pin-x:73%;--pin-y:67%">
+              <span class="location-city-name">Atlanta</span>
             </button>
-          </div>
+        </div><div class="location-map-sheet location-map-sheet--east">
+          <img class="location-map-art" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgMjMwIiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPjxwYXRoIGQ9Ik00MCAxMiBMOTAgMTIgTDkwIDIwIEwxMzQgMjAgTDEzNCAxMiBMMjAyIDEyIEwyMDIgMTggTDI1NiAxOCBMMjU2IDEyIEwzMzYgMTIgTDMzNiAyNiBMMzY2IDI2IEwzNjYgNTggTDM1NCA1OCBMMzU0IDkwIEwzMzggOTAgTDMzOCAxMTggTDMxOCAxMTggTDMxOCAxNDggTDMwMCAxNDggTDMwMCAxNzggTDI4NCAxNzggTDI4NCAyMTIgTDIxOCAyMTIgTDIxOCAyMjAgTDE1NCAyMjAgTDE1NCAyMDYgTDExMCAyMDYgTDExMCAxOTAgTDc2IDE5MCBMNzYgMTY0IEw1NCAxNjQgTDU0IDEyNiBMMzYgMTI2IEwzNiA5MCBMMjYgOTAgTDI2IDUyIEw0MCA1MiBaIiBmaWxsPSIjYTZiMzhiIiBzdHJva2U9IiM4YjlmN2IiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0zNzYgMjAgTDQxMiAyMCBMNDEyIDIyMiBMMjk4IDIyMiBMMjk4IDE4OCBMMzE0IDE4OCBMMzE0IDE1NiBMMzM0IDE1NiBMMzM0IDEyNiBMMzUwIDEyNiBMMzUwIDk0IEwzNjYgOTQgTDM2NiA2MiBMMzc2IDYyIFoiIGZpbGw9IiM5MWIzYWEiLz48cGF0aCBkPSJNMTI4IDk4IEwxNTQgOTggTDE1NCAxMDQgTDE5MiAxMDQgTDE5MiAxMTAgTDIzNiAxMTAgTDIzNiAxMTYgTDI3MCAxMTYgTDI3MCAxMjIgTDMxMiAxMjIgTDMxMiAxMjggTDI2NiAxMjggTDI2NiAxMjIgTDIzMiAxMjIgTDIzMiAxMTYgTDE4OCAxMTYgTDE4OCAxMTAgTDE1MCAxMTAgTDE1MCAxMDQgTDEyOCAxMDQgWiIgZmlsbD0iIzkxYjNhYSIvPjxwYXRoIGQ9Ik0yMjQgMTYzIEwyNDIgMTYzIEwyNDIgMTcxIEwyNTAgMTcxIEwyNTAgMTg1IEwyMzIgMTg1IEwyMzIgMTc3IEwyMjQgMTc3IFoiIGZpbGw9IiM5MWIzYWEiLz48cmVjdCB4PSI3OCIgeT0iMTIwIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjU0IiB5PSIxMzIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyMzYiIHk9IjkyIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjAyIiB5PSI2MCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjM2IiB5PSIxMzQiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzMTQiIHk9IjMwIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjcyIiB5PSI4MiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI4NiIgeT0iNDQiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNDAiIHk9Ijc4IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjYiIHk9IjEwNCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE5MiIgeT0iNzYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzODAiIHk9IjEyIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iNzYiIHk9IjEwNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjM2NiIgeT0iNjAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzMDQiIHk9IjUyIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTMyIiB5PSIxNjgiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzMzgiIHk9IjEzMiIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE4MiIgeT0iMTA4IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjA2IiB5PSIxMDAiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNTAiIHk9IjEyNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE4OCIgeT0iMTMwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzYiIHk9IjE3NCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjEyNCIgeT0iMTM2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iNDA2IiB5PSIxMzQiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNjQiIHk9Ijg2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iNDAyIiB5PSIyMDgiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzMTYiIHk9Ijg4IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjIyIiB5PSIxMTAiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxOTQiIHk9Ijg4IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzg4IiB5PSIxNTQiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyODIiIHk9IjE1MCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjEzNiIgeT0iMTYwIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjIyIiB5PSI5NCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjcyIiB5PSIyMDQiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzNjgiIHk9IjIyMCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE1NCIgeT0iMzQiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxMTAiIHk9IjE1OCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9Ijk4IiB5PSIxODYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNDgiIHk9IjQwIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzMwIiB5PSIxOTgiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNzAiIHk9IjYyIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTQwIiB5PSIxNTYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzODQiIHk9IjE2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzI4IiB5PSIyMTAiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNDQiIHk9IjEyOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE3OCIgeT0iMjE4IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjYiIHk9IjEzNiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9Ijg4IiB5PSI2MiIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjIzNiIgeT0iMjAyIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjA2IiB5PSIxNzgiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIxNjAiIHk9IjE5OCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI5MCIgeT0iMTcyIiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjIiIHk9IjExMiIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI3NiIgeT0iMTE2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iOTQiIHk9IjE0OCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE5NCIgeT0iMTc4IiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iNjYiIHk9IjUwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjU4IiB5PSIxNzAiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyOTAiIHk9IjE2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjNzQ4YzcwIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzU2IiB5PSIyNiIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iIzhjYTE3YyIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjM5NCIgeT0iNjAiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiM3NDhjNzAiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIzMTYiIHk9IjcyIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzgiIHk9IjE3MCIgd2lkdGg9IjYiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjM5OCIgeT0iMjA2IiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjOGNhMTdjIiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMjY4IiB5PSI1NCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE5OCIgeT0iNTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjIiIGZpbGw9IiM4Y2ExN2MiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyODQiIHk9IjExOCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjMwNiIgeT0iNzYiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNkZWRkYjYiIG9wYWNpdHk9IjAuMjUiLz48cmVjdCB4PSIyNCIgeT0iMjEyIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTY2IiB5PSI0NCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjI3MCIgeT0iMTA2IiB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMzcyIiB5PSI4MiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzc0OGM3MCIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE2NCIgeT0iMTAwIiB3aWR0aD0iNiIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHJlY3QgeD0iMTkyIiB5PSI5MCIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iI2RlZGRiNiIgb3BhY2l0eT0iMC4yNSIvPjxyZWN0IHg9IjE3MCIgeT0iMjEwIiB3aWR0aD0iNCIgaGVpZ2h0PSIyIiBmaWxsPSIjZGVkZGI2IiBvcGFjaXR5PSIwLjI1Ii8+PHBhdGggZD0iTTU4IDU4IEw2MiA1OCBMNjIgNTIgTDY2IDUyIEw2NiA0NiBMNzAgNDYgTDcwIDQwIEw3NCA0MCBMNzQgNDYgTDc4IDQ2IEw3OCA1MiBMODIgNTIgTDgyIDU4IEw4NiA1OCBaIiBmaWxsPSIjOTY5NjdhIi8+PHBhdGggZD0iTTY2IDUwIEw3MCA1MCBMNzAgNDQgTDc0IDQ0IEw3NCA1MCBMNzggNTAgTDc4IDU0IEw3MiA1MiBMNjYgNTQgWiIgZmlsbD0iI2UyZGVjMCIvPjxwYXRoIGQ9Ik04NCA1NiBMODggNTYgTDg4IDUwIEw5MiA1MCBMOTIgNDQgTDk2IDQ0IEw5NiAzOCBMMTAwIDM4IEwxMDAgNDQgTDEwNCA0NCBMMTA0IDUwIEwxMDggNTAgTDEwOCA1NiBMMTEyIDU2IFoiIGZpbGw9IiM5Njk2N2EiLz48cGF0aCBkPSJNOTIgNDggTDk2IDQ4IEw5NiA0MiBMMTAwIDQyIEwxMDAgNDggTDEwNCA0OCBMMTA0IDUyIEw5OCA1MCBMOTIgNTIgWiIgZmlsbD0iI2UyZGVjMCIvPjxwYXRoIGQ9Ik0xMTIgNjkgTDExNiA2OSBMMTE2IDYzIEwxMjAgNjMgTDEyMCA1NyBMMTI0IDU3IEwxMjQgNTEgTDEyOCA1MSBMMTI4IDU3IEwxMzIgNTcgTDEzMiA2MyBMMTM2IDYzIEwxMzYgNjkgTDE0MCA2OSBaIiBmaWxsPSIjOTY5NjdhIi8+PHBhdGggZD0iTTEyMCA2MSBMMTI0IDYxIEwxMjQgNTUgTDEyOCA1NSBMMTI4IDYxIEwxMzIgNjEgTDEzMiA2NSBMMTI2IDYzIEwxMjAgNjUgWiIgZmlsbD0iI2UyZGVjMCIvPjxwYXRoIGQ9Ik00MSAxNTUgTDQ1IDE1NSBMNDUgMTQ5IEw0OSAxNDkgTDQ5IDE0MyBMNTMgMTQzIEw1MyAxMzcgTDU3IDEzNyBMNTcgMTQzIEw2MSAxNDMgTDYxIDE0OSBMNjUgMTQ5IEw2NSAxNTUgTDY5IDE1NSBaIiBmaWxsPSIjOTY5NjdhIi8+PHBhdGggZD0iTTQ5IDE0NyBMNTMgMTQ3IEw1MyAxNDEgTDU3IDE0MSBMNTcgMTQ3IEw2MSAxNDcgTDYxIDE1MSBMNTUgMTQ5IEw0OSAxNTEgWiIgZmlsbD0iI2UyZGVjMCIvPjxyZWN0IHg9IjE4MCIgeT0iNDciIHdpZHRoPSIyIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNTg3NjUzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTc4IiB5PSI0OSIgd2lkdGg9IjYiIGhlaWdodD0iNCIgZmlsbD0iIzcxOTU2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjE3NiIgeT0iNTMiIHdpZHRoPSIxMCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmM4YjYzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTg5IiB5PSI1MiIgd2lkdGg9IjIiIGhlaWdodD0iMTIiIGZpbGw9IiM1ODc2NTMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxODciIHk9IjU0IiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiBmaWxsPSIjNzE5NTZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTg1IiB5PSI1OCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjQiIGZpbGw9IiM2YzhiNjMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxOTgiIHk9IjQ1IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMiIgZmlsbD0iIzU4NzY1MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjE5NiIgeT0iNDciIHdpZHRoPSI2IiBoZWlnaHQ9IjQiIGZpbGw9IiM3MTk1NmIiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxOTQiIHk9IjUxIiB3aWR0aD0iMTAiIGhlaWdodD0iNCIgZmlsbD0iIzZjOGI2MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjI4NiIgeT0iNjkiIHdpZHRoPSIyIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNTg3NjUzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjg0IiB5PSI3MSIgd2lkdGg9IjYiIGhlaWdodD0iNCIgZmlsbD0iIzcxOTU2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjI4MiIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmM4YjYzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjk1IiB5PSI3NCIgd2lkdGg9IjIiIGhlaWdodD0iMTIiIGZpbGw9IiM1ODc2NTMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIyOTMiIHk9Ijc2IiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiBmaWxsPSIjNzE5NTZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjkxIiB5PSI4MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjQiIGZpbGw9IiM2YzhiNjMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIzMDQiIHk9IjY3IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMiIgZmlsbD0iIzU4NzY1MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjMwMiIgeT0iNjkiIHdpZHRoPSI2IiBoZWlnaHQ9IjQiIGZpbGw9IiM3MTk1NmIiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIzMDAiIHk9IjczIiB3aWR0aD0iMTAiIGhlaWdodD0iNCIgZmlsbD0iIzZjOGI2MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjEzMiIgeT0iMTc0IiB3aWR0aD0iMiIgaGVpZ2h0PSIxMiIgZmlsbD0iIzU4NzY1MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjEzMCIgeT0iMTc2IiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiBmaWxsPSIjNzE5NTZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTI4IiB5PSIxODAiIHdpZHRoPSIxMCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmM4YjYzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTQxIiB5PSIxNzkiIHdpZHRoPSIyIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNTg3NjUzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMTM5IiB5PSIxODEiIHdpZHRoPSI2IiBoZWlnaHQ9IjQiIGZpbGw9IiM3MTk1NmIiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxMzciIHk9IjE4NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjQiIGZpbGw9IiM2YzhiNjMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxNTAiIHk9IjE3MiIgd2lkdGg9IjIiIGhlaWdodD0iMTIiIGZpbGw9IiM1ODc2NTMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxNDgiIHk9IjE3NCIgd2lkdGg9IjYiIGhlaWdodD0iNCIgZmlsbD0iIzcxOTU2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjE0NiIgeT0iMTc4IiB3aWR0aD0iMTAiIGhlaWdodD0iNCIgZmlsbD0iIzZjOGI2MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjI4NCIgeT0iMTkxIiB3aWR0aD0iMiIgaGVpZ2h0PSIxMiIgZmlsbD0iIzU4NzY1MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjI4MiIgeT0iMTkzIiB3aWR0aD0iNiIgaGVpZ2h0PSI0IiBmaWxsPSIjNzE5NTZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjgwIiB5PSIxOTciIHdpZHRoPSIxMCIgaGVpZ2h0PSI0IiBmaWxsPSIjNmM4YjYzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjkzIiB5PSIxOTYiIHdpZHRoPSIyIiBoZWlnaHQ9IjEyIiBmaWxsPSIjNTg3NjUzIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjkxIiB5PSIxOTgiIHdpZHRoPSI2IiBoZWlnaHQ9IjQiIGZpbGw9IiM3MTk1NmIiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIyODkiIHk9IjIwMiIgd2lkdGg9IjEwIiBoZWlnaHQ9IjQiIGZpbGw9IiM2YzhiNjMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIzMDIiIHk9IjE4OSIgd2lkdGg9IjIiIGhlaWdodD0iMTIiIGZpbGw9IiM1ODc2NTMiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIzMDAiIHk9IjE5MSIgd2lkdGg9IjYiIGhlaWdodD0iNCIgZmlsbD0iIzcxOTU2YiIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjI5OCIgeT0iMTk1IiB3aWR0aD0iMTAiIGhlaWdodD0iNCIgZmlsbD0iIzZjOGI2MyIgb3BhY2l0eT0iMSIvPjxyZWN0IHg9IjM4MiIgeT0iMTgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNjY4Zjg5IiBvcGFjaXR5PSIwLjUiLz48cmVjdCB4PSIzODYiIHk9IjIyIiB3aWR0aD0iMTQiIGhlaWdodD0iMiIgZmlsbD0iI2I0Y2NiYSIgb3BhY2l0eT0iMC43Ii8+PHJlY3QgeD0iMzk3IiB5PSIyMDYiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNjY4Zjg5IiBvcGFjaXR5PSIwLjUiLz48cmVjdCB4PSI0MDEiIHk9IjIxMCIgd2lkdGg9IjE0IiBoZWlnaHQ9IjIiIGZpbGw9IiNiNGNjYmEiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjEwIiB5PSIyMDgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyIiBmaWxsPSIjNjY4Zjg5IiBvcGFjaXR5PSIwLjUiLz48cmVjdCB4PSIxNCIgeT0iMjEyIiB3aWR0aD0iMTQiIGhlaWdodD0iMiIgZmlsbD0iI2I0Y2NiYSIgb3BhY2l0eT0iMC43Ii8+PHJlY3QgeD0iMjEwIiB5PSIyMDgiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwIiBmaWxsPSIjOGE5MzZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjA2IiB5PSIyMTIiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyIiBmaWxsPSIjOGE5MzZiIiBvcGFjaXR5PSIxIi8+PHJlY3QgeD0iMjEwIiB5PSIyMTIiIHdpZHRoPSIyIiBoZWlnaHQ9IjIiIGZpbGw9IiNlNGRmYmUiIG9wYWNpdHk9IjEiLz48cmVjdCB4PSIxOTEiIHk9IjgiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0IiBmaWxsPSIjZWZlYmQ1IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMTg2IiB5PSIxMiIgd2lkdGg9IjI3IiBoZWlnaHQ9IjUiIGZpbGw9IiNlZmViZDUiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSIxOTAiIHk9IjE3IiB3aWR0aD0iMTgiIGhlaWdodD0iMiIgZmlsbD0iI2JhYmRhMCIgb3BhY2l0eT0iMC43Ii8+PHJlY3QgeD0iMzcxIiB5PSIxMzAiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0IiBmaWxsPSIjZWZlYmQ1IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMzY2IiB5PSIxMzQiIHdpZHRoPSIyNyIgaGVpZ2h0PSI1IiBmaWxsPSIjZWZlYmQ1IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMzcwIiB5PSIxMzkiIHdpZHRoPSIxOCIgaGVpZ2h0PSIyIiBmaWxsPSIjYmFiZGEwIiBvcGFjaXR5PSIwLjciLz48L3N2Zz4=" alt="" aria-hidden="true" />
+          <button class="photo-filter location-city" type="button" data-place="luoyang" data-label="Luoyang" aria-label="Luoyang, 1 photographs" aria-pressed="false" style="--pin-x:67%;--pin-y:60%">
+              <span class="location-city-name">Luoyang</span>
+            </button><button class="photo-filter location-city" type="button" data-place="xian" data-label="Xi’an" aria-label="Xi’an, 1 photographs" aria-pressed="false" style="--pin-x:21%;--pin-y:67%">
+              <span class="location-city-name">Xi’an</span>
+            </button><button class="photo-filter location-city" type="button" data-place="yuncheng" data-label="Yuncheng" aria-label="Yuncheng, 1 photographs" aria-pressed="false" style="--pin-x:43%;--pin-y:49%">
+              <span class="location-city-name">Yuncheng</span>
+            </button><button class="photo-filter location-city" type="button" data-place="taiyuan" data-label="Taiyuan" aria-label="Taiyuan, 2 photographs" aria-pressed="false" style="--pin-x:43%;--pin-y:21%">
+              <span class="location-city-name">Taiyuan</span>
+            </button><button class="photo-filter location-city" type="button" data-place="xianyang" data-label="Xianyang" aria-label="Xianyang, 2 photographs" aria-pressed="false" style="--pin-x:16%;--pin-y:35%">
+              <span class="location-city-name">Xianyang</span>
+            </button><button class="photo-filter location-city" type="button" data-place="beijing" data-label="Beijing" aria-label="Beijing, 2 photographs" aria-pressed="false" style="--pin-x:65%;--pin-y:33%">
+              <span class="location-city-name">Beijing</span>
+            </button><button class="photo-filter location-city" type="button" data-place="xiangtan" data-label="Xiangtan" aria-label="Xiangtan, 1 photographs" aria-pressed="false" style="--pin-x:50%;--pin-y:88%">
+              <span class="location-city-name">Xiangtan</span>
+            </button><button class="photo-filter location-city" type="button" data-place="shenyang" data-label="Shenyang" aria-label="Shenyang, 2 photographs" aria-pressed="false" style="--pin-x:83%;--pin-y:10%">
+              <span class="location-city-name">Shenyang</span>
+            </button><button class="photo-filter location-city" type="button" data-place="changsha" data-label="Changsha" aria-label="Changsha, 4 photographs" aria-pressed="false" style="--pin-x:83%;--pin-y:86%">
+              <span class="location-city-name">Changsha</span>
+            </button>
+        </div></div>
         </section>
-          </div>
-        </details>
       </div>
       <section class="album" aria-label="A pixel photo album with one photograph per page">
         <canvas class="album-margin-art album-margin-art--moths" data-album-art="moths" width="128" height="112" aria-hidden="true"></canvas>
@@ -4025,7 +3997,6 @@ window.PixelAlbum = class PixelAlbum {
   const pages = document.querySelector(".album-pages");
   const filters = [...document.querySelectorAll(".photo-filter")];
   const picker = document.querySelector(".location-picker");
-  const locationSummary = picker.querySelector("summary");
   const cover = document.querySelector(".album-cover");
   const previous = document.querySelector(".album-previous");
   const next = document.querySelector(".album-next");
@@ -4047,7 +4018,6 @@ window.PixelAlbum = class PixelAlbum {
     filters.forEach((button) => {
       button.disabled = busy;
     });
-    locationSummary.setAttribute("aria-disabled", String(busy));
     scene.dataset.turning = String(busy);
     scene.setAttribute("aria-busy", String(busy));
   }
@@ -4095,6 +4065,7 @@ window.PixelAlbum = class PixelAlbum {
 
   async function turnTo(index, direction, fromOverride = null) {
     if (busy || index < -1 || index >= visible.length) return;
+    const focused = document.activeElement;
     busy = true;
     lockControls();
     const from = fromOverride || {
@@ -4102,8 +4073,8 @@ window.PixelAlbum = class PixelAlbum {
       index: current,
     };
     const to = { entry: visible[index] || null, index };
-    const focusWasCover = document.activeElement === cover;
-    const focusWasClose = document.activeElement === close;
+    const focusWasCover = focused === cover;
+    const focusWasClose = focused === close;
     try {
       await Promise.all([ready(from.entry), ready(to.entry)]);
       cover.hidden = true;
@@ -4114,6 +4085,8 @@ window.PixelAlbum = class PixelAlbum {
       busy = false;
       settle();
       if (focusWasCover || focusWasClose) next.focus({ preventScroll: true });
+      else if (filters.includes(focused))
+        focused.focus({ preventScroll: true });
     }
   }
 
@@ -4134,9 +4107,6 @@ window.PixelAlbum = class PixelAlbum {
         : entries.filter(
             (entry) => entry.dataset.place === button.dataset.place,
           );
-    button.querySelector(".filter-count").textContent = String(
-      matching.length,
-    ).padStart(2, "0");
     button.addEventListener("click", () => {
       if (busy) return;
       const from = { entry: visible[current] || null, index: current };
@@ -4145,14 +4115,14 @@ window.PixelAlbum = class PixelAlbum {
         button.dataset.label;
       picker.querySelector(".location-current-count").textContent = String(
         matching.length,
-      ).padStart(2, "0");
-      picker.open = false;
-      locationSummary.focus({ preventScroll: true });
+      );
       filters.forEach((item) =>
         item.setAttribute("aria-pressed", String(item === button)),
       );
       const retained = visible.indexOf(from.entry);
-      if (current < 0 || retained >= 0) {
+      if (current < 0 && button.dataset.place !== "all") {
+        void turnTo(0, 1, from);
+      } else if (current < 0 || retained >= 0) {
         current = retained;
         settle();
       } else {
@@ -4161,89 +4131,31 @@ window.PixelAlbum = class PixelAlbum {
     });
   });
 
-  // A connected route adapts to the actual station rows, including wrapping
-  // on narrow screens. The track stays behind the native filter buttons.
-  function drawRoutes() {
-    if (!picker.open) return;
-    picker.querySelectorAll(".location-stations").forEach((route) => {
-      const bounds = route.getBoundingClientRect();
-      if (!bounds.width || !bounds.height) return;
-      const rows = [];
-      route.querySelectorAll(".location-station-mark").forEach((dot) => {
-        const r = dot.getBoundingClientRect();
-        const point = {
-          x: r.left + r.width / 2 - bounds.left,
-          y: r.top + r.height / 2 - bounds.top,
-        };
-        let row = rows.find((points) => Math.abs(points[0].y - point.y) < 3);
-        if (!row) rows.push((row = []));
-        row.push(point);
-      });
-      rows.sort((a, b) => a[0].y - b[0].y);
-      const points = rows.flatMap((row, index) =>
-        row.sort((a, b) => (index % 2 ? b.x - a.x : a.x - b.x)),
-      );
-      let path = "";
-      points.forEach((point, index) => {
-        const previous = points[index - 1];
-        if (!previous) path = `M${point.x} ${point.y}`;
-        else if (Math.abs(previous.y - point.y) < 3)
-          path += ` L${point.x} ${point.y}`;
-        else {
-          const edge = previous.x > bounds.width / 2 ? bounds.width - 3 : 3;
-          path += ` C${edge} ${previous.y} ${edge} ${point.y} ${point.x} ${point.y}`;
-        }
-      });
-      const svg = route.querySelector("svg");
-      svg.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
-      svg
-        .querySelectorAll("path")
-        .forEach((track) => track.setAttribute("d", path));
-    });
-  }
-  picker.addEventListener("toggle", () => {
-    if (picker.open) requestAnimationFrame(drawRoutes);
-  });
-  new ResizeObserver(drawRoutes).observe(picker);
-  locationSummary.addEventListener("click", (event) => {
-    if (busy) event.preventDefault();
-  });
-  document.addEventListener("pointerdown", (event) => {
-    if (!picker.contains(event.target)) picker.open = false;
-  });
-  picker.addEventListener("focusout", (event) => {
-    if (!picker.contains(event.relatedTarget)) picker.open = false;
-  });
+  // The map's city pins stay visible; native buttons support touch and keyboard.
   picker.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && picker.open) {
-      event.preventDefault();
-      event.stopPropagation();
-      picker.open = false;
-      locationSummary.focus({ preventScroll: true });
-    } else if (
-      filters.includes(document.activeElement) &&
-      [
-        "ArrowLeft",
-        "ArrowRight",
-        "ArrowUp",
-        "ArrowDown",
-        "Home",
-        "End",
-      ].includes(event.key)
-    ) {
-      event.preventDefault();
-      const i = filters.indexOf(document.activeElement);
-      const target =
-        event.key === "Home"
-          ? 0
-          : event.key === "End"
-            ? filters.length - 1
-            : (i +
-                (["ArrowLeft", "ArrowUp"].includes(event.key) ? -1 : 1) +
-                filters.length) %
-              filters.length;
-      filters[target].focus();
-    }
+    const keys = [
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "Home",
+      "End",
+    ];
+    if (!filters.includes(document.activeElement) || !keys.includes(event.key))
+      return;
+    event.preventDefault();
+    event.stopPropagation();
+    const index = filters.indexOf(document.activeElement);
+    const target =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? filters.length - 1
+          : (index +
+              (["ArrowLeft", "ArrowUp"].includes(event.key) ? -1 : 1) +
+              filters.length) %
+            filters.length;
+    filters[target].focus();
   });
 
   cover.addEventListener("click", () => advance(1));
@@ -4259,7 +4171,7 @@ window.PixelAlbum = class PixelAlbum {
       event.ctrlKey ||
       event.metaKey ||
       event.target.closest("input, textarea, select, [contenteditable=true]") ||
-      (picker.open && event.target.closest(".location-picker")) ||
+      event.target.closest(".location-picker") ||
       !["ArrowLeft", "ArrowRight"].includes(event.key)
     )
       return;
