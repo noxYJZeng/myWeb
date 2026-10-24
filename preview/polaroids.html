@@ -2121,7 +2121,7 @@ figcaption > span:last-child {
 
 </style>
     <style>
-/* The album is drawn in pixels; still photographs keep their native detail. */
+/* Pixel cloth and binding; original images stay on continuous 3D paper leaves. */
 .gallery-page [hidden] {
   display: none !important;
 }
@@ -2221,19 +2221,34 @@ figcaption > span:last-child {
 }
 .album-scene {
   position: relative;
-  width: min(100%, 620px);
+  width: min(100%, 800px);
   margin: 0 auto;
 }
+.album-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  perspective: 1800px;
+  perspective-origin: 50% 45%;
+}
+.album-book {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
 #album-canvas {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   image-rendering: pixelated;
   pointer-events: none;
+  transform: translateZ(-2px);
 }
 .album-cover {
   position: absolute;
-  left: var(--cover-left);
+  left: calc(var(--cover-left) + var(--closed-shift));
   top: var(--cover-top);
   width: var(--cover-width);
   height: var(--cover-height);
@@ -2243,12 +2258,7 @@ figcaption > span:last-child {
   color: #b6c0aa;
 }
 .album-cover > span {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 20%;
-  font: 10px/1.8 var(--mono);
-  letter-spacing: 0.5px;
+  opacity: 0;
 }
 .album-cover:hover > span {
   color: #e3d8b7;
@@ -2284,7 +2294,7 @@ figcaption > span:last-child {
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  width: min(100%, 620px);
+  width: min(100%, 800px);
   margin: -12px auto 0;
 }
 .album-status {
@@ -2307,10 +2317,74 @@ figcaption > span:last-child {
 }
 .album-enhanced .album-pages {
   position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.album-leaf,
+.album-cover-leaf {
+  position: absolute;
   left: var(--page-left);
   top: var(--page-top);
   width: var(--page-width);
   height: var(--page-height);
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+}
+.album-cover-leaf {
+  left: var(--cover-left);
+  top: var(--cover-top);
+  width: var(--cover-width);
+  height: var(--cover-height);
+  pointer-events: none;
+}
+.album-face {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.album-face-front {
+  background-image: var(--leaf-texture);
+  transform: translateZ(0.1px);
+}
+.album-face-back {
+  background-image: var(--leaf-back-texture);
+  transform: rotateY(180deg) translateZ(0.1px);
+  pointer-events: none;
+}
+.album-leaf-shade {
+  position: absolute;
+  inset: 0;
+  transform: translateZ(0.2px);
+  backface-visibility: hidden;
+  background: linear-gradient(90deg, #000b, #0003 50%, #0007);
+  opacity: 0;
+  pointer-events: none;
+}
+.album-folio {
+  position: absolute;
+  right: 5%;
+  bottom: 2.8%;
+  color: #758368;
+  font: 10px/1 var(--mono);
+}
+.album-cover-count,
+.album-cover-invitation {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #a7b396;
+  font: 10px/1.8 var(--mono);
+  letter-spacing: 0.5px;
+}
+.album-cover-count {
+  top: 64%;
+}
+.album-cover-invitation {
+  bottom: 20%;
 }
 .album-enhanced .photo-entry {
   position: absolute;
@@ -2333,6 +2407,7 @@ figcaption > span:last-child {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  image-rendering: auto;
 }
 .album-enhanced .photo-entry figcaption {
   display: block;
@@ -2359,8 +2434,12 @@ figcaption > span:last-child {
   font: 9px/1.8 var(--mono);
 }
 .album-pages.is-turning {
-  visibility: hidden;
   pointer-events: none;
+}
+.album-leaf.is-moving,
+.album-cover-leaf.is-moving,
+.album-book.is-moving {
+  will-change: transform;
 }
 .album-scene[data-turning="true"] {
   touch-action: none;
@@ -2524,7 +2603,8 @@ figcaption > span:last-child {
   .album-controls {
     margin-top: -5px;
   }
-  .album-cover > span {
+  .album-cover-count,
+  .album-cover-invitation {
     font-size: 9px;
   }
   .photo-place {
@@ -3033,8 +3113,8 @@ document.querySelectorAll("a[data-preview-image]").forEach(link => {
 <script>
 "use strict";
 
-// The album, including its turning leaf, is painted on an integer pixel grid.
-// A native image sits above it while the page is still, keeping the print sharp.
+// Only the cloth, binding, and pockets use a pixel canvas. Every photograph and
+// caption stays in its native DOM element on a persistent, double-sided leaf.
 window.PixelAlbum = class PixelAlbum {
   constructor(canvas) {
     this.canvas = canvas;
@@ -3042,47 +3122,86 @@ window.PixelAlbum = class PixelAlbum {
     this.ctx = canvas.getContext("2d");
     this.compact = matchMedia("(max-width: 620px)");
     this.motion = matchMedia("(prefers-reduced-motion: reduce)");
+    this.entries = [...this.scene.querySelectorAll(".photo-entry")];
+    this.order = this.entries;
     this.entry = null;
     this.index = -1;
-    this.count = 0;
-    this.progress = null;
+    this.animating = false;
+
+    this.viewport = document.createElement("div");
+    this.viewport.className = "album-viewport";
+    this.book = document.createElement("div");
+    this.book.className = "album-book";
+    this.scene.prepend(this.viewport);
+    this.viewport.append(this.book);
+    this.book.append(canvas);
+    const pages = this.scene.querySelector(".album-pages");
+    this.book.append(pages);
+    this.leaves = new Map();
+    this.entries.forEach((entry) => {
+      const leaf = this.makeLeaf("album-leaf");
+      leaf.front.append(entry);
+      const folio = document.createElement("span");
+      folio.className = "album-folio";
+      folio.setAttribute("aria-hidden", "true");
+      leaf.front.append(folio);
+      leaf.folio = folio;
+      pages.append(leaf.node);
+      this.leaves.set(entry, leaf);
+    });
+    this.cover = this.makeLeaf("album-cover-leaf");
+    this.cover.node.setAttribute("aria-hidden", "true");
+    const invitation = document.createElement("span");
+    invitation.className = "album-cover-invitation";
+    invitation.textContent = "Open album ↗";
+    this.cover.front.append(invitation);
+    this.book.append(this.cover.node);
+
+    this.makeTextures();
     this.resize = this.resize.bind(this);
     this.compact.addEventListener("change", this.resize);
     this.resize();
   }
 
+  makeLeaf(className) {
+    const node = document.createElement("div");
+    node.className = className;
+    const front = document.createElement("div");
+    front.className = "album-face album-face-front";
+    const back = document.createElement("div");
+    back.className = "album-face album-face-back";
+    const shade = document.createElement("div");
+    shade.className = "album-leaf-shade";
+    shade.setAttribute("aria-hidden", "true");
+    node.append(front, back, shade);
+    return { node, front, back, shade };
+  }
+
   resize() {
-    const width = this.compact.matches ? 240 : 360;
+    const width = this.compact.matches ? 280 : 430;
+    const hinge = this.compact.matches ? 78 : 215;
     this.canvas.width = width;
     this.canvas.height = 330;
     this.ctx.imageSmoothingEnabled = false;
-    const x = (width - 192) / 2;
-    this.g = {
-      width,
-      x,
-      y: 24,
-      w: 192,
-      h: 270,
-      px: x + 10,
-      py: 31,
-      pw: 176,
-      ph: 250,
-    };
+    this.g = { width, hinge, y: 24, px: hinge, py: 31, pw: 176, ph: 250 };
     const s = this.scene.style;
-    s.aspectRatio = `${width} / 330`;
-    for (const [name, value] of Object.entries({
-      "--page-left": `${(this.g.px / width) * 100}%`,
-      "--page-top": `${(31 / 330) * 100}%`,
-      "--page-width": `${(176 / width) * 100}%`,
-      "--page-height": `${(250 / 330) * 100}%`,
-      "--cover-left": `${(x / width) * 100}%`,
-      "--cover-top": `${(24 / 330) * 100}%`,
-      "--cover-width": `${(192 / width) * 100}%`,
-      "--cover-height": `${(270 / 330) * 100}%`,
-    }))
-      s.setProperty(name, value);
-    if (this.progress) this.paintTurn(this.progress);
-    else this.render(this.entry, this.index, this.count);
+    s.aspectRatio = width + " / 330";
+    const values = {
+      "--page-left": (hinge / width) * 100 + "%",
+      "--page-top": (31 / 330) * 100 + "%",
+      "--page-width": (176 / width) * 100 + "%",
+      "--page-height": (250 / 330) * 100 + "%",
+      "--cover-left": (hinge / width) * 100 + "%",
+      "--cover-top": (24 / 330) * 100 + "%",
+      "--cover-width": (192 / width) * 100 + "%",
+      "--cover-height": (270 / 330) * 100 + "%",
+      "--closed-shift": (((width - 192) / 2 - hinge) / width) * 100 + "%",
+    };
+    Object.entries(values).forEach(([name, value]) =>
+      s.setProperty(name, value),
+    );
+    this.base();
+    if (!this.animating) this.render(this.entry, this.index, this.order);
   }
 
   rect(c, x, y, w, h, color) {
@@ -3143,112 +3262,84 @@ window.PixelAlbum = class PixelAlbum {
     });
   }
 
-  surface(entry, index, count) {
-    const cover = !entry;
-    const buffer = document.createElement("canvas");
-    buffer.width = cover ? 192 : 176;
-    buffer.height = cover ? 270 : 250;
-    const c = buffer.getContext("2d");
-    c.imageSmoothingEnabled = false;
-    this.rect(
-      c,
-      0,
-      2,
-      buffer.width,
-      buffer.height - 4,
-      cover ? "#101a14" : "#20281f",
-    );
-    this.rect(
-      c,
-      2,
-      0,
-      buffer.width - 4,
-      buffer.height,
-      cover ? "#162019" : "#20281f",
-    );
-    for (let y = 4; y < buffer.height - 4; y += 4)
-      for (let x = 4; x < buffer.width - 4; x += 4) {
+  texture(width, height, paint) {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    paint(canvas.getContext("2d"));
+    return 'url("' + canvas.toDataURL() + '")';
+  }
+
+  paper(c, width, height, cover = false) {
+    this.rect(c, 0, 0, width, height, cover ? "#162019" : "#20281f");
+    for (let y = 4; y < height - 4; y += 4)
+      for (let x = 4; x < width - 4; x += 4) {
         const n = (x * 73 + y * 151) % 31;
         if (n < 4)
           this.rect(c, x, y, n === 0 ? 2 : 1, 1, cover ? "#293329" : "#2c3429");
       }
-    this.rect(c, 2, 3, 1, buffer.height - 6, "#3b4636");
-    this.rect(c, buffer.width - 3, 3, 1, buffer.height - 6, "#0b140e");
-    if (cover) {
+    this.rect(c, 0, 0, 1, height, "#48543f");
+    this.rect(c, width - 1, 0, 1, height, "#111c12");
+    this.rect(c, 0, height - 1, width, 1, "#65715b");
+  }
+
+  makeTextures() {
+    this.book.style.setProperty(
+      "--leaf-texture",
+      this.texture(176, 250, (c) => {
+        this.paper(c, 176, 250);
+        this.rect(c, 9, 10, 158, 1, "#77816b");
+        this.rect(c, 9, 11, 1, 190, "#56624d");
+        this.rect(c, 166, 11, 1, 190, "#3c4737");
+        this.rect(c, 10, 201, 156, 1, "#354031");
+        this.rect(c, 13, 203, 150, 1, "#87907a");
+      }),
+    );
+    this.book.style.setProperty(
+      "--leaf-back-texture",
+      this.texture(176, 250, (c) => {
+        this.paper(c, 176, 250);
+        this.rect(c, 5, 8, 1, 234, "#36422f");
+        this.rect(c, 170, 8, 1, 234, "#283522");
+        for (let y = 12; y < 238; y += 7) this.rect(c, 172, y, 1, 2, "#536348");
+      }),
+    );
+    this.cover.front.style.backgroundImage = this.texture(192, 270, (c) => {
+      this.paper(c, 192, 270, true);
       this.rect(c, 7, 2, 4, 266, "#0d1710");
       this.rect(c, 12, 3, 1, 264, "#34432f");
       for (let y = 8; y < 260; y += 6) this.rect(c, 16, y, 1, 2, "#4c5840");
       this.text(c, "POLAROIDS", 43, 88, 2);
       this.text(c, "NOX ZENG", 73, 121, 1, "#91a08b");
-      this.text(
-        c,
-        `${String(count).padStart(2, "0")} PHOTOS`,
-        63,
-        174,
-        1,
-        "#88957c",
-      );
       const colors = ["#ba6e72", "#c28b61", "#c6b778", "#82a88b", "#819eaf"];
       colors.forEach((color, i) =>
         this.rect(c, 47 + i * 23, 240, 23, 3, color),
       );
-    } else {
-      // The faint highlights are the edges of a clear archival photo pocket.
-      this.rect(c, 9, 10, 158, 1, "#77816b");
-      this.rect(c, 9, 11, 1, 182, "#56624d");
-      this.rect(c, 166, 11, 1, 182, "#3c4737");
-      this.rect(c, 10, 194, 156, 1, "#354031");
-      this.rect(c, 13, 197, 150, 1, "#87907a");
-      if (entry) {
-        const image = entry.querySelector("img");
-        if (image.complete && image.naturalWidth) {
-          const scale = Math.min(
-            152 / image.naturalWidth,
-            184 / image.naturalHeight,
-          );
-          const w = Math.round(image.naturalWidth * scale),
-            h = Math.round(image.naturalHeight * scale);
-          c.drawImage(
-            image,
-            12 + Math.round((152 - w) / 2),
-            14 + Math.round((184 - h) / 2),
-            w,
-            h,
-          );
-        }
-        c.font = "7px monospace";
-        c.fillStyle = "#bec9b1";
-        c.fillText(
-          entry.querySelector(".photo-place").textContent,
-          12,
-          217,
-          152,
-        );
-        c.fillStyle = "#839078";
-        c.fillText(
-          entry.querySelector("time")?.textContent || "",
-          12,
-          229,
-          152,
-        );
-      }
-      this.text(c, String(index + 1).padStart(2, "0"), 149, 238, 1, "#5e6f55");
-    }
-    return buffer;
+    });
+    this.cover.back.style.backgroundImage = this.texture(192, 270, (c) => {
+      this.paper(c, 192, 270, true);
+      // An endpaper beneath the turned leaves also keeps filter changes seamless.
+      c.save();
+      c.translate(16, 7);
+      this.paper(c, 176, 250);
+      c.restore();
+      for (let y = 10; y < 260; y += 7) this.rect(c, 187, y, 1, 2, "#536348");
+    });
+    this.coverCount = document.createElement("span");
+    this.coverCount.className = "album-cover-count";
+    this.cover.front.append(this.coverCount);
   }
 
   base() {
     const c = this.ctx,
       g = this.g;
     c.clearRect(0, 0, g.width, 330);
-    this.rect(c, g.x + 9, g.y + 12, 187, 269, "#00000045");
-    this.rect(c, g.x, g.y + 2, 192, 270, "#0d1710");
-    this.rect(c, g.x + 2, g.y, 188, 274, "#18241a");
-    this.rect(c, g.x + 2, g.y + 2, 1, 268, "#4c5c40");
+    this.rect(c, g.hinge + 5, 36, 191, 269, "#00000045");
+    this.rect(c, g.hinge, 24, 192, 274, "#18241a");
     for (let x = 0; x < 4; x++) {
       this.rect(
         c,
-        g.px + 174 + x * 2,
+        g.px + 176 + x * 2,
         g.py + 4 + x * 2,
         1,
         246 - x * 2,
@@ -3263,91 +3354,123 @@ window.PixelAlbum = class PixelAlbum {
         x % 2 ? "#43533b" : "#78816b",
       );
     }
-    this.rect(c, g.x + 4, g.y + 3, 5, 266, "#0b150e");
-    for (let y = 10; y < 260; y += 7)
-      this.rect(c, g.x + 6, g.y + y, 1, 2, "#536348");
+    this.rect(c, g.hinge - 1, 25, 2, 270, "#0b150e");
   }
 
-  render(entry, index, count) {
+  positionLeaves(index, order) {
+    this.entries.forEach((entry) => {
+      const leaf = this.leaves.get(entry);
+      const i = order.indexOf(entry);
+      leaf.node.hidden = i < 0;
+      const turned = index >= 0 && i < index;
+      leaf.node.style.transform = "rotateY(" + (turned ? -180 : 0) + "deg)";
+      leaf.node.style.zIndex = String(
+        turned ? 100 + i : 100 + order.length - i,
+      );
+      leaf.node.dataset.side = turned ? "left" : "right";
+      leaf.folio.textContent = String(i + 1).padStart(2, "0");
+      leaf.node.inert = entry !== order[index];
+      entry.hidden = entry !== order[index];
+    });
+  }
+
+  render(entry, index, order) {
     this.entry = entry;
     this.index = index;
-    this.count = count;
+    this.order = order;
+    this.positionLeaves(index, order);
+    this.coverCount.textContent =
+      String(order.length).padStart(2, "0") + " PHOTOS";
+    this.cover.node.style.transform = "rotateY(" + (entry ? -180 : 0) + "deg)";
+    this.cover.node.style.zIndex = entry ? "10" : "2000";
+    this.book.style.transform = entry
+      ? "translateX(0%)"
+      : "translateX(var(--closed-shift))";
+    this.scene.dataset.open = String(!!entry);
     this.base();
-    const g = this.g;
-    const surface = this.surface(entry, index, count);
-    this.ctx.drawImage(surface, entry ? g.px : g.x, entry ? g.py : g.y);
   }
 
-  paintTurn(state) {
-    const { from, to, direction, p } = state;
-    this.render(
-      direction > 0 ? to.entry : from.entry,
-      direction > 0 ? to.index : from.index,
-      this.count,
-    );
-    const surface = state.sheet;
-    const cover = surface.width === 192;
-    const g = this.g,
-      c = this.ctx;
-    const theta = Math.PI * (direction > 0 ? p : 1 - p);
-    const cos = Math.cos(theta),
-      sin = Math.sin(theta);
-    const hinge = cover ? g.x + 6 : g.px;
-    const y = cover ? g.y : g.py;
-    const fade = cos < 0 ? Math.min(1, (1 + cos) * 3) : 1;
-    this.rect(
-      c,
-      hinge,
-      y + 1,
-      Math.max(1, 10 * sin),
-      surface.height - 2,
-      `rgba(0, 0, 0, ${sin * 0.35})`,
-    );
-    for (let x = 0; x < surface.width; x++) {
-      const u = x / surface.width;
-      const curl = Math.sin(Math.PI * u) * sin * 7;
-      const dx = Math.round(hinge + cos * x + curl);
-      const dy = Math.round(y - sin * u * 9);
-      const height = Math.round(surface.height + sin * u * 18);
-      c.globalAlpha = fade;
-      if (cos >= 0)
-        c.drawImage(surface, x, 0, 1, surface.height, dx, dy, 1, height);
-      else this.rect(c, dx, dy, 1, height, x % 5 ? "#253022" : "#34402c");
-      c.globalAlpha = fade * sin * (0.12 + u * 0.2);
-      this.rect(c, dx, dy, 1, height, cos >= 0 ? "#020b05" : "#b0b79c");
-    }
-    c.globalAlpha = 1;
-  }
-
-  turn(from, to, direction, count) {
-    this.count = count;
+  async turn(from, to, direction, order) {
     if (this.motion.matches) {
-      this.render(to.entry, to.index, count);
-      return Promise.resolve();
+      this.render(to.entry, to.index, order);
+      return;
     }
-    const sheetSide = direction > 0 ? from : to;
-    const sheet = this.surface(sheetSide.entry, sheetSide.index, count);
-    return new Promise((resolve) => {
-      let began = null,
-        last = -1;
-      const tick = (now) => {
-        began ??= now;
-        const t = Math.min(1, (now - began) / 980);
-        const p = t * t * (3 - 2 * t);
-        this.progress = { from, to, direction, sheet, p };
-        if (now - last > 1000 / 20 || t === 1) {
-          this.paintTurn(this.progress);
-          last = now;
-        }
-        if (t < 1) requestAnimationFrame(tick);
-        else {
-          this.progress = null;
-          this.render(to.entry, to.index, count);
-          resolve();
-        }
-      };
-      requestAnimationFrame(tick);
-    });
+    this.animating = true;
+    const opening = !from.entry;
+    const closing = !to.entry;
+    // Stage the next native photograph below the leaf before movement starts.
+    this.positionLeaves(closing ? from.index : to.index, order);
+    if (from.entry) from.entry.hidden = false;
+    if (to.entry) to.entry.hidden = false;
+    const leaf =
+      opening || closing
+        ? this.cover
+        : this.leaves.get(direction > 0 ? from.entry : to.entry);
+    leaf.node.hidden = false;
+    leaf.node.inert = true;
+    leaf.node.style.zIndex = "2000";
+    leaf.node.classList.add("is-moving");
+    const startAngle = opening ? 0 : closing ? -180 : direction > 0 ? 0 : -180;
+    const endAngle = startAngle === 0 ? -180 : 0;
+    leaf.node.style.transform = "rotateY(" + endAngle + "deg)";
+    this.coverCount.textContent =
+      String(order.length).padStart(2, "0") + " PHOTOS";
+    const timing = {
+      duration: opening || closing ? 1050 : 900,
+      easing: "cubic-bezier(.42, 0, .2, 1)",
+    };
+    const animations = [
+      leaf.node.animate(
+        [
+          { transform: "rotateY(" + startAngle + "deg)" },
+          { transform: "rotateY(" + endAngle + "deg)" },
+        ],
+        timing,
+      ),
+      leaf.shade.animate(
+        [{ opacity: 0 }, { opacity: 0.22, offset: 0.5 }, { opacity: 0 }],
+        timing,
+      ),
+    ];
+    if (opening || closing) {
+      this.book.classList.add("is-moving");
+      const closed = "translateX(var(--closed-shift))";
+      const open = "translateX(0%)";
+      this.book.style.transform = closing ? closed : open;
+      animations.push(
+        this.book.animate(
+          [
+            { transform: opening ? closed : open },
+            { transform: closing ? closed : open },
+          ],
+          timing,
+        ),
+      );
+    }
+    if (closing) {
+      // The leaves already on the left close with the cover as one bundle.
+      // They remain physically present rather than resetting at the last frame.
+      order.slice(0, from.index).forEach((entry) => {
+        const node = this.leaves.get(entry).node;
+        node.style.transform = "rotateY(0deg)";
+        animations.push(
+          node.animate(
+            [{ transform: "rotateY(-180deg)" }, { transform: "rotateY(0deg)" }],
+            timing,
+          ),
+        );
+      });
+    }
+    try {
+      await Promise.all(animations.map((animation) => animation.finished));
+    } finally {
+      // Keep the exact same leaf and its back face in the spread after landing.
+      this.animating = false;
+      animations.forEach((animation) => animation.cancel());
+      leaf.node.classList.remove("is-moving");
+      this.book.classList.remove("is-moving");
+      this.render(to.entry, to.index, order);
+    }
   }
 };
 
@@ -3364,7 +3487,7 @@ window.PixelAlbum = class PixelAlbum {
   if (!entries.length || !canvas || !window.PixelAlbum) return;
 
   const renderer = new window.PixelAlbum(canvas);
-  const scene = canvas.parentElement;
+  const scene = document.querySelector(".album-scene");
   const pages = document.querySelector(".album-pages");
   const filters = [...document.querySelectorAll(".photo-filter")];
   const cover = document.querySelector(".album-cover");
@@ -3428,7 +3551,7 @@ window.PixelAlbum = class PixelAlbum {
         ? `Cover · ${visible.length} photograph${visible.length === 1 ? "" : "s"}`
         : `Page ${String(current + 1).padStart(2, "0")} / ${String(visible.length).padStart(2, "0")}`;
     scene.dataset.page = current < 0 ? "cover" : String(current + 1);
-    renderer.render(entry, current, visible.length);
+    renderer.render(entry, current, visible);
     lockControls();
     void ready(visible[current + 1]);
   }
@@ -3448,7 +3571,7 @@ window.PixelAlbum = class PixelAlbum {
       await Promise.all([ready(from.entry), ready(to.entry)]);
       cover.hidden = true;
       pages.classList.add("is-turning");
-      await renderer.turn(from, to, direction, visible.length);
+      await renderer.turn(from, to, direction, visible);
       current = index;
     } finally {
       busy = false;
