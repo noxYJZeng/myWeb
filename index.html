@@ -6,16 +6,18 @@
     <meta name="theme-color" content="#050b08" />
     <meta
       name="description"
-      content="Nox Zeng — Computer Science at Georgia Tech. Projects, code, and a few pixel butterflies."
+      content="Nox Zeng — Computer Science master's student at Georgia Tech, specializing in Machine Learning. LLM agents, reinforcement learning, and AI research tools."
     />
     <title>Nox Zeng — Personal Website</title>
     <link rel="icon" type="image/svg+xml" href="assets/butterfly.svg" />
     <link rel="apple-touch-icon" href="assets/favicon.png" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="js/intro.js"></script>
-    <script src="js/garden.js" defer></script>
-    <script src="js/site.js" defer></script>
-    <script src="js/details.js" defer></script>
+    <link rel="stylesheet" href="style.css?v=e308ce322644" />
+    <script src="js/intro.js?v=c462114d2ba2"></script>
+    <script src="js/garden.js?v=2a47d5484334" defer></script>
+    <script src="js/site.js?v=141482794531" defer></script>
+    <script src="js/details.js?v=6c1804c99047" defer></script>
+    <script src="js/cursor.js?v=d8328e7fa5c6" defer></script>
+    <script src="js/selection.js?v=388bb3a83b85" defer></script>
   </head>
   <body id="top">
     <div class="match-intro" id="match-intro" aria-hidden="true">
@@ -32,6 +34,7 @@
         <a href="#about"><span class="nav-index">01</span> About</a>
         <a href="#projects"><span class="nav-index">02</span> Projects</a>
         <a href="#contact"><span class="nav-index">03</span> Contact ↗</a>
+        <a href="#offscreen"><span class="nav-index">04</span> Interests</a>
       </nav>
       <span class="header-note"
         ><span class="status-light"></span> CODE / ART / CURIOSITY</span
@@ -53,7 +56,7 @@
           <p class="hero-intro">
             Computer Science <span class="at-sign">@</span> Georgia Tech<br /><span
               class="hero-thread"
-              >Intelligence × Media</span
+              >M.S. · Machine Learning</span
             >
           </p>
           <div class="hero-actions">
@@ -162,55 +165,32 @@
         aria-labelledby="about-title"
       >
         <div class="section-marker">
-          <span>01 / ABOUT ME</span><span aria-hidden="true">↘</span>
+          <span>01 / INTRO</span><span aria-hidden="true">↘</span>
         </div>
         <div class="about-main">
           <h2 id="about-title">About Me</h2>
-          <div class="about-columns">
-            <div>
-              <p>
-                I’m Nox Zeng, a Computer Science student at
-                <a
-                  href="https://www.gatech.edu/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Georgia Tech</a
-                >, exploring Intelligence & Media.
-              </p>
-              <p>
-                I build web and mobile apps and work on simulations and machine
-                learning projects.
-              </p>
-            </div>
-            <div>
-              <p>
-                I enjoy reading, Polaroid and film photography, drawing and
-                painting, and visiting historic sites, especially ancient tombs.
-              </p>
-            </div>
-          </div>
-          <div class="toolbox" id="skills">
-            <span class="eyebrow">LANGUAGES & TOOLS</span>
-            <ul aria-label="Selected tools and languages">
-              <li>Java</li>
-              <li>Python</li>
-              <li>C / C++</li>
-              <li>TypeScript</li>
-              <li>React</li>
-              <li>Vue</li>
-              <li>PyTorch</li>
-              <li>Git</li>
-            </ul>
-            <details class="all-tools">
-              <summary>More tools <span aria-hidden="true">+</span></summary>
-              <p>
-                JavaScript · C# · MATLAB · SQL · HTML & CSS · Node.js · NestJS ·
-                PostgreSQL · Firebase · MongoDB · Docker · Redis · TensorFlow ·
-                CesiumJS · Leaflet · Chart.js · MPAndroidChart · Tailwind CSS ·
-                MVVM · Design patterns · Agile collaboration
-              </p>
-            </details>
-          </div>
+          <p class="about-copy">
+            I’m Nox, a <strong>Computer Science master’s student</strong> at
+            <a
+              href="https://www.gatech.edu/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Georgia Tech</a
+            >, where I also earned my <strong>B.S.</strong> My focus is machine
+            learning, and my current research explores RSI. I’ve also worked on
+            LLM agents and reinforcement learning, including an AI internship at
+            ZTE, where I built distributed training pipelines for multi-turn
+            agents. I recently submitted a paper to
+            <a
+              href="https://aclrollingreview.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >ACL Rolling Review (ARR)</a
+            >
+            and am in team matching for Google’s 2027 SWE internship. Outside of
+            CS, I enjoy reading, Polaroid and film photography, drawing and
+            painting, and visiting historic sites, especially ancient tombs.
+          </p>
         </div>
       </section>
       <section
@@ -231,113 +211,141 @@
             >More on GitHub <span aria-hidden="true">↗</span></a
           >
         </div>
+        <article class="project-focus" aria-labelledby="claim2code-title">
+          <div>
+            <p class="eyebrow">AI / RESEARCH TOOLS</p>
+            <h3 id="claim2code-title">Claim2Code</h3>
+            <span class="project-stack"
+              >PYTHON · FASTAPI · PYTORCH · PGVECTOR</span
+            >
+          </div>
+          <p>
+            An AI agent that checks claims in ML papers against PyTorch code. It
+            combines embeddings with symbol/dependency signals, served through
+            FastAPI with PostgreSQL and pgvector.
+          </p>
+        </article>
         <div class="projects-grid">
           <a
             class="project"
             href="https://nasa-explorer-z.netlify.app/apod"
             target="_blank"
             rel="noopener noreferrer"
-            ><div class="project-image nasa-image">
-              <img
-                src="assets/nasa.png"
-                alt="NASA Explorer illustration of a rocket and a star"
-                loading="lazy"
-                width="800"
-                height="500"
-              /><span class="image-index">01 / NASA EXPLORER</span
-              ><span class="project-open" aria-hidden="true">↗</span>
-            </div>
-            <div class="project-title">
-              <h3>NASA Explorer</h3>
-              <span>SPACE</span>
-            </div>
-            <p>
-              A NASA API dashboard with real-time ISS tracking, 2D/3D maps,
-              asteroid statistics, and an astronomy picture of the day.
-            </p>
-            <span class="project-stack"
-              >VUE · TYPESCRIPT · CESIUMJS · NASA APIs</span
-            ></a
           >
+            <div class="project-sheet">
+              <div class="project-fileline" aria-hidden="true">
+                <span>01 / SPACE</span><span class="project-open">↗</span>
+              </div>
+              <div class="project-frame">
+                <div class="project-image nasa-image">
+                  <img
+                    src="assets/nasa.png"
+                    alt="NASA Explorer illustration of a rocket and a star"
+                    loading="lazy"
+                    width="800"
+                    height="500"
+                  />
+                </div>
+              </div>
+              <h3>NASA Explorer</h3>
+              <p>
+                A NASA API dashboard with real-time ISS tracking, 2D/3D maps,
+                asteroid statistics, and an astronomy picture of the day.
+              </p>
+              <span class="project-stack"
+                >VUE · TYPESCRIPT · CESIUMJS · NASA APIs</span
+              >
+            </div>
+          </a>
           <a
             class="project"
             href="https://github.com/noxYJZeng/lbm-generating-obstacles-randomly"
             target="_blank"
             rel="noopener noreferrer"
-            ><div class="project-image fluid-image">
-              <img
-                src="assets/lbm.png"
-                alt="LBM fluid simulation with generated obstacles"
-                loading="lazy"
-                width="800"
-                height="500"
-              /><span class="image-index">02 / FLUID SIMULATION</span
-              ><span class="project-open" aria-hidden="true">↗</span>
-            </div>
-            <div class="project-title">
-              <h3>LBM Fluid Simulation</h3>
-              <span>LBM</span>
-            </div>
-            <p>
-              A 2D fluid solver with randomized obstacle generation, built to
-              produce varied simulation data for machine learning.
-            </p>
-            <span class="project-stack"
-              >PYTHON · LBM · MACHINE LEARNING</span
-            ></a
           >
+            <div class="project-sheet">
+              <div class="project-fileline" aria-hidden="true">
+                <span>02 / SIMULATION</span><span class="project-open">↗</span>
+              </div>
+              <div class="project-frame">
+                <div class="project-image fluid-image">
+                  <img
+                    src="assets/lbm.png"
+                    alt="LBM fluid simulation with generated obstacles"
+                    loading="lazy"
+                    width="800"
+                    height="500"
+                  />
+                </div>
+              </div>
+              <h3>LBM Fluid Simulation</h3>
+              <p>
+                A 2D fluid solver with randomized obstacle generation, built to
+                produce varied simulation data for machine learning.
+              </p>
+              <span class="project-stack">PYTHON · LBM · MACHINE LEARNING</span>
+            </div>
+          </a>
           <a
             class="project"
             href="https://noxyjzeng.github.io/HealthTracker/"
             target="_blank"
             rel="noopener noreferrer"
-            ><div class="project-image health-image">
-              <img
-                src="assets/healthtracker.png"
-                alt="HealthTracker logo on a green grid"
-                loading="lazy"
-                width="800"
-                height="500"
-              /><span class="image-index">03 / HEALTHTRACKER</span
-              ><span class="project-open" aria-hidden="true">↗</span>
-            </div>
-            <div class="project-title">
-              <h3>HealthTracker</h3>
-              <span>WELLNESS</span>
-            </div>
-            <p>
-              Log calories, track workouts, and join community challenges with
-              role-based features and a clear view of your progress.
-            </p>
-            <span class="project-stack">MOBILE · MVVM · COMMUNITY</span></a
           >
+            <div class="project-sheet">
+              <div class="project-fileline" aria-hidden="true">
+                <span>03 / WELLNESS</span><span class="project-open">↗</span>
+              </div>
+              <div class="project-frame">
+                <div class="project-image health-image">
+                  <img
+                    src="assets/healthtracker.png"
+                    alt="HealthTracker logo on a green grid"
+                    loading="lazy"
+                    width="800"
+                    height="500"
+                  />
+                </div>
+              </div>
+              <h3>HealthTracker</h3>
+              <p>
+                Log calories, track workouts, and join community challenges with
+                role-based features and a clear view of your progress.
+              </p>
+              <span class="project-stack">MOBILE · MVVM · COMMUNITY</span>
+            </div>
+          </a>
           <a
             class="project"
             href="https://noxyjzeng.github.io/ATLSFW_App_Enhancement/"
             target="_blank"
             rel="noopener noreferrer"
-            ><div class="project-image fashion-image">
-              <img
-                src="assets/atlsfw.png"
-                alt="ATLSFW circular sustainable fashion logo"
-                loading="lazy"
-                width="800"
-                height="500"
-              /><span class="image-index">04 / ATLSFW</span
-              ><span class="project-open" aria-hidden="true">↗</span>
-            </div>
-            <div class="project-title">
-              <h3>ATLSFW</h3>
-              <span>FASHION</span>
-            </div>
-            <p>
-              Connecting people with sustainable fashion, local makers, and the
-              stories behind what we wear.
-            </p>
-            <span class="project-stack"
-              >MOBILE · SUSTAINABILITY · ROLE-BASED UX</span
-            ></a
           >
+            <div class="project-sheet">
+              <div class="project-fileline" aria-hidden="true">
+                <span>04 / FASHION</span><span class="project-open">↗</span>
+              </div>
+              <div class="project-frame">
+                <div class="project-image fashion-image">
+                  <img
+                    src="assets/atlsfw.png"
+                    alt="ATLSFW circular sustainable fashion logo"
+                    loading="lazy"
+                    width="800"
+                    height="500"
+                  />
+                </div>
+              </div>
+              <h3>ATLSFW</h3>
+              <p>
+                Connecting people with sustainable fashion, local makers, and
+                the stories behind what we wear.
+              </p>
+              <span class="project-stack"
+                >MOBILE · SUSTAINABILITY · ROLE-BASED UX</span
+              >
+            </div>
+          </a>
         </div>
         <a
           class="project-extra"
@@ -357,32 +365,67 @@
         id="contact"
         aria-labelledby="contact-title"
       >
-        <div class="contact-top">
-          <span class="eyebrow">03 / CONTACT</span
-          ><span class="contact-status"
-            ><span class="status-light"></span> GET IN TOUCH</span
-          >
-        </div>
-        <h2 id="contact-title">Contact</h2>
-        <p>Email me about projects or collaborations.</p>
-        <a class="contact-email" href="mailto:xzeng0501@gmail.com"
-          >xzeng0501@gmail.com <span aria-hidden="true">↗</span></a
-        >
-        <div class="contact-bottom">
-          <span>EMAIL / GITHUB / LINKEDIN</span>
-          <div>
-            <a
-              href="https://github.com/noxYJZeng"
-              target="_blank"
-              rel="noopener noreferrer"
-              >GitHub ↗</a
-            ><a
-              href="https://www.linkedin.com/in/nox-zeng-2a6161294/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >LinkedIn ↗</a
+        <div class="contact-stack">
+          <div class="paper-layer paper-layer-back" aria-hidden="true"></div>
+          <div class="paper-layer paper-layer-middle" aria-hidden="true"></div>
+          <div class="contact-paper">
+            <div class="contact-top">
+              <span>03 / FIND ME</span>
+              <img src="assets/butterfly.svg" width="34" height="28" alt="" />
+            </div>
+            <h2 id="contact-title">Contact</h2>
+            <p>For work, projects, or a quick hello.</p>
+            <a class="contact-email" href="mailto:xzeng0501@gmail.com"
+              >xzeng0501@gmail.com <span aria-hidden="true">↗</span></a
             >
+            <div class="contact-links">
+              <a
+                href="https://github.com/noxYJZeng"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                title="GitHub"
+              >
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/nox-zeng-2a6161294/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+              >
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"
+                  />
+                </svg>
+              </a>
+            </div>
           </div>
+          <img
+            class="contact-pen"
+            src="assets/fountain-pen.svg"
+            width="120"
+            height="48"
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+          />
         </div>
       </section>
 
@@ -393,71 +436,129 @@
       >
         <div class="section-heading">
           <div>
-            <p class="eyebrow">04 / INTERESTS</p>
+            <p class="eyebrow">04 / KNOW MORE ABOUT ME</p>
             <h2 id="offscreen-title">Interests</h2>
           </div>
         </div>
-        <div class="interest-grid">
-          <article class="interest-card">
-            <div class="interest-art">
-              <canvas
-                width="240"
-                height="156"
-                data-pixels="reading"
-                role="img"
-                aria-label="Pixel animation of an open book with a slowly turning page."
-                >An open book in pixels.</canvas
+        <div class="interest-list">
+          <article
+            class="interest-row interest-row--reading"
+            aria-labelledby="interest-reading"
+          >
+            <div class="interest-copy">
+              <span class="interest-index">01</span>
+              <h3 id="interest-reading">Reading</h3>
+              <p>
+                I read a bit of everything, but history books are my favorite.
+              </p>
+              <p>
+                Lately I’ve been puzzling over Nabokov’s <em>Pale Fire</em>.
+              </p>
+            </div>
+            <div class="interest-visual">
+              <div class="interest-art">
+                <canvas
+                  width="240"
+                  height="156"
+                  data-pixels="reading"
+                  role="img"
+                  aria-label="Pixel animation of an open book with a slowly turning page."
+                  >An open book in pixels.</canvas
+                >
+              </div>
+            </div>
+          </article>
+          <article
+            class="interest-row interest-row--camera"
+            aria-labelledby="interest-camera"
+          >
+            <div class="interest-copy">
+              <span class="interest-index">02</span>
+              <h3 id="interest-camera">Polaroid &amp; Film</h3>
+              <p>
+                I love Polaroid and film photography for the surprises,
+                including the occasional “oh no.”
+              </p>
+              <p>
+                While I’m waiting for a photo to develop, I never quite know
+                what I’m going to get. I like that uncertainty and the excuse to
+                experiment.
+              </p>
+              <a class="interest-gallery-link" href="polaroids.html"
+                >View my Polaroids <span aria-hidden="true">↗</span></a
               >
             </div>
-            <span class="interest-index">01</span>
-            <h3>Reading</h3>
-            <p>Books and literature.</p>
-          </article>
-          <article class="interest-card">
-            <div class="interest-art">
-              <canvas
-                width="240"
-                height="156"
-                data-pixels="camera"
-                role="img"
-                aria-label="Front view of a pixel Polaroid SX-70 folding camera with a silver frame, brown leather, and black bellows. A white-bordered photograph emerges from the centered black film slot and slowly develops, beside a roll of film."
-                >A Polaroid SX-70 folding camera and a roll of film in
-                pixels.</canvas
-              >
+            <div class="interest-visual">
+              <div class="interest-art">
+                <canvas
+                  width="240"
+                  height="156"
+                  data-pixels="camera"
+                  role="img"
+                  aria-label="Front view of a pixel Polaroid SX-70 folding camera. A photograph emerges from its centered film slot and slowly develops beside a roll of film."
+                  >A Polaroid SX-70 folding camera and a roll of film in
+                  pixels.</canvas
+                >
+              </div>
             </div>
-            <span class="interest-index">02</span>
-            <h3>Polaroid &amp; Film</h3>
-            <p>Instant and film photography.</p>
           </article>
-          <article class="interest-card">
-            <div class="interest-art">
+          <article
+            class="interest-row interest-row--painting"
+            aria-labelledby="interest-painting"
+          >
+            <div class="interest-copy">
+              <span class="interest-index">03</span>
+              <h3 id="interest-painting">Drawing &amp; Painting</h3>
+              <p>
+                With watercolor, I love seeing how water and pigment spread and
+                blend on cotton paper. Changing the amount of water or the mix
+                of colors can lead to very different results.
+              </p>
+              <p>I also enjoy drawing and painting with other materials.</p>
+            </div>
+            <div class="interest-visual interest-visual--painting">
+              <div class="interest-art" aria-hidden="true"></div>
               <canvas
-                width="240"
-                height="156"
+                width="360"
+                height="260"
                 data-pixels="painting"
                 role="img"
-                aria-label="Pixel animation of a paintbrush adding green and amber marks to a drawing."
-                >A paintbrush and a small painting in pixels.</canvas
+                aria-label="A detailed pixel watercolor brush paints a butterfly with translucent washes, pigment grain, and soft bleeding edges directly on the paper. Its handle moves beyond the page."
+                >A butterfly being painted in watercolors, with a large brush
+                extending past the paper.</canvas
               >
             </div>
-            <span class="interest-index">03</span>
-            <h3>Drawing &amp; Painting</h3>
-            <p>Sketching and watercolor painting.</p>
           </article>
-          <article class="interest-card">
-            <div class="interest-art">
-              <canvas
-                width="240"
-                height="156"
-                data-pixels="ruins"
-                role="img"
-                aria-label="Pixel animation of a mossy ancient tomb entrance with a small flickering lantern."
-                >A historic tomb entrance and a small lantern in pixels.</canvas
-              >
+          <article
+            class="interest-row interest-row--ruins"
+            aria-labelledby="interest-ruins"
+          >
+            <div class="interest-copy">
+              <span class="interest-index">04</span>
+              <h3 id="interest-ruins">Historic Sites</h3>
+              <p>
+                I like visiting historic sites of all kinds, especially ancient
+                tombs. There’s a lot to learn from the architecture, carvings,
+                and inscriptions.
+              </p>
+              <p>
+                I have a lot of respect for the people resting there, so I try
+                to be a good guest and leave everything as I found it.
+              </p>
             </div>
-            <span class="interest-index">04</span>
-            <h3>Historic Sites</h3>
-            <p>Historic sites, especially ancient tombs.</p>
+            <div class="interest-visual">
+              <div class="interest-art">
+                <canvas
+                  width="240"
+                  height="156"
+                  data-pixels="ruins"
+                  role="img"
+                  aria-label="Pixel animation of a mossy ancient tomb entrance with a small flickering lantern."
+                  >A historic tomb entrance and a small lantern in
+                  pixels.</canvas
+                >
+              </div>
+            </div>
           </article>
         </div>
       </section>
@@ -471,20 +572,16 @@
             >Thanks for stopping by.<span aria-hidden="true"> _</span></span
           >
         </div>
-        <figure class="waxwing-window">
-          <div class="waxwing-label">
-            <span>WAXWING</span><span aria-hidden="true">02</span>
-          </div>
-          <div class="waxwing-art">
-            <canvas
-              width="360"
-              height="220"
-              data-pixels="waxwing"
-              role="img"
-              aria-label="A large pixel waxwing that looks around, preens its feathers, stretches and flutters its wings, hops along the branch, and pecks at berries."
-              >A waxwing resting on a branch, drawn in large pixels.</canvas
-            >
-          </div>
+        <figure class="waxwing-scene">
+          <canvas
+            width="1180"
+            height="360"
+            data-pixels="waxwing"
+            role="img"
+            aria-label="A large pixel waxwing moving freely among leafy branches, flowers, berries, and fireflies on the page. It looks around, preens, stretches its wings, hops, and pecks at berries."
+            >A waxwing among flowering branches, drawn in pixels directly on the
+            page.</canvas
+          >
         </figure>
       </section>
     </main>

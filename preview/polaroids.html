@@ -4722,6 +4722,8 @@ window.PixelAlbum = class PixelAlbum {
           );
     button.addEventListener("click", () => {
       if (busy) return;
+      // A location change is a new action, not the delayed click from a page tap.
+      ignoreClickUntil = 0;
       const from = { entry: visible[current] || null, index: current };
       visible = matching;
       picker.querySelector(".location-current").textContent =

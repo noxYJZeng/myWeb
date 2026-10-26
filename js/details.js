@@ -381,64 +381,497 @@
     line(ctx, 207, 68, 215, 68, "#687e53");
     line(ctx, 215, 68, 215, 110, "#687e53");
   }
-  const brushMarks = [
-    [88, 69],
-    [86, 65],
-    [84, 61],
-    [80, 56],
-    [75, 52],
-    [74, 57],
-    [76, 63],
-    [80, 68],
-    [86, 73],
-    [92, 77],
-    [96, 81],
-    [101, 82],
-    [106, 80],
-    [112, 76],
-    [119, 72],
-    [124, 66],
-    [128, 59],
-    [128, 53],
-    [122, 56],
-    [117, 62],
-    [113, 68],
-    [108, 74],
-    [104, 78],
-    [99, 83],
-    [93, 91],
-    [88, 97],
-    [86, 91],
-    [91, 85],
-    [99, 80],
-    [107, 84],
-    [115, 91],
-    [118, 97],
-    [111, 95],
-    [106, 88],
-    [101, 82],
-  ];
-  function painting(ctx, t) {
-    box(ctx, 50, 21, 118, 107, "#436945");
-    box(ctx, 56, 27, 106, 95, "#b9c1a0");
-    box(ctx, 63, 34, 92, 81, "#cdd1b4");
-    line(ctx, 63, 129, 51, 143, "#869367", 3);
-    line(ctx, 154, 129, 166, 143, "#869367", 3);
-    box(ctx, 46, 126, 126, 5, "#829166");
-    const step = Math.min(brushMarks.length - 1, Math.floor((t % 7) * 7));
-    for (let i = 0; i <= step; i++) {
-      const [x, y] = brushMarks[i];
-      box(ctx, x, y, 4, 4, i % 5 === 0 ? "#b39e6c" : "#4e9364");
-    }
-    const [x, y] = brushMarks[step];
-    line(ctx, x + 3, y + 1, x + 27, y - 23, "#8d7955", 3);
-    line(ctx, x + 2, y + 2, x + 8, y - 4, "#396b49", 3);
-    box(ctx, 183, 109, 28, 17, "#899772");
-    box(ctx, 180, 113, 33, 10, "#899772");
-    box(ctx, 186, 113, 5, 5, "#68a677");
-    box(ctx, 194, 116, 5, 5, "#c29d64");
-    box(ctx, 202, 112, 5, 5, "#749b9b");
+  // One continuous route includes short pen lifts between separate strokes.
+  function sampleCurve(a, b, c, d, count = 20) {
+    return Array.from({ length: count + 1 }, (_, i) => {
+      const p = i / count;
+      const q = 1 - p;
+      return [0, 1].map(
+        (axis) =>
+          q ** 3 * a[axis] +
+          3 * q * q * p * b[axis] +
+          3 * q * p * p * c[axis] +
+          p ** 3 * d[axis],
+      );
+    });
   }
+  function joinedCurves(start, curves) {
+    const result = [start];
+    for (const [b, c, d] of curves) {
+      result.push(...sampleCurve(result[result.length - 1], b, c, d).slice(1));
+    }
+    return result;
+  }
+  const leftForewing = joinedCurves(
+    [168, 140],
+    [
+      [
+        [150, 110],
+        [118, 84],
+        [88, 91],
+      ],
+      [
+        [77, 105],
+        [88, 130],
+        [107, 141],
+      ],
+      [
+        [128, 153],
+        [151, 149],
+        [168, 144],
+      ],
+    ],
+  );
+  const leftHindwing = joinedCurves(
+    [167, 148],
+    [
+      [
+        [142, 144],
+        [118, 149],
+        [107, 167],
+      ],
+      [
+        [108, 186],
+        [128, 197],
+        [143, 183],
+      ],
+      [
+        [152, 174],
+        [154, 157],
+        [167, 148],
+      ],
+    ],
+  );
+  const mirrorWing = (points) => points.map(([x, y]) => [340 - x, y]);
+  const butterflyWings = [
+    leftForewing,
+    mirrorWing(leftForewing),
+    leftHindwing,
+    mirrorWing(leftHindwing),
+  ];
+  // Broad wet brush passes supply pigment; the wing shapes only mask the wash.
+  const leftForewash = joinedCurves(
+    [163, 140],
+    [
+      [
+        [142, 125],
+        [113, 100],
+        [93, 101],
+      ],
+      [
+        [88, 112],
+        [100, 129],
+        [120, 138],
+      ],
+      [
+        [139, 147],
+        [145, 136],
+        [126, 120],
+      ],
+      [
+        [117, 112],
+        [104, 109],
+        [101, 117],
+      ],
+      [
+        [111, 133],
+        [137, 140],
+        [158, 141],
+      ],
+    ],
+  );
+  const leftHindwash = joinedCurves(
+    [161, 153],
+    [
+      [
+        [145, 153],
+        [122, 158],
+        [116, 172],
+      ],
+      [
+        [119, 186],
+        [133, 184],
+        [142, 174],
+      ],
+      [
+        [151, 161],
+        [143, 156],
+        [128, 169],
+      ],
+      [
+        [123, 179],
+        [137, 181],
+        [150, 163],
+      ],
+    ],
+  );
+  const washPaths = [
+    leftForewash,
+    mirrorWing(leftForewash),
+    leftHindwash,
+    mirrorWing(leftHindwash),
+  ];
+  const detailPaths = [
+    [
+      [169, 123],
+      [167, 143],
+      [170, 178],
+      [173, 144],
+      [171, 123],
+    ],
+    joinedCurves(
+      [169, 124],
+      [
+        [
+          [164, 115],
+          [158, 112],
+          [157, 106],
+        ],
+      ],
+    ),
+    joinedCurves(
+      [172, 124],
+      [
+        [
+          [178, 116],
+          [183, 111],
+          [185, 107],
+        ],
+      ],
+    ),
+    [
+      [166, 142],
+      [128, 116],
+      [100, 104],
+    ],
+    [
+      [162, 146],
+      [123, 135],
+      [103, 119],
+    ],
+    [
+      [164, 152],
+      [137, 172],
+      [122, 182],
+    ],
+    [
+      [174, 142],
+      [212, 116],
+      [240, 104],
+    ],
+    [
+      [178, 146],
+      [217, 135],
+      [237, 119],
+    ],
+    [
+      [176, 152],
+      [203, 172],
+      [218, 182],
+    ],
+  ];
+  const paintingStrokes = [
+    ...washPaths.map((points, wing) => ({ points, wing })),
+    ...detailPaths.map((points) => ({ points, wing: -1 })),
+  ];
+  const drawingRoute = [];
+  const washRanges = [];
+  let routeLength = 0;
+  let lastPoint = null;
+  for (const { points, wing } of paintingStrokes) {
+    let start;
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
+      if (lastPoint) {
+        const length = Math.hypot(
+          point[0] - lastPoint[0],
+          point[1] - lastPoint[1],
+        );
+        if (length) {
+          if (i === 1) start = routeLength;
+          drawingRoute.push({
+            from: lastPoint,
+            to: point,
+            start: routeLength,
+            end: routeLength + length,
+            ink: i > 0,
+            wing,
+          });
+          routeLength += length;
+        }
+      }
+      lastPoint = point;
+    }
+    if (wing >= 0) washRanges[wing] = { start, end: routeLength };
+  }
+  function insideWing(x, y, points) {
+    let inside = false;
+    for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+      const a = points[i],
+        b = points[j];
+      if (
+        a[1] > y !== b[1] > y &&
+        x < ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]) + a[0]
+      )
+        inside = !inside;
+    }
+    return inside;
+  }
+  function segmentDistance(x, y, a, b) {
+    const dx = b[0] - a[0],
+      dy = b[1] - a[1];
+    const p = Math.max(
+      0,
+      Math.min(
+        1,
+        ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy || 1),
+      ),
+    );
+    return Math.hypot(x - a[0] - dx * p, y - a[1] - dy * p);
+  }
+  function pigmentNoise(x, y, seed) {
+    const value = Math.sin(x * 12.9898 + y * 78.233 + seed * 37.1) * 43758.5453;
+    return value - Math.floor(value);
+  }
+  // Cache paper-grain pigment cells and their first contact with the wet brush.
+  const watercolorCells = butterflyWings.map((wing, index) => {
+    const path = washPaths[index];
+    const lengths = [0];
+    for (let i = 1; i < path.length; i++)
+      lengths.push(
+        lengths[i - 1] +
+          Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]),
+      );
+    const cells = [];
+    const xs = wing.map((p) => p[0]),
+      ys = wing.map((p) => p[1]);
+    for (
+      let y = Math.floor((Math.min(...ys) - 3) / 2) * 2;
+      y <= Math.max(...ys) + 3;
+      y += 2
+    ) {
+      for (
+        let x = Math.floor((Math.min(...xs) - 3) / 2) * 2;
+        x <= Math.max(...xs) + 3;
+        x += 2
+      ) {
+        const inside = insideWing(x + 1, y + 1, wing);
+        let edge = Infinity;
+        for (let i = 0; i < wing.length; i++)
+          edge = Math.min(
+            edge,
+            segmentDistance(x, y, wing[i], wing[(i + 1) % wing.length]),
+          );
+        const grain = pigmentNoise(x, y, index);
+        if (!inside && (edge > 2.5 || grain > 0.55)) continue;
+        let firstTouch = 0.88;
+        for (let i = 0; i < path.length; i++) {
+          if (Math.hypot(x - path[i][0], y - path[i][1]) < 18) {
+            firstTouch = Math.min(
+              0.88,
+              (lengths[i] / lengths[lengths.length - 1]) * 0.88,
+            );
+            break;
+          }
+        }
+        const cloud =
+          0.5 +
+          0.25 * Math.sin(x * 0.16 + y * 0.09) +
+          0.25 * Math.sin(y * 0.21 - x * 0.06);
+        const warmSpot =
+          index < 2 &&
+          Math.hypot(x - (index ? 226 : 114), (y - 116) * 1.2) < 12;
+        const color = warmSpot
+          ? grain > 0.45
+            ? "#ba9754"
+            : "#cfb46c"
+          : edge < 3
+            ? "#367d70"
+            : cloud > 0.6
+              ? "#4b9b91"
+              : cloud > 0.35
+                ? "#72ac94"
+                : "#98b59a";
+        let alpha = inside ? 0.34 + cloud * 0.2 + grain * 0.13 : 0.09;
+        if (edge < 3 && inside) alpha += 0.12;
+        if (warmSpot) alpha += 0.12;
+        if (grain > 0.94) alpha *= 0.18;
+        cells.push({ x, y, color, alpha, touch: firstTouch });
+      }
+    }
+    return cells;
+  });
+  function brush(ctx, tip, angle, lifted) {
+    const direction = [Math.cos(angle), Math.sin(angle)];
+    const point = (along, across = 0) => [
+      Math.round(tip[0] + along * direction[0] - across * direction[1]),
+      Math.round(tip[1] + along * direction[1] + across * direction[0]),
+    ];
+    const shape = (points, color) =>
+      polygon(
+        ctx,
+        points.map(([a, b]) => point(a, b)),
+        color,
+        1,
+      );
+    // A page-only shadow shows the brush lifting without painting a new panel.
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(21, 46, 276, 197);
+    ctx.clip();
+    ctx.globalAlpha = lifted ? 0.09 : 0.16;
+    polygon(
+      ctx,
+      [
+        [0, 2],
+        [18, -4],
+        [108, -1],
+        [110, 4],
+        [24, 8],
+      ].map(([a, b]) => {
+        const p = point(a, b);
+        return [p[0] + 4, p[1] + (lifted ? 9 : 4)];
+      }),
+      "#353d2d",
+      1,
+    );
+    ctx.restore();
+    // Long faceted wooden handle, metal ferrule, individual bristles, wet tip.
+    shape(
+      [
+        [25, -5],
+        [98, -3],
+        [109, -1],
+        [110, 1],
+        [98, 3],
+        [25, 5],
+      ],
+      "#4b3b2b",
+    );
+    shape(
+      [
+        [28, -2],
+        [99, -2],
+        [108, 0],
+        [99, 1],
+        [28, 2],
+      ],
+      "#a58250",
+    );
+    line(ctx, ...point(33, -2), ...point(98, -2), "#d2b77c", 1);
+    line(ctx, ...point(38, 2), ...point(94, 2), "#735039", 1);
+    shape(
+      [
+        [13, -4],
+        [27, -5],
+        [30, -4],
+        [30, 4],
+        [27, 5],
+        [13, 4],
+      ],
+      "#738174",
+    );
+    shape(
+      [
+        [15, -2],
+        [28, -3],
+        [28, 0],
+        [15, 1],
+      ],
+      "#c2c9b0",
+    );
+    line(ctx, ...point(17, -4), ...point(17, 4), "#8e9277", 1);
+    line(ctx, ...point(25, -4), ...point(25, 4), "#e1dcc0", 1);
+    shape(
+      [
+        [0, 0],
+        [5, -2],
+        [13, -4],
+        [15, 4],
+        [6, 2],
+      ],
+      "#6c7953",
+    );
+    for (let i = -1; i <= 1; i++)
+      line(
+        ctx,
+        ...point(4, i),
+        ...point(13, i * 2),
+        i ? "#9b9a6b" : "#b5b58a",
+        1,
+      );
+    shape(
+      [
+        [0, 0],
+        [5, -1],
+        [7, 1],
+        [2, 2],
+      ],
+      "#315a41",
+    );
+    line(ctx, ...point(96, -2), ...point(96, 2), "#b3b798", 1);
+  }
+  function painting(ctx, t) {
+    const cycle = t % 12;
+    const progress = Math.min(1, Math.max(0, (cycle - 0.55) / 8.1));
+    const distance = progress * routeLength;
+    const fade = cycle > 11.4 ? Math.max(0, (12 - cycle) / 0.6) : 1;
+    ctx.save();
+    // The transparent pigment bleeds into the page, without a pencil outline.
+    ctx.beginPath();
+    ctx.rect(21, 46, 276, 197);
+    ctx.clip();
+    for (let wing = 0; wing < watercolorCells.length; wing++) {
+      const range = washRanges[wing];
+      const amount = Math.max(
+        0,
+        Math.min(1, (distance - range.start) / (range.end - range.start)),
+      );
+      for (const cell of watercolorCells[wing]) {
+        const wet = Math.max(0, Math.min(1, (amount - cell.touch) / 0.12));
+        if (!wet) continue;
+        ctx.globalAlpha = fade * cell.alpha * wet;
+        box(ctx, cell.x, cell.y, 2, 2, cell.color);
+      }
+    }
+    let tip = drawingRoute[0].from;
+    let lifted = cycle < 0.55 || progress === 1;
+    for (const segment of drawingRoute) {
+      if (distance < segment.start) break;
+      const amount = Math.min(
+        1,
+        (distance - segment.start) / (segment.end - segment.start),
+      );
+      tip = segment.from.map((n, axis) => n + (segment.to[axis] - n) * amount);
+      lifted = !segment.ink;
+      if (segment.ink && segment.wing < 0) {
+        ctx.globalAlpha = fade * 0.55;
+        line(ctx, ...segment.from, ...tip, "#487968", 1);
+      }
+      if (amount < 1) break;
+    }
+    ctx.restore();
+    // Lift smoothly to a resting position outside the sheet, then return.
+    const rest = [256, 102];
+    let drawingAngle = 1;
+    if (progress === 1) {
+      const p = Math.min(1, (cycle - 8.65) / 0.75);
+      const eased = p * p * (3 - 2 * p);
+      drawingAngle = 1 - eased;
+      tip = tip.map((n, i) => n + (rest[i] - n) * eased);
+      lifted = true;
+    } else if (cycle < 0.55) {
+      const p = cycle / 0.55;
+      const eased = p * p * (3 - 2 * p);
+      drawingAngle = eased;
+      tip = rest.map((n, i) => n + (drawingRoute[0].from[i] - n) * eased);
+      lifted = true;
+    }
+    const lift = lifted ? 3 + Math.sin(t * 2) : 0;
+    const angle = -0.56 + (-0.23 + Math.sin(t * 0.9) * 0.04) * drawingAngle;
+    brush(ctx, [tip[0], tip[1] - lift], angle, lifted);
+  }
+
   function ruins(ctx, t) {
     box(ctx, 30, 132, 182, 6, "#3b5339");
     box(ctx, 45, 127, 151, 5, "#6a7a59");
@@ -852,14 +1285,212 @@
       line(ctx, 22, footY - 1, 26, footY - 1, "#9b9972", 1);
     }
     ctx.restore();
-    box(ctx, 32, 34, 3, 3, "#527b4d");
-    box(ctx, 312, 49, 2, 2, "#8a9b67");
   }
-  const painters = { reading: book, camera, painting, ruins, waxwing };
+
+  // Transparent scenery grows across the page instead of filling a panel.
+  function curve(ctx, a, b, c, d, color, size = 2) {
+    let previous = a;
+    for (let i = 1; i <= 40; i++) {
+      const p = i / 40;
+      const q = 1 - p;
+      const next = [0, 1].map(
+        (axis) =>
+          q ** 3 * a[axis] +
+          3 * q * q * p * b[axis] +
+          3 * q * p * p * c[axis] +
+          p ** 3 * d[axis],
+      );
+      line(ctx, ...previous, ...next, color, size);
+      previous = next;
+    }
+  }
+  function sceneLeaf(ctx, x, y, dx, dy, color) {
+    polygon(
+      ctx,
+      [
+        [x, y],
+        [x + dx * 0.3 - dy * 0.23, y + dy * 0.3 + dx * 0.23],
+        [x + dx, y + dy],
+        [x + dx * 0.6 + dy * 0.2, y + dy * 0.6 - dx * 0.2],
+      ],
+      color,
+    );
+    line(ctx, x, y, x + dx * 0.85, y + dy * 0.85, "#8b9a6955", 1);
+  }
+  function sceneSprig(ctx, x, y, dx, dy, t, color = "#3f664b") {
+    const sway = Math.sin(t * 0.6 + x) * 2;
+    curve(
+      ctx,
+      [x, y],
+      [x + dx * 0.3, y + dy * 0.25],
+      [x + dx * 0.8 + sway, y + dy * 0.7],
+      [x + dx + sway, y + dy],
+      "#4e684b",
+    );
+    for (let i = 1; i <= 5; i++) {
+      const p = i / 6;
+      const side = i % 2 ? 1 : -1;
+      const leafX = x + dx * p + sway * p;
+      const leafY = y + dy * p;
+      sceneLeaf(
+        ctx,
+        leafX,
+        leafY,
+        dx * 0.12 - dy * 0.25 * side,
+        dy * 0.12 + dx * 0.25 * side,
+        color,
+      );
+    }
+  }
+  function sceneFlower(ctx, x, y, color = "#bfb399") {
+    for (const [dx, dy] of [
+      [-5, -2],
+      [0, -6],
+      [5, -2],
+      [3, 4],
+      [-3, 4],
+    ]) {
+      box(ctx, x + dx, y + dy, 4, 4, color);
+    }
+    box(ctx, x, y, 3, 3, "#b79459");
+    box(ctx, x + 1, y, 1, 1, "#e5cf99");
+  }
+  const birdLayer = document.createElement("canvas");
+  birdLayer.width = 360;
+  birdLayer.height = 220;
+  const birdContext = birdLayer.getContext("2d");
+  birdContext.imageSmoothingEnabled = false;
+
+  function waxwingScene(ctx, t) {
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+    const scale = Math.min(width > 900 ? 1.1 : 1, (width - 22) / 360);
+    const anchorX = width - 360 * scale - 16;
+    const anchorY = height - 292 * scale;
+    const perch = (x, y) => [anchorX + x * scale, anchorY + y * scale];
+    const start = perch(24, 193);
+    const end = perch(340, 153);
+
+    curve(
+      ctx,
+      [12, height - 21],
+      [Math.max(16, start[0] * 0.4), height - 6],
+      [Math.max(16, start[0] - 80), start[1] + 15],
+      start,
+      "#3c513d",
+      4,
+    );
+    curve(
+      ctx,
+      [14, height - 23],
+      [Math.max(16, start[0] * 0.4), height - 8],
+      [Math.max(16, start[0] - 80), start[1] + 13],
+      start,
+      "#6f7851",
+      1,
+    );
+    curve(
+      ctx,
+      end,
+      [width - 35, end[1] - 4],
+      [width - 20, end[1] - 42],
+      [width - 9, end[1] - 58],
+      "#4e6747",
+      2,
+    );
+
+    sceneSprig(ctx, 42, height - 22, 55, -71, t, "#385e45");
+    sceneSprig(ctx, width * 0.4, height - 26, -39, -66, t, "#42664b");
+    sceneSprig(ctx, width - 48, end[1] - 5, 16, -95, t, "#3e6149");
+    sceneSprig(ctx, width - 87, end[1] + 10, 53, -46, t, "#587653");
+    sceneSprig(ctx, width - 72, end[1] + 8, -26, -74, t, "#345840");
+    if (width > 650) {
+      sceneSprig(ctx, start[0] - 29, start[1] + 8, -64, -96, t, "#294c39");
+      sceneSprig(ctx, start[0] - 18, start[1] + 8, -6, -113, t, "#426448");
+    } else {
+      sceneSprig(ctx, 30, height - 23, 10, -106, t, "#294c39");
+    }
+
+    // A few small blossoms and hanging berries keep the decoration airy.
+    const blossomX = Math.max(38, width * 0.52);
+    curve(
+      ctx,
+      [blossomX - 17, height - 31],
+      [blossomX - 25, height - 76],
+      [blossomX + 30, height - 86],
+      [blossomX + 12, height - 115],
+      "#657452",
+      1,
+    );
+    sceneFlower(ctx, blossomX + 12, height - 116);
+    sceneFlower(ctx, width - 35, end[1] - 82, "#b59384");
+    sceneFlower(ctx, width - 72, end[1] - 62, "#b6ba9c");
+    sceneFlower(ctx, width - 53, end[1] - 47, "#b3a480");
+    sceneFlower(ctx, 96, height - 95, "#a5b195");
+
+    const berryX = Math.max(35, anchorX + 42 * scale);
+    const berryY = start[1] + 12;
+    curve(
+      ctx,
+      [berryX, berryY - 7],
+      [berryX + 14, berryY + 4],
+      [berryX + 2, berryY + 14],
+      [berryX + 12, berryY + 23],
+      "#697052",
+      1,
+    );
+    for (const [dx, dy] of [
+      [10, 23],
+      [16, 18],
+      [20, 25],
+    ]) {
+      box(ctx, berryX + dx, berryY + dy, 5, 5, "#9c6456");
+      box(ctx, berryX + dx, berryY + dy, 2, 1, "#d1a07c");
+    }
+
+    // Draw at integer coordinates first; nearest-neighbor scaling keeps the
+    // feathers solid on narrow screens and prevents seams between pixel cells.
+    birdContext.clearRect(0, 0, birdLayer.width, birdLayer.height);
+    waxwing(birdContext, t);
+    ctx.drawImage(
+      birdLayer,
+      Math.round(anchorX),
+      Math.round(anchorY),
+      Math.round(360 * scale),
+      Math.round(220 * scale),
+    );
+
+    for (let i = 0; i < 7; i++) {
+      const x = width * (0.48 + (i % 4) * 0.13) + Math.sin(t * 0.3 + i * 4) * 6;
+      const y =
+        31 +
+        ((i * 47) % Math.max(80, height - 140)) +
+        Math.cos(t * 0.4 + i) * 5;
+      const shimmer = 0.2 + (Math.sin(t * 1.1 + i * 2.1) + 1) * 0.3;
+      ctx.globalAlpha = shimmer;
+      box(ctx, x, y, 2, 2, i % 2 ? "#bdad7d" : "#94b486");
+      if (i % 3 === 0) {
+        box(ctx, x - 2, y + 1, 6, 1, "#94b48655");
+        box(ctx, x + 1, y - 2, 1, 6, "#94b48655");
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  const painters = {
+    reading: book,
+    camera,
+    painting,
+    ruins,
+    waxwing: waxwingScene,
+  };
 
   function paint(state) {
     const { canvas, ctx, type, time } = state;
-    backdrop(ctx, canvas.width, canvas.height);
+    if (type === "waxwing") ctx.clearRect(0, 0, canvas.width, canvas.height);
+    else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (type === "camera") backdrop(ctx, canvas.width, canvas.height);
+    }
     painters[type](ctx, time);
   }
   function active() {
@@ -889,6 +1520,16 @@
     if (repaint) lastPaint = now;
     frame = requestAnimationFrame(tick);
   }
+  function fitScene(state) {
+    const bounds = state.canvas.getBoundingClientRect();
+    const width = Math.max(1, Math.round(bounds.width));
+    const height = Math.max(1, Math.round(bounds.height));
+    if (state.canvas.width === width && state.canvas.height === height) return;
+    state.canvas.width = width;
+    state.canvas.height = height;
+    state.ctx.imageSmoothingEnabled = false;
+    paint(state);
+  }
   for (const canvas of document.querySelectorAll("[data-pixels]")) {
     const ctx = canvas.getContext("2d");
     if (!ctx) continue;
@@ -897,12 +1538,28 @@
       canvas,
       ctx,
       type: canvas.dataset.pixels,
-      time: preference.matches && canvas.dataset.pixels !== "waxwing" ? 5 : 0,
+      time: preference.matches
+        ? canvas.dataset.pixels === "waxwing"
+          ? 0
+          : canvas.dataset.pixels === "painting"
+            ? 10
+            : 5
+        : 0,
       visible: false,
     };
     states.push(state);
+    if (state.type === "waxwing") fitScene(state);
     paint(state);
   }
+  const sceneResize = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const state = states.find((state) => state.canvas === entry.target);
+      if (state) fitScene(state);
+    }
+  });
+  states
+    .filter((state) => state.type === "waxwing")
+    .forEach((state) => sceneResize.observe(state.canvas));
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {

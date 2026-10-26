@@ -34,6 +34,7 @@ sections.forEach((section) => observer.observe(section));
   const messages = [
     "Hi, I’m Nox.",
     "I write code and paint watercolors.",
+    "I build tools for AI research.",
     "I build things that make me smile.",
     "I love clean syntax and late-night snacks.",
     "I fix bugs with my tea and optimism.",

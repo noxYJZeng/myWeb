@@ -30,6 +30,7 @@
     root.classList.remove("intro-active", "intro-revealing");
     for (const property of [
       "--intro-shade",
+      "--intro-page",
       "--intro-exposure",
       "--intro-saturation",
       "--intro-flare",
@@ -67,31 +68,41 @@
       return p * p * (3 - 2 * p);
     };
     const mix = (a, b, p) => a + (b - a) * p;
+    const sceneFadeAt = 2.58;
+    const sceneFadeDuration = 0.25;
+    const sceneFadeEnd = sceneFadeAt + sceneFadeDuration;
+    const pageRevealAt = sceneFadeEnd + 0.02;
 
-    // A short low-light pause, then the flame brings the whole page forward.
+    // Green fire and reflected light share the homepage palette.
+    // Clear the objects first, so the match and homepage never share a frame.
     function illuminate(t) {
-      const lowLight = ease((t - 2) / 0.3);
-      const flare = ease((t - 2.3) / 0.26);
-      const settle = ease((t - 2.56) / 0.7);
-      const exposure =
-        t < 2.3
-          ? mix(0.04, 0.13, lowLight)
-          : mix(mix(0.13, 1.22, flare), 1, settle);
-      const arrival = 1 - Math.pow(1 - clamp((t - 2.3) / 0.65), 3);
-      const warmth = ease((t - 2.3) / 0.2) * (1 - ease((t - 2.5) / 0.7));
-      root.style.setProperty("--intro-shade", String(1 - ease((t - 2) / 0.42)));
+      const atmosphere = ease((t - 2.3) / 0.64) * (1 - ease((t - 3.02) / 1.16));
+      root.style.setProperty("--intro-flare", (atmosphere * 0.48).toFixed(4));
+      if (!revealed) return;
+
+      const arrival = ease((t - pageRevealAt) / 0.82);
+      const exposure = mix(mix(0.38, 1.08, arrival), 1, ease((t - 3.7) / 0.48));
+      root.style.setProperty(
+        "--intro-page",
+        ease((t - pageRevealAt) / 0.6).toFixed(4),
+      );
+      root.style.setProperty(
+        "--intro-shade",
+        String(1 - ease((t - pageRevealAt) / 0.42)),
+      );
       root.style.setProperty("--intro-exposure", exposure.toFixed(4));
       root.style.setProperty(
         "--intro-saturation",
-        mix(mix(0.45, 1.12, flare), 1, settle).toFixed(4),
+        mix(0.8, 1, arrival).toFixed(4),
       );
-      root.style.setProperty("--intro-flare", (warmth * 0.16).toFixed(4));
-      root.style.setProperty("--intro-scale", mix(0.94, 1, arrival).toFixed(5));
+      root.style.setProperty(
+        "--intro-scale",
+        mix(0.985, 1, arrival).toFixed(5),
+      );
       root.style.setProperty(
         "--intro-rise",
-        `${mix(22, 0, arrival).toFixed(2)}px`,
+        `${mix(12, 0, arrival).toFixed(2)}px`,
       );
-      canvas.style.opacity = String(1 - ease((t - 2.48) / 0.26));
     }
     function pixel(x, y, w, h, color) {
       ctx.fillStyle = color;
@@ -214,7 +225,7 @@
           const distance = (px * px + py * py * 0.85) / (260 * spread * spread);
           if (distance > 2.3) continue;
           ctx.globalAlpha = Math.exp(-distance * 2) * 0.105 * strength * pulse;
-          pixel(x + px, y + py - 4, 2, 2, "#d4934e");
+          pixel(x + px, y + py - 4, 2, 2, "#43c97c");
         }
       }
       ctx.globalAlpha = 1;
@@ -278,7 +289,7 @@
           y + py * strength * scale,
         ]);
       ctx.globalAlpha = strength;
-      polygon(shape(points), "#9d5b2c");
+      polygon(shape(points), "#247148");
       polygon(
         shape([
           [-1, 0],
@@ -290,7 +301,7 @@
           [2, -2],
           [1, 0],
         ]),
-        "#dba15b",
+        "#59c988",
       );
       polygon(
         shape([
@@ -300,9 +311,9 @@
           [1, -4],
           [1, -1],
         ]),
-        "#f0d3a0",
+        "#c5f3c4",
       );
-      pixel(x - 1, y, 3, 1, "#b76d36");
+      pixel(x - 1, y, 3, 1, "#39875b");
       ctx.globalAlpha = 1;
     }
 
@@ -329,9 +340,9 @@
       const endY = y + Math.sin(angle) * 42;
       line(x + 1, y + 1, endX, endY, "#716047", 2);
       line(x + 1, y, endX, endY - 1, "#c0a273");
-      line(x + 1, y, x + 7, y + 3, burn ? "#b47741" : "#a58a60", 2);
-      pixel(x - 2, y - 2, 4, 4, burn ? "#a97141" : "#794937");
-      pixel(x - 1, y - 2, 2, 1, burn ? "#dfb078" : "#9b5f42");
+      line(x + 1, y, x + 7, y + 3, burn ? "#38563b" : "#a58a60", 2);
+      pixel(x - 2, y - 2, 4, 4, burn ? "#3f8050" : "#794937");
+      pixel(x - 1, y - 2, 2, 1, burn ? "#8adea3" : "#9b5f42");
       ctx.globalAlpha = 1;
 
       // Small embers follow the initial strike.
@@ -354,7 +365,7 @@
             84 + vy * p + p * p * 8,
             i % 3 === 0 ? 2 : 1,
             1,
-            i % 2 ? "#e7bd7c" : "#b9773f",
+            i % 2 ? "#a2e6ad" : "#4a9d68",
           );
         }
         ctx.globalAlpha = 1;
@@ -372,6 +383,7 @@
 
     let began = null;
     let lastFrame = -1;
+    let sceneCleared = false;
     function tick(now) {
       if (finished) return;
       began ??= now;
@@ -379,13 +391,21 @@
       // Give the lit match, flare, and settling light more time to register.
       // Keep the strike and the flame's flicker at their original speed.
       const t = elapsed <= 1.65 ? elapsed : 1.65 + (elapsed - 1.65) / 1.5;
-      if (t >= 2) reveal();
-      if (now - lastFrame > 1000 / 24) {
+      canvas.style.opacity = String(
+        1 - ease((t - sceneFadeAt) / sceneFadeDuration),
+      );
+      if (t >= sceneFadeEnd && !sceneCleared) {
+        canvas.style.visibility = "hidden";
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        sceneCleared = true;
+      }
+      if (!sceneCleared && now - lastFrame > 1000 / 24) {
         render(t, elapsed);
         lastFrame = now;
       }
-      if (revealed) illuminate(t);
-      if (t >= 3.65) return finish();
+      if (t >= pageRevealAt) reveal();
+      if (t >= 2.3) illuminate(t);
+      if (t >= 4.35) return finish();
       frame = requestAnimationFrame(tick);
     }
     frame = requestAnimationFrame(tick);
