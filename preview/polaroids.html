@@ -659,21 +659,16 @@ figcaption > span:last-child {
 .about-main h2 {
   margin-bottom: 28px;
 }
-.about-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 35px;
-  font-size: 12px;
+.about-copy {
+  max-width: 78ch;
+  font-size: 14px;
   line-height: 1.95;
 }
-.about-columns p + p {
-  margin-top: 16px;
-}
-.about-columns a {
+.about-copy a {
   color: #c1d2c4;
   border-bottom: 1px solid #a3987655;
 }
-.about-columns strong {
+.about-copy strong {
   color: var(--ink);
   font-weight: 600;
 }
@@ -1312,9 +1307,8 @@ figcaption > span:last-child {
     grid-template-columns: 150px minmax(0, 1fr);
     gap: 20px;
   }
-  .about-columns {
-    gap: 25px;
-    font-size: 11px;
+  .about-copy {
+    font-size: 13px;
   }
   .section-heading h2 {
     font-size: 30px;
@@ -1417,8 +1411,8 @@ figcaption > span:last-child {
   .about-main h2 {
     font-size: 35px;
   }
-  .about-columns {
-    font-size: 12px;
+  .about-copy {
+    font-size: 14px;
   }
   .section-heading {
     flex-direction: column;
@@ -1570,10 +1564,8 @@ figcaption > span:last-child {
     letter-spacing: -1.3px;
     margin-bottom: 24px;
   }
-  .about-columns {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 22px;
-    font-size: 12px;
+  .about-copy {
+    font-size: 13px;
   }
   .work {
     padding-block: 42px;
