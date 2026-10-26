@@ -2695,6 +2695,13 @@ figcaption > span:last-child {
   width: min(800px, calc(100% - 176px));
   margin: 0 auto;
 }
+@media (any-hover: hover) and (any-pointer: fine) {
+  .album-scene[data-page-direction] {
+    cursor:
+      url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNiIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDM2IDQ4IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0xNiA0aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjYmE2YzM4IiBkPSJNMTYgNmgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2JhNmMzOCIgZD0iTTE4IDZoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0xNCA4aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjZTNhNzViIiBkPSJNMTYgOGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2JhNmMzOCIgZD0iTTE4IDhoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0xNCAxMGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2UzYTc1YiIgZD0iTTE2IDEwaDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjZTNhNzViIiBkPSJNMTggMTBoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0yMCAxMGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2JhNmMzOCIgZD0iTTEyIDEyaDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjZTNhNzViIiBkPSJNMTQgMTJoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNmZmUyYTEiIGQ9Ik0xNiAxMmgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2UzYTc1YiIgZD0iTTE4IDEyaDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjYmE2YzM4IiBkPSJNMjAgMTJoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0xMiAxNGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2UzYTc1YiIgZD0iTTE0IDE0aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjZmZlMmExIiBkPSJNMTYgMTRoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNmZmUyYTEiIGQ9Ik0xOCAxNGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2UzYTc1YiIgZD0iTTIwIDE0aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjYmE2YzM4IiBkPSJNMjIgMTRoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0xMiAxNmgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2UzYTc1YiIgZD0iTTE0IDE2aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjZmZlMmExIiBkPSJNMTYgMTZoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNmZmUyYTEiIGQ9Ik0xOCAxNmgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2UzYTc1YiIgZD0iTTIwIDE2aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjYmE2YzM4IiBkPSJNMjIgMTZoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0xNCAxOGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2UzYTc1YiIgZD0iTTE2IDE4aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjZTNhNzViIiBkPSJNMTggMThoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiYTZjMzgiIGQ9Ik0yMCAxOGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2JhNmMzOCIgZD0iTTE2IDIwaDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjYmE2YzM4IiBkPSJNMTggMjBoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiM0MjU2NGMiIGQ9Ik0xMCAyOGgxNnYxOGgtMTZ6Ii8+PHBhdGggZmlsbD0iIzZmODM3OSIgZD0iTTkgMjloMTh2MTVoLTE4eiIvPjxwYXRoIGZpbGw9IiMyNDNlMzMiIGQ9Ik0xMCAyOWgxNnYxNWgtMTZ6Ii8+PHBhdGggZmlsbD0iI2M2ZDJjNCIgZD0iTTEwIDI5aDF2MTRoLTF6Ii8+PHBhdGggZmlsbD0iIzU0NzQ2NSIgZD0iTTEyIDMwaDEydjFoLTEyeiIvPjxwYXRoIGZpbGw9IiMxMDIyMTkiIGQ9Ik0yNSAzMGgxdjEzaC0xeiIvPjxwYXRoIGZpbGw9IiNhZmJjYWEiIGQ9Ik0xMSA0NGgxNHYxaC0xNHoiLz48cGF0aCBmaWxsPSIjNjY3ZjZjIiBkPSJNMTIgNDVoMTJ2MWgtMTJ6Ii8+PHBhdGggZmlsbD0iI2I4YmVhMSIgZD0iTTEzIDM0aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjYTNiMDk0IiBkPSJNMTUgMzVoMnYyaC0yeiIvPjxwYXRoIGZpbGw9IiNiOGJlYTEiIGQ9Ik0yMCAzNGgydjJoLTJ6Ii8+PHBhdGggZmlsbD0iI2EzYjA5NCIgZD0iTTE4IDM1aDJ2MmgtMnoiLz48cGF0aCBmaWxsPSIjODI5YjgwIiBkPSJNMTQgMzdoM3YyaC0zeiIvPjxwYXRoIGZpbGw9IiM4MjliODAiIGQ9Ik0xOCAzN2gzdjJoLTN6Ii8+PHBhdGggZmlsbD0iI2QwYzY5ZCIgZD0iTTE3IDM1aDF2NWgtMXoiLz48cGF0aCBmaWxsPSIjZDJkOGM3IiBkPSJNMSAxOGg1djFoLTV6Ii8+PHBhdGggZmlsbD0iIzcxODg3OSIgZD0iTTAgMTloN3Y4aC03eiIvPjxwYXRoIGZpbGw9IiNiNmMyYjEiIGQ9Ik0xIDIwaDR2NmgtNHoiLz48cGF0aCBmaWxsPSIjNDg1ZDRmIiBkPSJNNiAyM2gydjZoLTJ6Ii8+PHBhdGggZmlsbD0iIzk2YTY5MSIgZD0iTTcgMjdoNHYzaC00eiIvPjxwYXRoIGZpbGw9IiNiYWMzYWMiIGQ9Ik0xMSAyMmgxMnY3aC0xMnoiLz48cGF0aCBmaWxsPSIjZTFlM2M3IiBkPSJNMTIgMjFoMTB2MWgtMTB6Ii8+PHBhdGggZmlsbD0iIzQwNTM0NCIgZD0iTTEyIDIzaDJ2MWgtMnoiLz48cGF0aCBmaWxsPSIjNDA1MzQ0IiBkPSJNMTIgMjZoMnYxaC0yeiIvPjxwYXRoIGZpbGw9IiM0MDUzNDQiIGQ9Ik0xNyAyM2gydjFoLTJ6Ii8+PHBhdGggZmlsbD0iIzQwNTM0NCIgZD0iTTE3IDI2aDJ2MWgtMnoiLz48cGF0aCBmaWxsPSIjNDA1MzQ0IiBkPSJNMjEgMjNoMnYxaC0yeiIvPjxwYXRoIGZpbGw9IiM0MDUzNDQiIGQ9Ik0yMSAyNmgydjFoLTJ6Ii8+PHBhdGggZmlsbD0iIzY1NzU2NSIgZD0iTTIzIDIzaDN2NWgtM3oiLz48cGF0aCBmaWxsPSIjZDBkMGFlIiBkPSJNMjQgMjNoMXY0aC0xeiIvPjxwYXRoIGZpbGw9IiNlMWI4NzYiIGQ9Ik0xNSAyMWg0djFoLTR6Ii8+PC9zdmc+Cg==") 17 23,
+      pointer;
+  }
+}
 .album-viewport {
   position: absolute;
   inset: 0;
@@ -3794,7 +3801,7 @@ document.querySelectorAll("a[data-preview-image]").forEach(link => {
   document.body.append(cursor);
 
   const controls =
-    'a[href], button, summary, [role="button"], [role="link"], select, input:not([type="hidden"]), label[for]';
+    'a[href], button, summary, [role="button"], [role="link"], select, input:not([type="hidden"]), label[for], .album-scene[data-page-direction]';
   const flames = [
     [
       "...o...",
@@ -4817,7 +4824,11 @@ window.PixelAlbum = class PixelAlbum {
     (event) => {
       touch =
         !busy && event.touches.length === 1
-          ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
+          ? {
+              x: event.touches[0].clientX,
+              y: event.touches[0].clientY,
+              startedAt: performance.now(),
+            }
           : null;
     },
     { passive: true },
@@ -4829,10 +4840,35 @@ window.PixelAlbum = class PixelAlbum {
       const end = event.changedTouches[0];
       const dx = end.clientX - touch.x,
         dy = end.clientY - touch.y;
+      const duration = performance.now() - touch.startedAt;
       touch = null;
       if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.25) {
         ignoreClickUntil = performance.now() + 400;
         advance(dx < 0 ? 1 : -1);
+      } else if (
+        Math.abs(dx) < 12 &&
+        Math.abs(dy) < 12 &&
+        duration < 400 &&
+        !event.target.closest("button, input, select, textarea")
+      ) {
+        const direction = directionOnPaper(end.clientX, end.clientY);
+        const photo = visible[current]
+          ?.querySelector(".photo-open")
+          .getBoundingClientRect();
+        const onPhoto =
+          photo &&
+          end.clientX >= photo.left &&
+          end.clientX <= photo.right &&
+          end.clientY >= photo.top &&
+          end.clientY <= photo.bottom;
+        if (direction && !onPhoto) {
+          // Use the finger's actual position; mobile browsers can retarget a
+          // paper-margin tap to the nearby image link. Suppress that later click.
+          ignoreClickUntil = performance.now() + 400;
+          advance(direction);
+        } else if (direction && onPhoto) {
+          ignoreClickUntil = 0;
+        }
       }
     },
     { passive: true },
@@ -4854,6 +4890,54 @@ window.PixelAlbum = class PixelAlbum {
     },
     true,
   );
+
+  function directionOnPaper(clientX, clientY) {
+    if (busy || viewer.open || current < 0) return 0;
+    const rect = scene.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * renderer.g.width;
+    const y = ((clientY - rect.top) / rect.height) * 330;
+    // Match the actual spread, including the endpaper on the first page.
+    const hinge = renderer.g.hinge;
+    if (y < 24 || y > 294 || x < hinge - 192 || x > hinge + 192) return 0;
+    return x < hinge ? -1 : 1;
+  }
+  function pageDirection(event) {
+    if (event.target.closest("a, button, input, select, textarea")) return 0;
+    return directionOnPaper(event.clientX, event.clientY);
+  }
+  scene.addEventListener(
+    "pointermove",
+    (event) => {
+      const direction = pageDirection(event);
+      if (direction)
+        scene.dataset.pageDirection = direction < 0 ? "previous" : "next";
+      else delete scene.dataset.pageDirection;
+    },
+    { passive: true },
+  );
+  scene.addEventListener("pointerleave", () => {
+    delete scene.dataset.pageDirection;
+  });
+  scene.addEventListener("click", (event) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.altKey ||
+      event.shiftKey ||
+      performance.now() < ignoreClickUntil
+    )
+      return;
+    const selection = document.getSelection();
+    if (selection && !selection.isCollapsed) return;
+    const direction = pageDirection(event);
+    if (direction) {
+      event.preventDefault();
+      delete scene.dataset.pageDirection;
+      advance(direction);
+    }
+  });
 
   entries.forEach((entry) => {
     const link = entry.querySelector(".photo-open");
@@ -5112,19 +5196,17 @@ window.PixelAlbum = class PixelAlbum {
       t + 1.2,
       Math.round(156 + Math.sin(t * 0.42 + 1.2) * 28),
       Math.round(91 + Math.sin(t * 0.57 + 2) * 26),
-      1 + (Math.floor(t / 22) % 2),
+      1,
       2,
     );
-    // A faint green match by the low flowers, separate from the flight paths.
-    for (let i = 0; i < 33; i++)
-      pixel(c, 32 + i, 175 - Math.floor(i / 2), 2, 2, "#827d54");
-    pixel(c, 62, 157, 6, 4, "#75633e");
-    const flame = [
-      ["...g..", "..gg..", "..glg.", ".gllg.", ".glwg.", "..lg.."],
-      ["..g...", "..gg..", ".glg..", ".gllg.", ".glwg.", "..lg.."],
-      ["....g.", "...gg.", "..glg.", ".gllg.", ".glwg.", "..lg.."],
-    ][Math.floor(t * 6) % 3];
-    sprite(c, flame, { g: "#54794a", l: "#a4b87c", w: "#ded4a0" }, 57, 145, 2);
+    butterfly(
+      c,
+      t + 0.65,
+      Math.round(58 + Math.sin(t * 0.3 + 2) * 22),
+      Math.round(145 + Math.sin(t * 0.51 + 1) * 14),
+      2,
+      2,
+    );
     sprig(c, 18, 184, 24, "#476443", "#b2a77b");
     sprig(c, 33, 191, 13, "#344f39", "#c2b78a");
     sprig(c, 84, 177, 16, "#3f5940", "#b49c73");
@@ -5142,178 +5224,247 @@ window.PixelAlbum = class PixelAlbum {
     c.globalAlpha = 1;
   }
 
-  function waxwing(c, t, curious) {
-    const phase = t % 30;
-    let offset = 0,
-      lift = 0;
-    if (phase > 4 && phase < 6) {
-      const progress = (phase - 4) / 2;
-      offset = Math.round(progress * 26);
-      lift = Math.round(Math.abs(Math.sin(progress * Math.PI * 2)) * 13);
-    } else if (phase >= 6 && phase < 18) offset = 26;
-    else if (phase >= 18 && phase < 20) {
-      const progress = (phase - 18) / 2;
-      offset = Math.round((1 - progress) * 26);
-      lift = Math.round(Math.abs(Math.sin(progress * Math.PI * 2)) * 14);
+  function birdPolygon(c, points, color) {
+    const xs = points.map(([x]) => x),
+      ys = points.map(([, y]) => y);
+    for (
+      let y = Math.floor(Math.min(...ys));
+      y <= Math.ceil(Math.max(...ys));
+      y++
+    ) {
+      for (
+        let x = Math.floor(Math.min(...xs));
+        x <= Math.ceil(Math.max(...xs));
+        x++
+      ) {
+        let inside = false;
+        for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+          const a = points[i],
+            b = points[j];
+          if (
+            a[1] > y !== b[1] > y &&
+            x < ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]) + a[0]
+          )
+            inside = !inside;
+        }
+        if (inside) pixel(c, x, y, 1, 1, color);
+      }
     }
-    const x = 62 + offset,
-      y = 40 - lift;
-    const preen = (phase > 10 && phase < 13) || phase > 27;
-    const peck = phase > 7 && phase < 9;
-    const spread = (phase > 14 && phase < 16) || lift > 7 || curious;
-    const tail = Math.floor(t * 5) % 6 < 2 ? 2 : 0;
-    const p = {
-      a: "#4d6253",
-      b: "#889981",
-      c: "#b8bca0",
-      d: "#dbc9a6",
-      e: "#202f29",
-      r: "#b9705a",
-      z: "#d2bc76",
-      w: "#efe0b9",
+  }
+  function birdLine(c, a, b, color) {
+    const steps = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]));
+    for (let i = 0; i <= steps; i++) {
+      const p = steps ? i / steps : 0;
+      pixel(c, a[0] + (b[0] - a[0]) * p, a[1] + (b[1] - a[1]) * p, 1, 1, color);
+    }
+  }
+  function birdPose(t) {
+    const phase = t % 24;
+    const envelope = (start, end) =>
+      phase > start && phase < end
+        ? Math.sin(((phase - start) / (end - start)) * Math.PI) ** 2
+        : 0;
+    const pose = {
+      offset: 0,
+      lift: 0,
+      preen: envelope(7, 10),
+      wing: envelope(11, 13),
+      peck: envelope(18, 20),
     };
-    // Loose plants and seed lights ground the bird without enclosing it.
+    const hop = (start, end, returning) => {
+      const p = (phase - start) / (end - start);
+      const progress = p * p * (3 - 2 * p);
+      pose.offset = 20 * (returning ? 1 - progress : progress);
+      pose.lift = Math.sin(p * Math.PI) * 13;
+      pose.wing = Math.sin(p * Math.PI) * 0.25;
+    };
+    if (phase >= 4.5 && phase < 5.4) hop(4.5, 5.4, false);
+    else if (phase >= 5.4 && phase < 15.5) pose.offset = 20;
+    else if (phase >= 15.5 && phase < 16.6) hop(15.5, 16.6, true);
+    pose.angle = -pose.preen * 1.15 + pose.peck * 0.72 + envelope(1, 4) * 0.16;
+    return pose;
+  }
+
+  function waxwing(c, t, attention) {
+    const pose = birdPose(t);
+    // A fixed ground anchor and a connected neck keep the bird in one place.
+    // Only the head turns: never mirror the complete bird across the canvas.
+    const x = Math.round(28 + pose.offset);
+    const y = Math.round(
+      30 - pose.lift + pose.peck * 2 + Math.sin(t * 0.85) * 0.6,
+    );
+    const tail = Math.round(Math.sin(t * 1.7) * 0.8);
     sprig(c, 29, 143, 20, "#3d593f", "#a6a46f");
     sprig(c, 182, 141, 25, "#3b553e", "#ac9d6f");
     sprig(c, 171, 148, 13, "#2d4936", "#b5ad7c");
-    c.globalAlpha = 0.35;
-    pixel(c, 57, 127, 80, 2, "#465b3d");
-    pixel(c, 48, 129, 12, 1, "#667048");
-    pixel(c, 144, 128, 5, 2, "#aca26b");
+    c.globalAlpha = 0.3;
+    pixel(c, 65 + Math.round(pose.offset * 0.4), 129, 57, 2, "#465b3d");
+    pixel(c, 52, 131, 9, 1, "#667048");
+    pixel(c, 144, 130, 4, 1, "#aca26b");
     c.globalAlpha = 1;
     c.save();
-    if (phase > 21 && phase < 27) {
-      c.translate(210, 0);
-      c.scale(-1, 1);
-    }
-    sprite(
+    c.translate(x, y);
+    c.scale(3, 3);
+    birdPolygon(
       c,
       [
-        "...aa...",
-        "..abba..",
-        ".abbbba.",
-        "abbbba..",
-        "abbba...",
-        "azzz....",
-        "zzz.....",
+        [9, 22],
+        [15, 25],
+        [10 + tail, 29],
+        [7 + tail, 33],
+        [2 + tail, 31],
+        [7, 27],
       ],
-      p,
-      x - 10 - tail,
-      y + 51,
-      3,
+      "#71816c",
     );
-    if (spread) {
-      const reach = Math.floor(t * 7) % 2 ? 0 : 3;
-      sprite(
-        c,
-        [
-          "a........",
-          "ab.......",
-          "abb......",
-          ".abbb....",
-          "..abbbb..",
-          "...abbrba",
-          ".....abba",
-        ],
-        p,
-        x - 24 - reach,
-        y + 15,
-        4,
-      );
-      sprite(
-        c,
-        [
-          "........a",
-          ".......ba",
-          "......bba",
-          "....abbba",
-          "..abbbba.",
-          ".abrrba..",
-          "..abba...",
-        ],
-        p,
-        x + 31,
-        y + 19,
-        3,
-      );
-    }
-    pixel(c, x + 24, y + 20, 9, 15, p.c);
-    sprite(
+    birdPolygon(
       c,
       [
-        "...bbbb...",
-        "..bccccb..",
-        ".bccddcbb.",
-        "bccddddcbb",
-        "bccddddcbb",
-        ".bccddcabb",
-        ".bccccabb.",
-        "..bbaaab..",
-        "...aaaa...",
+        [2 + tail, 31],
+        [7 + tail, 33],
+        [8 + tail, 30],
+        [4 + tail, 29],
       ],
-      p,
-      x,
-      y + 25,
-      4,
+      "#d3bb72",
     );
-    if (!spread || Math.floor(t * 8) % 3)
-      sprite(
+    const wing = pose.wing;
+    if (wing > 0.02)
+      birdPolygon(
         c,
         [
-          "..aaaa..",
-          ".abbbbaa",
-          "abbbbbaa",
-          ".abbbbaa",
-          "..abbraa",
-          "...abrra",
-          "....abza",
-          ".....aa.",
+          [21, 14],
+          [27 + wing * 2, 12 - wing * 5],
+          [29 + wing * 8, 13 - wing * 5],
+          [30 + wing * 3, 16],
+          [24, 21],
         ],
-        p,
-        x + 2,
-        y + 36,
-        3,
+        "#647961",
       );
-    const headX = x + (preen ? 6 : 16) + (curious ? 3 : 0);
-    const headY =
-      y +
-      (peck
-        ? Math.round(Math.sin(((phase - 7) / 2) * Math.PI) * 18)
-        : preen
-          ? 13
-          : 0);
-    const head = preen
-      ? [
-          "....aa...",
-          "..aabbaa.",
-          ".abbccaa.",
-          "abccdda..",
-          "aeeeee...",
-          ".bccda...",
-          "..bd.....",
-        ]
-      : [
-          "aa.......",
-          "abba.....",
-          ".abbbaa..",
-          "..bccdaa.",
-          "..bccddaa",
-          "..aeeeee.",
-          "...bccda.",
-          "....bdd..",
-        ];
-    sprite(c, head, p, headX, headY, 3);
-    if (!preen) {
-      const blink = Math.floor(t * 3) % 17 === 0;
-      pixel(c, headX + 18, headY + 15, 2, blink ? 1 : 2, "#e9ddbd");
-      pixel(c, headX + 24, headY + 17, 6, 3, "#8f8b66");
-      pixel(c, headX + 27, headY + 17, 3, 1, "#c7ba8a");
-    }
-    const step = lift ? (Math.floor(t * 9) % 2 ? 3 : -3) : 0;
-    pixel(c, x + 20 + step, y + 61, 2, 10, "#9b9874");
-    pixel(c, x + 32 - step, y + 61, 2, 10, "#9b9874");
-    pixel(c, x + 15 + step, y + 70, 10, 2, "#c1b48b");
-    pixel(c, x + 28 - step, y + 70, 10, 2, "#c1b48b");
+    birdPolygon(
+      c,
+      [
+        [12, 11],
+        [22, 10],
+        [27, 16],
+        [25, 23],
+        [19, 28],
+        [11, 25],
+        [7, 18],
+      ],
+      "#b8b79e",
+    );
+    birdPolygon(
+      c,
+      [
+        [14, 20],
+        [23, 18],
+        [25, 23],
+        [19, 28],
+        [13, 25],
+      ],
+      "#d0bf94",
+    );
+    const folded = [
+      [9, 13],
+      [14, 14],
+      [19, 16],
+      [22, 20],
+      [21, 23],
+      [18, 25],
+      [12, 23],
+      [10, 18],
+    ];
+    const extended = [
+      [11, 14],
+      [-3, 10],
+      [-8, 2],
+      [-2, 0],
+      [7, 4],
+      [18, 10],
+      [23, 17],
+      [18, 23],
+    ];
+    birdPolygon(
+      c,
+      folded.map(([a, b], i) => [
+        Math.round(a + (extended[i][0] - a) * wing),
+        Math.round(b + (extended[i][1] - b) * wing),
+      ]),
+      "#82927c",
+    );
+    birdLine(c, [11 - wing * 12, 16 - wing * 10], [18, 23], "#bac4a9");
+    birdLine(c, [14 - wing * 12, 15 - wing * 10], [21, 21], "#a6b59a");
+    pixel(c, 18, 22, 1, 2, "#bc715a");
+    pixel(c, 20, 21, 1, 2, "#bc715a");
+    const angle = pose.angle + attention * 0.12;
+    const headPoint = ([a, b]) => {
+      const dx = a - 23,
+        dy = b - 10;
+      return [
+        Math.round(23 + dx * Math.cos(angle) - dy * Math.sin(angle)),
+        Math.round(
+          10 + pose.peck * 4 + dx * Math.sin(angle) + dy * Math.cos(angle),
+        ),
+      ];
+    };
+    // Join the head to the chest in every preening and pecking pose.
+    birdPolygon(
+      c,
+      [headPoint([21, 12]), headPoint([28, 13]), [26, 20], [18, 18]],
+      "#b8b79e",
+    );
+    const head = (points, color) =>
+      birdPolygon(c, points.map(headPoint), color);
+    head(
+      [
+        [18, 7],
+        [15, 0],
+        [22, 3],
+        [27, 6],
+      ],
+      "#9eaa91",
+    );
+    head(
+      [
+        [22, 4],
+        [28, 5],
+        [31, 10],
+        [30, 15],
+        [23, 15],
+        [18, 11],
+        [18, 7],
+      ],
+      "#b8b79e",
+    );
+    head(
+      [
+        [23, 8],
+        [30, 8],
+        [33, 10],
+        [31, 12],
+        [26, 11],
+        [23, 10],
+      ],
+      "#24372b",
+    );
+    head(
+      [
+        [31, 10],
+        [35, 11],
+        [32, 12],
+      ],
+      "#a39a70",
+    );
+    const eye = headPoint([27, 9]),
+      glint = headPoint([27, 8]);
+    const blink = t % 5.4 > 5.12;
+    pixel(c, eye[0], eye[1], 2, 1, blink ? "#8e9d81" : "#08130c");
+    if (!blink) pixel(c, glint[0], glint[1], 1, 1, "#e0dec0");
+    const foot = pose.lift > 1 ? 32 : Math.round((129 - y) / 3);
+    birdLine(c, [19, 27], [19, foot], "#9d9d77");
+    birdLine(c, [23, 26], [24, foot - 1], "#9d9d77");
+    birdLine(c, [17, foot], [21, foot], "#c6b98e");
+    birdLine(c, [22, foot - 1], [26, foot - 1], "#c6b98e");
     c.restore();
   }
 
@@ -5330,7 +5481,11 @@ window.PixelAlbum = class PixelAlbum {
         pointer.x < r.right &&
         pointer.y > r.top &&
         pointer.y < r.bottom;
-      waxwing(c, t, near && Math.floor(t * 3) % 4 === 0);
+      const target = near && !preference.matches ? 1 : 0;
+      state.attention = preference.matches
+        ? 0
+        : (state.attention || 0) + (target - (state.attention || 0)) * 0.22;
+      waxwing(c, t, state.attention);
     }
   }
   function active() {
