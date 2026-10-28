@@ -133,7 +133,10 @@ def render(filename):
     scripts = []
 
     def collect_script(match):
-        src = attributes(match.group(1))["src"]
+        attrs = attributes(match.group(1))
+        if "data-production-only" in attrs:
+            return ""
+        src = attrs["src"]
         source = local_path(src).read_text(encoding="utf-8")
         source = re.sub(r"</script", r"<\/script", source, flags=re.IGNORECASE)
         scripts.append(f"<script>\n{source}\n</script>")

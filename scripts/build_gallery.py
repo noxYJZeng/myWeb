@@ -100,6 +100,7 @@ def build():
     <script src="js/album.js" defer></script>
     <script src="js/gallery.js" defer></script>
     <script src="js/album-ambient.js" defer></script>
+    <script src="js/analytics.js" defer data-production-only></script>
   </head>
   <body class="gallery-page" id="top">
     <canvas class="album-backdrop" data-album-art="night" width="480" height="300" aria-hidden="true"></canvas>

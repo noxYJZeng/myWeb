@@ -30,6 +30,36 @@ previews. This also versions hosted CSS and script URLs from their file contents
 so visitors receive updated assets after a release. Commit the editable site
 files, generated pages, and required assets together.
 
+## Private visitor analytics
+
+The production homepage and photo album use Cloudflare Web Analytics with the
+public website token from the owner's account in `js/analytics.js`. Emptying
+`siteToken` disables collection. There is no public visitor counter or
+analytics dashboard on this website.
+
+To configure it for another Cloudflare account:
+
+1. Sign in to [Cloudflare](https://dash.cloudflare.com/) with your own account.
+2. Open **Web Analytics**, select **Add a site**, and enter
+   `noxyjzeng.github.io` as the hostname. Select the matching hostname, then
+   **Done**. GitHub Pages stays the hosting provider; no DNS change is needed.
+3. In **Manage site**, copy the JavaScript snippet. Its `data-cf-beacon`
+   attribute contains a `token`: this is the public website identifier,
+   **not** an account API token. Put that value in `siteToken`.
+4. Run `python3 scripts/export_preview.py`, commit, and push to `main`.
+5. Visit the live website, then check **Web Analytics** in your Cloudflare
+   dashboard. Data may take a few minutes to appear.
+
+Only HTTPS visits to `/myWeb/`, `/myWeb/index.html`, and
+`/myWeb/polaroids.html` on the production hostname load the beacon. Local
+development, portable files, and `preview/` are excluded. The exporter omits
+scripts marked `data-production-only` from every portable preview. Section
+navigation does not create extra page views, and a blocked analytics script
+does not prevent the website from working. View analytics by signing in to
+Cloudflare; the public site token provides no dashboard access. Statistics
+start after activation, and browsers that block the beacon will be missing
+from the totals.
+
 ## Single-file preview
 
 Some HTML preview panels only receive the selected file, so relative stylesheet,
@@ -53,7 +83,8 @@ python3 scripts/export_preview.py
 ```
 
 Edit the original source files; `preview.html` is generated. The site uses system
-fonts and has no external CDN dependencies.
+fonts. Its appearance and interactions have no external CDN dependencies;
+optional production analytics loads separately.
 
 ## Polaroid gallery
 
