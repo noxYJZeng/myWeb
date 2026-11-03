@@ -8,6 +8,30 @@ separate pixel animations for books, instant photography, painting, historic
 sites, and a waxwing that looks around, preens, stretches its wings, hops along
 its branch, and picks at berries. No package installation or build is needed to run the site.
 
+The nine habitat butterflies follow separate routes. One resident at a time
+approaches a plant, rests with gently opening wings, and takes off again. A nearby
+mouse or a brief touch makes the nearby butterflies ease away; their return is
+damped, and their flight is kept inside the display. Flight positions repaint at
+up to 30 fps while wing poses retain six pixel frames.
+
+The book, SX-70, and watercolor brush also respond to hovering their row, clicking
+the artwork, or focusing and activating its keyboard control. The controls are
+transparent native buttons over the existing objects, without additional visible
+button panels. Each action finishes before it can be replayed. Automatic actions
+are spaced apart: the book turns one double-sided page around its binding; the
+camera trips its shutter, ejects an opaque print through the centered slot, and
+develops the image in pixel cells; the brush dips into a small paint pan and paints
+directly on the sketchbook. Finished photographs and watercolor remain visible.
+Replaying the camera moves the previous print out below the frame; replaying the
+brush re-wets the finished butterfly instead of clearing the paper. Active actions
+repaint at up to 24 fps, while the existing waxwing keeps its original cadence.
+Actions pause outside the viewport and while the document is hidden. Reduced
+motion displays settled artwork and hides the decorative replay controls.
+
+Motion references were Floor796's independent scene loops, Melonking's object
+interactions, and PixelPlanets' pixel shading. The existing artwork and drawings
+remain original to this site; no external sprites or animation library are bundled.
+
 An opening of about six seconds shows a pixel match striking its box and lighting
 a flickering green flame against black. Green light stays around the match. The match,
 box, and flame clear before the homepage develops from the same near-black

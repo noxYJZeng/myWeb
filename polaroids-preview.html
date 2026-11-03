@@ -1756,6 +1756,26 @@ figcaption > span:last-child {
   justify-self: end;
   min-width: 0;
 }
+.interest-trigger {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  appearance: none;
+}
+.interest-trigger:focus-visible {
+  outline: 2px solid var(--warm);
+  outline-offset: 7px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .interest-trigger {
+    display: none;
+  }
+}
 /* Each small animation lives on an object: a book, film, sketchpad, field note. */
 .interest-art {
   position: relative;

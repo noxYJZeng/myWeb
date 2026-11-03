@@ -15,6 +15,7 @@
   let previous = 0;
   let lastDraw = 0;
   let pointer = null;
+  let pointerUntil = 0;
   let selectedSpecies = "all";
   let randomState = 43;
   const random = () => {
@@ -615,6 +616,7 @@
     const minY = Math.floor(Math.min(...points.map((point) => point[1])));
     const maxY = Math.ceil(Math.max(...points.map((point) => point[1])));
     const maxX = Math.ceil(Math.max(...points.map((point) => point[0])));
+    form.bounds = { minY, maxY, maxX };
     for (let y = minY; y <= maxY; y++) {
       for (let x = 1; x <= maxX; x++) {
         const polygon = inside(x, y, form.upper) ? form.upper : form.lower;
@@ -629,8 +631,9 @@
     }
   }
 
-  function butterfly(form, x, y, scale, phase) {
-    const flap = [1, 0.8, 0.48, 0.24, 0.48, 0.8][Math.floor(phase) % 6];
+  function butterfly(form, x, y, scale, phase, rest = 0, bank = 0) {
+    const beat = [1, 0.8, 0.48, 0.24, 0.48, 0.8][Math.floor(phase) % 6];
+    const flap = beat * (1 - rest) + (0.84 + Math.sin(time * 0.9) * 0.06) * rest;
     const cellW = Math.max(1, Math.ceil(scale * flap));
     x = Math.round(x);
     y = Math.round(y);
@@ -639,7 +642,10 @@
       const distance = Math.round(px * scale * flap);
       for (const direction of [-1, 1]) {
         ctx.fillRect(
-          x + direction * distance - (direction < 0 ? cellW : 0),
+          x +
+            Math.round(py * scale * bank) +
+            Math.round(direction * distance * (1 + direction * bank)) -
+            (direction < 0 ? cellW : 0),
           y + py * scale,
           cellW,
           scale,
@@ -650,7 +656,7 @@
     line(
       x,
       y - scale * 4,
-      x,
+      x + Math.round(scale * 10 * bank),
       y + scale * 10,
       form.palette[3],
       Math.max(1, scale * bodyWidth),
@@ -659,6 +665,118 @@
     line(x, y - scale * 3, x + scale * 3, y - scale * 7, form.palette[1], 1);
     pixel(x - scale * 3, y - scale * 7, form.palette[3], 1);
     pixel(x + scale * 3, y - scale * 7, form.palette[3], 1);
+    if (rest > 0.8) {
+      for (const side of [-1, 1]) {
+        line(
+          x,
+          y + scale * 5,
+          x + side * scale * 3,
+          y + scale * 9,
+          form.palette[0],
+          1,
+        );
+      }
+    }
+  }
+
+  const ease = (p) => {
+    p = Math.max(0, Math.min(1, p));
+    return p * p * (3 - 2 * p);
+  };
+  const perches = {
+    luna: [421, 344],
+    swallowtail: [168, 298],
+    morpho: [532, 274],
+    monarch: [252, 362],
+    glasswing: [665, 264],
+    atlas: [73, 285],
+  };
+  const residents = forms.filter((form) => overviewIds.has(form.id));
+  const visitors = [
+    { form: forms.find((form) => form.id === "morpho"), x: 641, y: 192 },
+    { form: forms.find((form) => form.id === "glasswing"), x: 350, y: 360 },
+    { form: forms.find((form) => form.id === "swallowtail"), x: 463, y: 84 },
+  ];
+  for (const flier of [...forms, ...visitors]) {
+    flier.motion = { x: 0, y: 0, alert: 0 };
+  }
+
+  // One resident lands at a time. The other eight keep their own quiet routes;
+  // these are the existing butterflies, rather than additional particle sprites.
+  function flight(form, index, t, delta, visitor = null) {
+    const focused = selectedSpecies !== "all";
+    const scale = focused
+      ? form.id === "comet" || form.id === "zebra"
+        ? 5
+        : 7
+      : visitor
+        ? 1
+        : form.scale;
+    const phase = index * 1.7;
+    const radiusX = focused ? 7 : visitor ? 12 : 17;
+    const radiusY = focused ? 6 : visitor ? 8 : 13;
+    const home = [
+      (focused ? W / 2 : visitor ? visitor.x : form.x) +
+        Math.sin(t * (0.33 + index * 0.013) + phase) * radiusX +
+        Math.sin(t * 0.17 + index) * 4,
+      (focused ? 210 : visitor ? visitor.y : form.y) +
+        Math.sin(t * (0.51 + index * 0.019) + index * 0.9) * radiusY,
+    ];
+    const motion = (visitor || form).motion;
+    let landing = 0;
+    let lift = 0;
+    if (!focused && !visitor && !reduced) {
+      const slot = t % 16;
+      if (residents[Math.floor(t / 16) % residents.length] === form) {
+        if (slot < 5) {
+          const progress = ease((slot - 2) / 3);
+          landing = progress;
+          lift = -Math.sin(progress * Math.PI) * 22;
+        } else if (slot < 10) {
+          landing = 1;
+        } else {
+          const progress = ease((slot - 10) / 3);
+          landing = 1 - progress;
+          lift = -Math.sin(progress * Math.PI) * 38;
+        }
+      }
+    }
+    const perch = perches[form.id] || home;
+    let x = home[0] + (perch[0] - home[0]) * landing;
+    let y = home[1] + (perch[1] - home[1]) * landing + lift;
+    const dx = pointer ? x - pointer.x : 0;
+    const dy = pointer ? y - pointer.y : 0;
+    const distance = Math.hypot(dx, dy);
+    const attention =
+      pointer && !reduced ? 1 - ease(distance / (42 + scale * 18)) : 0;
+    const follow = 1 - Math.exp(-delta * 5);
+    motion.alert += (attention - motion.alert) * follow;
+    const avoidance = focused ? 24 : 34;
+    motion.x +=
+      ((distance ? dx / distance : 1) * attention * avoidance - motion.x) * follow;
+    motion.y +=
+      ((distance ? dy / distance : -1) * attention * avoidance - motion.y) * follow;
+    // A perched butterfly lifts toward its route when approached, then settles
+    // again gently. No rotation of the canvas: every wing edge stays pixel sharp.
+    x += (home[0] - x) * motion.alert + motion.x;
+    y += (home[1] - y) * motion.alert + motion.y;
+    const side = form.bounds.maxX * scale * 1.12 + 4;
+    x = Math.max(side + 12, Math.min(W - side - 12, x));
+    y = Math.max(
+      24 - form.bounds.minY * scale,
+      Math.min(H - 22 - form.bounds.maxY * scale, y),
+    );
+    const rest = landing * (1 - motion.alert);
+    const bank = reduced ? 0 : Math.cos(t * 0.55 + phase) * 0.07 * (1 - rest);
+    butterfly(
+      form,
+      x,
+      y,
+      scale,
+      reduced ? 0 : t * (12 + form.speed) + phase,
+      rest,
+      bank,
+    );
   }
 
   const motes = Array.from({ length: 32 }, () => ({
@@ -705,7 +823,9 @@
     ctx.globalAlpha = 1;
   }
 
-  function render(t) {
+  function render(t, delta = 0) {
+    if (reduced) t = 0;
+    if (pointer && t > pointerUntil) pointer = null;
     ctx.drawImage(background, 0, 0);
     for (const mote of motes) {
       const light = 0.3 + Math.sin(t * mote.speed + mote.phase) * 0.2;
@@ -733,31 +853,8 @@
       const form = forms[i];
       if (selectedSpecies === "all" && !overviewIds.has(form.id)) continue;
       if (selectedSpecies !== "all" && selectedSpecies !== form.id) continue;
-      const focused = selectedSpecies !== "all";
-      const driftX = focused ? 6 : 11 + (i % 4) * 3;
-      const driftY = focused ? 5 : 7 + (i % 3) * 3;
-      let x =
-        (focused ? W / 2 : form.x) +
-        Math.round(
-          Math.sin(t * (0.33 + i * 0.013) + i * 1.7) * driftX +
-            Math.sin(t * 0.17 + i) * 3,
-        );
-      let y =
-        (focused ? 210 : form.y) +
-        Math.round(Math.sin(t * (0.51 + i * 0.019) + i * 0.9) * driftY);
-      if (pointer) {
-        x += Math.round((pointer.x - W / 2) * 0.02);
-        y += Math.round((pointer.y - H / 2) * 0.02);
-      }
-      const focusedScale = form.id === "comet" || form.id === "zebra" ? 5 : 7;
-      butterfly(
-        form,
-        x,
-        y,
-        focused ? focusedScale : form.scale,
-        reduced ? 0 : t * form.speed + i,
-      );
-      if (focused) {
+      flight(form, i, t, delta);
+      if (selectedSpecies !== "all") {
         ctx.fillStyle = "#83ca98";
         ctx.font = "8px monospace";
         ctx.fillText(form.name, 32, 78);
@@ -765,20 +862,8 @@
       }
     }
     if (selectedSpecies === "all") {
-      const extras = [
-        { type: "morpho", x: 641, y: 192 },
-        { type: "glasswing", x: 463, y: 347 },
-        { type: "swallowtail", x: 463, y: 84 },
-      ];
-      for (const [i, extra] of extras.entries()) {
-        const form = forms.find((form) => form.id === extra.type);
-        butterfly(
-          form,
-          extra.x + Math.round(Math.sin(t * 0.6 + i) * 7),
-          extra.y + Math.round(Math.cos(t * 0.7 + i) * 5),
-          1,
-          reduced ? 0 : t * 3.2 + i,
-        );
+      for (const [i, visitor] of visitors.entries()) {
+        flight(visitor.form, i + 6, t, delta, visitor);
       }
     }
     ctx.save();
@@ -789,26 +874,37 @@
 
   function tick(now) {
     frameId = null;
+    syncMotionPreference();
     if (reduced || !visible || document.hidden) return;
     if (previous) time += Math.min(now - previous, 100) / 1000;
     previous = now;
-    if (now - lastDraw >= 1000 / 12) {
-      render(time);
+    if (now - lastDraw >= 1000 / 30) {
+      render(time, Math.min((now - lastDraw) / 1000, 0.1));
       lastDraw = now;
     }
     frameId = requestAnimationFrame(tick);
   }
   function schedule() {
+    syncMotionPreference();
     if (frameId !== null) cancelAnimationFrame(frameId);
     frameId = null;
     previous = 0;
     if (!reduced && visible && !document.hidden)
       frameId = requestAnimationFrame(tick);
   }
-  reducedMotion.addEventListener("change", (event) => {
-    reduced = event.matches;
-    schedule();
-  });
+  function syncMotionPreference() {
+    if (reduced === reducedMotion.matches) return;
+    reduced = reducedMotion.matches;
+    if (reduced) {
+      pointer = null;
+      for (const flier of [...forms, ...visitors]) {
+        flier.motion = { x: 0, y: 0, alert: 0 };
+      }
+      render(0);
+    }
+  }
+  reducedMotion.addEventListener("change", schedule);
+  window.addEventListener("focus", schedule);
   document.addEventListener("visibilitychange", schedule);
   new IntersectionObserver(
     (entries) => {
@@ -818,15 +914,27 @@
     { rootMargin: "100px" },
   ).observe(canvas);
   canvas.addEventListener("pointermove", (event) => {
+    if (reduced !== reducedMotion.matches) schedule();
     if (reduced || event.pointerType !== "mouse") return;
     const rect = canvas.getBoundingClientRect();
     pointer = {
       x: ((event.clientX - rect.left) / rect.width) * W,
       y: ((event.clientY - rect.top) / rect.height) * H,
     };
+    pointerUntil = Infinity;
   });
-  canvas.addEventListener("pointerleave", () => {
-    pointer = null;
+  canvas.addEventListener("pointerdown", (event) => {
+    if (reduced !== reducedMotion.matches) schedule();
+    if (reduced || event.pointerType === "mouse") return;
+    const rect = canvas.getBoundingClientRect();
+    pointer = {
+      x: ((event.clientX - rect.left) / rect.width) * W,
+      y: ((event.clientY - rect.top) / rect.height) * H,
+    };
+    pointerUntil = time + 1.4;
+  });
+  canvas.addEventListener("pointerleave", (event) => {
+    if (event.pointerType === "mouse") pointer = null;
   });
   for (const button of document.querySelectorAll("[data-species]")) {
     button.addEventListener("focus", () => {

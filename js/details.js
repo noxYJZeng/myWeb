@@ -2,10 +2,16 @@
 
 (() => {
   const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let appliedMotionPreference = preference.matches;
   const states = [];
   let frame = null;
   let previous = 0;
-  let lastPaint = 0;
+  const clamp = (p) => Math.max(0, Math.min(1, p));
+  const ease = (p) => {
+    p = clamp(p);
+    return p * p * (3 - 2 * p);
+  };
+  const mix = (a, b, p) => a + (b - a) * p;
 
   function box(ctx, x, y, width, height, color) {
     ctx.fillStyle = color;
@@ -57,7 +63,7 @@
       for (let y = 12; y < height; y += 18) box(ctx, x, y, 1, 1, "#305c3a55");
     }
   }
-  function book(ctx, t) {
+  function book(ctx, t, state) {
     box(ctx, 42, 118, 156, 5, "#163821");
     polygon(
       ctx,
@@ -93,37 +99,63 @@
     );
     line(ctx, 112, 42, 112, 120, "#718267");
     for (let i = 0; i < 6; i++) {
-      line(ctx, 58, 48 + i * 8, 101, 53 + i * 8, "#7a9371");
+      line(ctx, 58, 47 + i * 8, 101, 53 + i * 8, "#7a9371");
       line(ctx, 124, 53 + i * 8, 174, 47 + i * 8, "#8ba07d");
     }
-    const turn = Math.floor((t % 6) * 3);
-    if (turn < 12) {
-      const edge = 170 - turn * 10;
+    if (state.action) {
+      const progress = ease(state.action.age / 2.8);
+      const cosine = Math.cos(progress * Math.PI);
+      const span = cosine * (cosine >= 0 ? 72 : 64);
+      const edge = 112 + span;
+      const lift = Math.sin(progress * Math.PI) * 10;
       polygon(
         ctx,
         [
           [112, 41],
-          [edge, 33 + Math.abs(edge - 112) * 0.05],
-          [edge, 107],
+          [edge, 32 - lift],
+          [edge, 107 - lift],
           [112, 116],
         ],
-        turn < 6 ? "#d0d4b8" : "#b5c1a0",
+        progress < 0.5 ? "#c1c8aa" : "#adb89b",
       );
-      line(ctx, edge, 36, edge, 105, "#94a784");
+      if (Math.abs(span) > 4) {
+        for (let i = 0; i < 6; i++) {
+          line(
+            ctx,
+            112 + span * 0.17,
+            53 + i * 8 - lift * 0.17,
+            112 + span * 0.86,
+            47 + i * 8 - lift * 0.86,
+            progress < 0.5 ? "#8ba07d" : "#7a9371",
+          );
+        }
+      }
+      line(ctx, edge, 32 - lift, edge, 107 - lift, "#94a784", 1);
     }
-    box(ctx, 128, 109, 5, 22, "#bb9a61");
-    box(ctx, 128, 129, 2, 4, "#bb9a61");
+    const ribbon = Math.round(Math.sin(t * 0.8));
+    box(ctx, 128, 109, 5, 22 + ribbon, "#bb9a61");
+    box(ctx, 128, 129 + ribbon, 2, 4, "#bb9a61");
   }
-  function camera(ctx, t) {
+  function camera(ctx, t, state) {
     const center = 110;
     const slot = { x: center - 35, y: 94, width: 70, height: 8, exitY: 97 };
     const paper = { x: center - 26, width: 52, height: 56 };
-    const cycle = t % 9;
-    const eject = Math.min(1, Math.max(0, (cycle - 0.55) / 2.8));
+    const clearing = state.action?.clearing || 0;
+    const removing = state.action && state.action.age < clearing;
+    const cycle = state.action
+      ? removing
+        ? 6.8
+        : state.action.age - clearing
+      : state.hasPhoto
+        ? 6.8
+        : -1;
+    const eject = ease((cycle - 0.55) / 2.8);
     const visiblePaper = Math.round(eject * paper.height);
-    const photoY = slot.exitY - paper.height + visiblePaper;
-    const photoOpacity = 1 - Math.min(1, Math.max(0, (cycle - 7.7) / 1.1));
-    const develop = Math.min(1, Math.max(0, (cycle - 2) / 3));
+    const removeOffset = removing
+      ? ease(state.action.age / clearing) * (paper.height + 5)
+      : 0;
+    const photoY = slot.exitY - paper.height + visiblePaper + removeOffset;
+    const develop = clamp((cycle - 2.5) / 3.5);
 
     // One straight-on view. Horizontal edges stay level, and every part of
     // the folding body, film slot, and photograph shares the same center.
@@ -327,7 +359,11 @@
     box(ctx, 146, 69, 10, 12, "#58715d");
     box(ctx, 148, 71, 6, 8, "#263e2b");
     box(ctx, 151, 71, 2, 2, "#a7b997");
-    if (cycle < 0.28) box(ctx, 105, 68, 4, 3, "#e6d7a2");
+    if (cycle >= 0 && cycle < 0.22) {
+      box(ctx, 70, 78, 6, 5, "#985b49");
+      box(ctx, 105, 73, 10, 9, "#081a12");
+      if (cycle > 0.08) box(ctx, 106, 70, 4, 3, "#d1d4b1");
+    }
 
     box(ctx, 42, 95, 136, 9, "#9eb3a0");
     box(ctx, 44, 104, 132, 2, "#54715a");
@@ -339,10 +375,8 @@
     ctx.beginPath();
     ctx.rect(paper.x, slot.exitY, paper.width, paper.height);
     ctx.clip();
-    ctx.globalAlpha = photoOpacity;
     box(ctx, paper.x, photoY, paper.width, paper.height, "#dddcc3");
     box(ctx, paper.x + 7, photoY + 5, 38, 38, "#263a30");
-    ctx.globalAlpha = photoOpacity * develop;
     box(ctx, paper.x + 7, photoY + 5, 38, 38, "#3a6650");
     polygon(
       ctx,
@@ -356,8 +390,21 @@
       "#819974",
     );
     box(ctx, 119, photoY + 12, 4, 4, "#d4bd82");
-    ctx.globalAlpha = photoOpacity;
-    if (visiblePaper > 0)
+    // Contrast develops across the whole picture in small, coherent colour
+    // steps. Grain varies the exposure slightly without a flickering noise mask.
+    // The paper stays opaque and on the centered slot's plane throughout.
+    for (let y = 0; y < 38; y += 2) {
+      for (let x = 0; x < 38; x += 2) {
+        const density = pigmentNoise(x, y, 8);
+        const fog = Math.round((1 - develop) * (0.92 + density * 0.08) * 8) / 8;
+        if (fog) {
+          ctx.globalAlpha = fog;
+          box(ctx, paper.x + 7 + x, photoY + 5 + y, 2, 2, "#a0ab95");
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+    if (visiblePaper > 0 && !removing)
       box(
         ctx,
         paper.x,
@@ -811,11 +858,28 @@
     );
     line(ctx, ...point(96, -2), ...point(96, 2), "#b3b798", 1);
   }
-  function painting(ctx, t) {
-    const cycle = t % 12;
-    const progress = Math.min(1, Math.max(0, (cycle - 0.55) / 8.1));
+  function paintPan(ctx) {
+    polygon(
+      ctx,
+      [[307, 184], [344, 184], [349, 189], [349, 204],
+       [344, 209], [307, 209], [303, 204], [303, 189]],
+      "#adb09a",
+      1,
+    );
+    line(ctx, 309, 186, 343, 186, "#dbd7bc", 1);
+    const wells = [[309, "#537b6d"], [322, "#66998b"], [335, "#b39c69"]];
+    for (const [x, color] of wells) {
+      box(ctx, x, 191, 8, 10, "#737f6c");
+      box(ctx, x + 1, 192, 6, 8, color);
+      box(ctx, x + 2, 192, 3, 1, "#d5d3b56b");
+    }
+  }
+  function painting(ctx, t, state) {
+    paintPan(ctx);
+    const age = state.action ? state.action.age : state.hasPainting ? 10.5 : 0;
+    const progress = clamp((age - 1.65) / 8.1);
     const distance = progress * routeLength;
-    const fade = cycle > 11.4 ? Math.max(0, (12 - cycle) / 0.6) : 1;
+    const pigmentDistance = state.hasPainting ? routeLength : distance;
     ctx.save();
     // The transparent pigment bleeds into the page, without a pencil outline.
     ctx.beginPath();
@@ -825,50 +889,64 @@
       const range = washRanges[wing];
       const amount = Math.max(
         0,
-        Math.min(1, (distance - range.start) / (range.end - range.start)),
+        Math.min(1, (pigmentDistance - range.start) / (range.end - range.start)),
       );
       for (const cell of watercolorCells[wing]) {
         const wet = Math.max(0, Math.min(1, (amount - cell.touch) / 0.12));
         if (!wet) continue;
-        ctx.globalAlpha = fade * cell.alpha * wet;
+        ctx.globalAlpha = cell.alpha * wet;
         box(ctx, cell.x, cell.y, 2, 2, cell.color);
       }
     }
     let tip = drawingRoute[0].from;
-    let lifted = cycle < 0.55 || progress === 1;
+    let lifted = true;
     for (const segment of drawingRoute) {
-      if (distance < segment.start) break;
-      const amount = Math.min(
-        1,
-        (distance - segment.start) / (segment.end - segment.start),
-      );
-      tip = segment.from.map((n, axis) => n + (segment.to[axis] - n) * amount);
-      lifted = !segment.ink;
-      if (segment.ink && segment.wing < 0) {
-        ctx.globalAlpha = fade * 0.55;
-        line(ctx, ...segment.from, ...tip, "#487968", 1);
+      if (distance >= segment.start) {
+        const amount = clamp((distance - segment.start) / (segment.end - segment.start));
+        tip = segment.from.map((n, axis) => mix(n, segment.to[axis], amount));
+        lifted = !segment.ink;
       }
-      if (amount < 1) break;
+      if (segment.ink && segment.wing < 0 && pigmentDistance >= segment.start) {
+        const amount = clamp((pigmentDistance - segment.start) / (segment.end - segment.start));
+        const end = segment.from.map((n, axis) => mix(n, segment.to[axis], amount));
+        ctx.globalAlpha = 0.55;
+        line(ctx, ...segment.from, ...end, "#487968", 1);
+      }
+    }
+    // Re-wetting keeps the finished butterfly on the cotton paper. A replay
+    // adds a small wet wash beneath the bristles instead of clearing the sheet.
+    if (state.hasPainting && state.action && age > 1.65 && progress < 1 && !lifted) {
+      for (const wing of watercolorCells) {
+        for (const cell of wing) {
+          const near = Math.max(0, 1 - Math.hypot(cell.x - tip[0], cell.y - tip[1]) / 14);
+          if (!near) continue;
+          ctx.globalAlpha = near * 0.12;
+          box(ctx, cell.x, cell.y, 2, 2, cell.color);
+        }
+      }
     }
     ctx.restore();
-    // Lift smoothly to a resting position outside the sheet, then return.
     const rest = [256, 102];
-    let drawingAngle = 1;
-    if (progress === 1) {
-      const p = Math.min(1, (cycle - 8.65) / 0.75);
-      const eased = p * p * (3 - 2 * p);
-      drawingAngle = 1 - eased;
-      tip = tip.map((n, i) => n + (rest[i] - n) * eased);
+    const well = [325, 196];
+    let angle = -0.79 + Math.sin(t * 0.9) * 0.04;
+    if (age < 0.9) {
+      const progress = ease(age / 0.65);
+      tip = rest.map((n, i) => mix(n, well[i], progress));
+      angle = mix(-0.56, -2.18, progress);
+      if (age > 0.65) tip[1] += Math.sin((age - 0.65) / 0.25 * Math.PI) * 2;
+      lifted = age < 0.65;
+    } else if (age < 1.65) {
+      const progress = ease((age - 0.9) / 0.75);
+      tip = well.map((n, i) => mix(n, drawingRoute[0].from[i], progress));
+      angle = mix(-2.18, -0.79, progress);
       lifted = true;
-    } else if (cycle < 0.55) {
-      const p = cycle / 0.55;
-      const eased = p * p * (3 - 2 * p);
-      drawingAngle = eased;
-      tip = rest.map((n, i) => n + (drawingRoute[0].from[i] - n) * eased);
+    } else if (progress === 1) {
+      const progress = ease((age - 9.75) / 0.75);
+      tip = tip.map((n, i) => mix(n, rest[i], progress));
+      angle = mix(-0.79, -0.56, progress);
       lifted = true;
     }
     const lift = lifted ? 3 + Math.sin(t * 2) : 0;
-    const angle = -0.56 + (-0.23 + Math.sin(t * 0.9) * 0.04) * drawingAngle;
     brush(ctx, [tip[0], tip[1] - lift], angle, lifted);
   }
 
@@ -1483,6 +1561,20 @@
     ruins,
     waxwing: waxwingScene,
   };
+  const interactions = {
+    reading: {
+      duration: 2.8, delay: 9, first: 2.5,
+      label: "Turn a page in the pixel book",
+    },
+    camera: {
+      duration: 6.8, delay: 11, first: 1,
+      label: "Take a pixel photograph",
+    },
+    painting: {
+      duration: 10.5, delay: 15, first: 1.4,
+      label: "Paint a watercolor butterfly",
+    },
+  };
 
   function paint(state) {
     const { canvas, ctx, type, time } = state;
@@ -1491,7 +1583,39 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (type === "camera") backdrop(ctx, canvas.width, canvas.height);
     }
-    painters[type](ctx, time);
+    painters[type](ctx, time, state);
+  }
+  function startAction(state, wake = true) {
+    syncMotionPreference();
+    if (preference.matches || state.action) return;
+    const clearing = state.type === "camera" && state.hasPhoto ? 0.8 : 0;
+    state.action = { age: 0, clearing };
+    state.canvas.dataset.motion = "playing";
+    state.control?.setAttribute("aria-busy", "true");
+    paint(state);
+    if (wake && frame === null) schedule();
+  }
+  function finishAction(state) {
+    if (state.type === "camera") state.hasPhoto = true;
+    if (state.type === "painting") state.hasPainting = true;
+    state.action = null;
+    state.untilNext = interactions[state.type].delay;
+    state.canvas.dataset.motion = "resting";
+    state.control?.setAttribute("aria-busy", "false");
+  }
+  function syncMotionPreference() {
+    if (appliedMotionPreference === preference.matches) return;
+    appliedMotionPreference = preference.matches;
+    for (const state of states) {
+      if (!state.interaction) continue;
+      if (appliedMotionPreference) {
+        finishAction(state);
+        state.canvas.dataset.motion = "still";
+        paint(state);
+      } else {
+        state.canvas.dataset.motion = "resting";
+      }
+    }
   }
   function active() {
     return (
@@ -1501,6 +1625,7 @@
     );
   }
   function schedule() {
+    syncMotionPreference();
     if (frame !== null) cancelAnimationFrame(frame);
     frame = null;
     previous = 0;
@@ -1508,16 +1633,31 @@
   }
   function tick(now) {
     frame = null;
+    // Also check on a frame: some browsers defer media-query change events.
+    // Settle the drawing before stopping rather than freezing a half-made print.
+    syncMotionPreference();
     if (!active()) return;
     const delta = previous ? Math.min(now - previous, 100) / 1000 : 0;
     previous = now;
-    const repaint = now - lastPaint >= 1000 / 9;
     for (const state of states) {
       if (!state.visible) continue;
       state.time += delta;
-      if (repaint) paint(state);
+      if (state.interaction) {
+        if (state.action) {
+          state.action.age += delta;
+          if (state.action.age >= state.interaction.duration + state.action.clearing)
+            finishAction(state);
+        } else {
+          state.untilNext -= delta;
+          if (state.untilNext <= 0) startAction(state, false);
+        }
+      }
+      const interval = state.action ? 1000 / 24 : 1000 / 9;
+      if (now - state.lastPaint >= interval) {
+        paint(state);
+        state.lastPaint = now;
+      }
     }
-    if (repaint) lastPaint = now;
     frame = requestAnimationFrame(tick);
   }
   function fitScene(state) {
@@ -1546,8 +1686,31 @@
             : 5
         : 0,
       visible: false,
+      action: null,
+      lastPaint: 0,
+      hasPhoto: preference.matches,
+      hasPainting: preference.matches,
+      interaction: interactions[canvas.dataset.pixels],
+      untilNext: interactions[canvas.dataset.pixels]?.first || 0,
     };
     states.push(state);
+    if (state.interaction) {
+      const control = document.createElement("button");
+      control.type = "button";
+      control.className = "interest-trigger";
+      control.setAttribute("aria-label", state.interaction.label);
+      control.title = state.interaction.label;
+      state.control = control;
+      state.canvas.dataset.motion = preference.matches ? "still" : "resting";
+      canvas.closest(".interest-visual").append(control);
+      control.addEventListener("click", () => startAction(state));
+      control.addEventListener("focus", () => {
+        if (control.matches(":focus-visible")) startAction(state);
+      });
+      canvas.closest(".interest-row").addEventListener("pointerenter", (event) => {
+        if (event.pointerType === "mouse") startAction(state);
+      });
+    }
     if (state.type === "waxwing") fitScene(state);
     paint(state);
   }
@@ -1572,5 +1735,6 @@
   );
   states.forEach((state) => observer.observe(state.canvas));
   preference.addEventListener("change", schedule);
+  window.addEventListener("focus", schedule);
   document.addEventListener("visibilitychange", schedule);
 })();
