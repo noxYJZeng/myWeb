@@ -1,0 +1,55 @@
+/* Whole-page motion is scoped to the homepage controller. */
+.scroll-atmosphere {
+  display: none;
+}
+html.has-scroll-scene {
+  scroll-padding-top: 108px;
+}
+.has-scroll-scene body {
+  isolation: isolate;
+  overflow-x: clip;
+}
+.has-scroll-scene .scroll-atmosphere {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+.has-scroll-scene .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--bg);
+}
+.has-scroll-scene .skip-link:focus {
+  z-index: 60;
+}
+.has-scroll-scene [data-scroll-art] {
+  transform-origin: center;
+}
+@media (max-width: 620px) {
+  html.has-scroll-scene {
+    scroll-padding-top: 72px;
+  }
+  .has-scroll-scene .site-header {
+    top: -52px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .has-scroll-scene [data-scroll-reveal],
+  .has-scroll-scene [data-scroll-depth] {
+    translate: none !important;
+    opacity: 1 !important;
+  }
+  .has-scroll-scene [data-scroll-mask] {
+    clip-path: none !important;
+  }
+  .has-scroll-scene [data-scroll-art] {
+    transform: none !important;
+    translate: none !important;
+  }
+}

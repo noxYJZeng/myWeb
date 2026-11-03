@@ -32,6 +32,23 @@ Motion references were Floor796's independent scene loops, Melonking's object
 interactions, and PixelPlanets' pixel shading. The existing artwork and drawings
 remain original to this site; no external sprites or animation library are bundled.
 
+The homepage also has a scroll choreography in `js/scroll.js` and `scroll.css`.
+The greeting and terminal move at different depths as the hero leaves. Project
+files arrive from alternating sides as their images resolve through a stepped
+pixel reveal, the contact papers spread as their section passes through the
+viewport, and Interests pair
+text entrances with a slower artwork layer. A low-resolution night background
+changes its dark green tone by section. The existing navigation stays at the top;
+on phones its wordmark scrolls away while the navigation row remains available.
+Scrolling keeps the browser's native wheel, touch, anchor, and history behavior.
+
+Entrances run once with temporary Web Animations rather than permanently hidden
+CSS states. Focusing a link or jumping to a section settles its entrance; hiding
+the tab cancels active entrances. Reduced motion keeps the finished composition
+and removes scroll depth and reveal effects. The scroll layer waits for the green
+match opening to finish, and its background redraws only when the view changes.
+No new runtime dependencies are needed.
+
 An opening of about six seconds shows a pixel match striking its box and lighting
 a flickering green flame against black. Green light stays around the match. The match,
 box, and flame clear before the homepage develops from the same near-black
