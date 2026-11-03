@@ -33,11 +33,11 @@ interactions, and PixelPlanets' pixel shading. The existing artwork and drawings
 remain original to this site; no external sprites or animation library are bundled.
 
 The homepage also has a scroll choreography in `js/scroll.js` and `scroll.css`.
-The greeting and terminal move at different depths as the hero leaves. Project
-files arrive from alternating sides as their images resolve through a stepped
-pixel reveal, the contact papers spread as their section passes through the
-viewport, and Interests pair
-text entrances with a slower artwork layer. A low-resolution night background
+The greeting and terminal move at different depths as the hero leaves. The featured
+project image resolves through a stepped pixel reveal, and work directory rows
+arrive with a short vertical movement. The contact papers spread as their section
+passes through the viewport, and Interests pair text entrances with a slower
+artwork layer. A low-resolution night background
 changes its dark green tone by section. The existing navigation stays at the top;
 on phones its wordmark scrolls away while the navigation row remains available.
 Scrolling keeps the browser's native wheel, touch, anchor, and history behavior.
@@ -209,8 +209,23 @@ marked completed and describes paper-to-code verification, cited paper and code
 evidence, mismatch explanations, and optional reference tests. The stack now
 includes its React web interface. `assets/claim2code.jpg` is the project's actual
 LoRA verification screenshot from `docs/screenshots/verification.jpg`; it links
-to the full screenshot in the project repository. The file-folder layout keeps
+to the full screenshot in the project repository. An open two-column feature keeps
 the screenshot beside the description on desktop and below it on small screens.
+
+The other five projects form a compact, numbered directory, with descriptions and
+technology lists visible on every link. `js/projects.js` adds a single shared
+preview on desktop: pointer hover, keyboard focus, and the row nearest the
+viewport center select its image. There is no timed slideshow, extra selection
+step, or change to the link destinations. At 900px and below, and when the script
+is unavailable, each row has its own small thumbnail. Reduced motion switches
+previews immediately. `assets/gba-pixel.svg` is an original illustration of the
+handheld console, rather than a screenshot of the game.
+
+Composition and image-reveal references were the official Codrops sources for
+[Double Image Hover Effects](https://github.com/codrops/DoubleImageHoverEffects)
+and [On-Scroll Image Layout Animations](https://github.com/codrops/ScrollBasedLayoutAnimations).
+The implementation uses native HTML links, CSS layout, and Web Animations, with
+no imported demo code, photos, fonts, or runtime dependencies.
 
 Contact uses three visibly offset sheets: ivory lace, deckled sage paper,
 and smoky rose writing paper with a folded corner. The lower stocks have
@@ -222,11 +237,9 @@ stepped edges and a small fixed palette. GitHub and LinkedIn use accessible icon
 The navigation includes all four sections. Small section labels use Intro,
 Selected Projects, Find Me, and Know More About Me.
 The butterfly habitat uses a graphite instrument casing, recessed glass,
-subtle reflections, corner screws, and a small vent. Projects are working index
-cards in alternating pale and dark stocks, with a tabbed folder for Claim2Code.
-Paper texture, ruled and graph stocks, a clip, and a folded corner give these
-surfaces physical depth. The visual references are reflected glass, manuscripts
-and commentary, and index-card writing; the page keeps direct section titles.
+subtle reflections, corner screws, and a small vent. Projects use open typography
+and one shared illustration area; the tactile paper materials remain in Contact
+and Interests. The page keeps direct section titles.
 Interests use four full-width rows, with personal text on the left and pixel
 artwork on the right, including on narrow screens. A clothbound book, film strip,
 sketchbook, and folded field note hold the artwork. The sketchbook has no inner

@@ -40,9 +40,7 @@
   register(".work .section-heading, .offscreen .section-heading", { y: 34 });
   register(".project-focus", { y: 72, solid: true, duration: 1000 });
   register(".project-preview img", { y: 0, mask: true, solid: true, duration: 1100 });
-  register(".projects-grid > .project", { cards: true, solid: true, duration: 950 });
-  register(".projects-grid .project-image", { y: 0, mask: true, solid: true, duration: 1000 });
-  register(".project-extra", { x: -26, y: 18 });
+  register(".project-list > li", { y: 24, solid: true, duration: 650 });
   register(".contact-stack", { y: 76, solid: true, duration: 1100 });
   register(".contact-paper", { y: 30, delay: 90, solid: true, duration: 1000 });
   register(".contact-pen", { x: 32, y: -30, delay: 260, solid: true, duration: 950 });
@@ -141,11 +139,6 @@
     let x = options.x || 0;
     let y = options.y ?? 32;
     let delay = options.delay || 0;
-    if (options.cards) {
-      x = (options.index % 2 ? 1 : -1) * 38;
-      y = 68;
-      delay = compact() ? 0 : (options.index % 2) * 90;
-    }
     if (compact()) {
       x = Math.max(-12, Math.min(12, x));
       y *= 0.65;

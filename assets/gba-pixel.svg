@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="210" viewBox="0 0 320 210" shape-rendering="crispEdges">
+  <title>Pixel illustration of a Game Boy Advance</title>
+  <path fill="#16281e" d="M32 48h256v8h16v24h8v66h-8v16h-16v8H32v-8H16v-16H8V80h8V56h16z"/>
+  <path fill="#98aa95" d="M32 40h256v8h16v24h8v66h-8v16h-16v8H32v-8H16v-16H8V72h8V48h16z"/>
+  <path fill="#c0c9ad" d="M32 40h256v8H32zm-16 8h16v8H16zm-8 24h8v48H8z"/>
+  <path fill="#5e7863" d="M32 152h256v10H32zm256-14h16v16h-16zm16-26h8v26h-8z"/>
+  <path fill="#263e30" d="M76 49h168v102H76z"/>
+  <path fill="#0b1810" d="M84 57h152v80H84z"/>
+  <path fill="none" stroke="#719665" stroke-width="3" d="M92 65h136v64H92V65zm12 12h32v12h-32V77zm48 0h28v12h-28V77zm44 0h20v12h-20V77zm-92 24h20v16h-20v-16zm36 0h36m20 0h20v16h-20v-16"/>
+  <path fill="#ddc37c" d="M145 103h8v3h5v3h-6v5h6v3h-5v3h-8v-3h-3v-11h3z"/>
+  <path fill="#adc593" d="M165 110h3v3h-3zm12 0h3v3h-3zm12 0h3v3h-3z"/>
+  <path fill="#435b48" d="M35 81h12v-12h12v12h12v12H59v12H47V93H35z"/>
+  <path fill="#243d2c" d="M39 84h11V73h6v11h11v6H56v11h-6V90H39z"/>
+  <path fill="#667a60" d="M265 80h14v14h-14zm19-11h14v14h-14z"/>
+  <path fill="#3c5944" d="M268 83h8v8h-8zm19-11h8v8h-8z"/>
+  <path fill="#536e57" d="M39 122h17v5H39zm0 10h17v5H39zm224-10h20v3h-20zm0 9h20v3h-20zm0 9h20v3h-20z"/>
+  <path fill="#bfd3ad" d="M270 56h7v4h-7zM132 143h56v3h-56z"/>
+</svg>
