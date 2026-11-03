@@ -157,11 +157,20 @@ upper roller and in front of the lower casing. Exterior reference:
 [SX-70 project photograph](https://github.com/udut7/Polaroid-SX70-RPi/blob/master/SX70_Raspberry_Pi.jpg).
 The reference photograph is not bundled with the site.
 
-The biography and featured Claim2Code project reflect the latest supplied resume:
+The biography reflects the latest supplied resume:
 Georgia Tech M.S. in Computer Science (Machine Learning), LLM agent training at
 ZTE, and AI research tooling. The ARR note records a paper submission.
 The biography briefly includes both the Georgia Tech B.S. and M.S., plus the
 current team-matching stage for Google's 2027 SWE internship.
+
+The featured [Claim2Code project](https://github.com/noxYJZeng/claim2code) is
+marked completed and describes paper-to-code verification, cited paper and code
+evidence, mismatch explanations, and optional reference tests. The stack now
+includes its React web interface. `assets/claim2code.jpg` is the project's actual
+LoRA verification screenshot from `docs/screenshots/verification.jpg`; it links
+to the full screenshot in the project repository. The file-folder layout keeps
+the screenshot beside the description on desktop and below it on small screens.
+
 Contact uses three visibly offset sheets: ivory lace, deckled sage paper,
 and smoky rose writing paper with a folded corner. The lower stocks have
 locally drawn fibers and relief grain, with faint ruling and crease highlights. A green and brass pixel fountain pen rests

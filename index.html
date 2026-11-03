@@ -11,7 +11,7 @@
     <title>Nox Zeng — Personal Website</title>
     <link rel="icon" type="image/svg+xml" href="assets/butterfly.svg" />
     <link rel="apple-touch-icon" href="assets/favicon.png" />
-    <link rel="stylesheet" href="style.css?v=e308ce322644" />
+    <link rel="stylesheet" href="style.css?v=cd474320275c" />
     <script src="js/intro.js?v=c462114d2ba2"></script>
     <script src="js/garden.js?v=2a47d5484334" defer></script>
     <script src="js/site.js?v=141482794531" defer></script>
@@ -213,18 +213,48 @@
           >
         </div>
         <article class="project-focus" aria-labelledby="claim2code-title">
-          <div>
+          <div class="project-focus-copy">
             <p class="eyebrow">AI / RESEARCH TOOLS</p>
-            <h3 id="claim2code-title">Claim2Code</h3>
+            <div class="project-focus-title">
+              <h3 id="claim2code-title">Claim2Code</h3>
+              <span class="project-status">Completed</span>
+            </div>
             <span class="project-stack"
-              >PYTHON · FASTAPI · PYTORCH · PGVECTOR</span
+              >PYTHON · FASTAPI · REACT · PGVECTOR</span
+            >
+            <p>
+              A web app for checking whether claims in ML papers match their
+              code. Upload a paper PDF and link its GitHub repository to get
+              verdicts with cited paper passages and code lines. It also explains
+              mismatches and supports optional reference tests.
+            </p>
+            <a
+              class="text-link"
+              href="https://github.com/noxYJZeng/claim2code"
+              target="_blank"
+              rel="noopener noreferrer"
+              >View on GitHub <span aria-hidden="true">↗</span></a
             >
           </div>
-          <p>
-            An AI agent that checks claims in ML papers against PyTorch code. It
-            combines embeddings with symbol/dependency signals, served through
-            FastAPI with PostgreSQL and pgvector.
-          </p>
+          <a
+            class="project-preview"
+            href="https://github.com/noxYJZeng/claim2code/blob/main/docs/screenshots/verification.jpg"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View the Claim2Code verification screenshot"
+          >
+            <img
+              src="assets/claim2code.jpg"
+              alt="Claim2Code checking a LoRA claim and explaining a mismatch between the paper and its code"
+              width="1440"
+              height="756"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="project-preview-label"
+              >LoRA verification example <span aria-hidden="true">↗</span></span
+            >
+          </a>
         </article>
         <div class="projects-grid">
           <a
