@@ -17,7 +17,7 @@
   document.body.append(cursor);
 
   const controls =
-    'a[href], button, summary, [role="button"], [role="link"], select, input:not([type="hidden"]), label[for], .album-scene[data-page-direction]';
+    'a[href], button, summary, [role="button"], [role="link"], select, input:not([type="hidden"]), label[for], .album-scene[data-page-direction], .paper-card';
   const flames = [
     [
       "...o...",

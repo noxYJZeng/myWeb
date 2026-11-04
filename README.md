@@ -33,9 +33,9 @@ interactions, and PixelPlanets' pixel shading. The existing artwork and drawings
 remain original to this site; no external sprites or animation library are bundled.
 
 The homepage also has a scroll choreography in `js/scroll.js` and `scroll.css`.
-The greeting and terminal move at different depths as the hero leaves. Project
-groups and notes arrive with a short vertical movement; the current note gains
-a cotton-paper surface as the shared illustration changes. The contact papers spread as their section
+The greeting and terminal move at different depths as the hero leaves. The paper
+index and its reading area arrive with a short vertical movement. The six sheets
+open into a fan as the section enters. The contact papers spread as their section
 passes through the viewport, and Interests pair text entrances with a slower
 artwork layer. A low-resolution night background
 changes its dark green tone by section. The existing navigation stays at the top;
@@ -203,38 +203,40 @@ current RSI research, and experience with LLM agents and reinforcement learning
 at ZTE. It records a first-author paper under review at NAACL and the current
 team-matching stage for Google's 2027 SWE internship.
 
-Projects are grouped by purpose: **ML & AI** contains Claim2Code and LBM Fluid
-Simulation, **SWE** contains NASA Explorer, HealthTracker, and ATLSFW, and
-**C & Systems** contains Pacman GBA. All six use the same note component, with
-project descriptions and technology lists available directly in the page.
+Projects retain three subject groups: **ML & AI** (Claim2Code and LBM), **SWE**
+(NASA Explorer, HealthTracker, ATLSFW), and **C & Systems** (Pacman GBA).
+`js/projects.js` builds a 3D paper index from these six readable HTML notes;
+`project-gallery.css` is scoped to the enhanced homepage component. The papers
+fan diagonally into depth, open as the section enters, and respond to pointer
+movement. Hovering a sheet pulls it forward and switches the full introduction
+below it. Descriptions and project links stay in an untransformed reading area.
 
-`js/projects.js` follows pointer movement, keyboard focus, or the note nearest
-the viewport center. One active note gains a gray-sage rag-paper surface with
-irregular edges, exposed cotton fibers, and pulp grain. `assets/project-rag-paper.svg`
-is original vector artwork. Paper and ink colors change together; the arrival
-moves only the material beneath the text, keeping the text readable and still.
-Links use an underline for keyboard focus. There are no project card outlines,
-row rules, category filter buttons, or separate featured-project layout.
+Each sheet has its own original SVG material in `assets/project-papers/`: ivory
+cotton, lavender graph paper, sage laid stock, rose fiber paper, mint vellum, and
+kraft board. Different torn outlines, loose fibers, grain, ruling, and creases
+make the surfaces distinct. Backing planes at different depths give them varied
+thickness, with contour shadows rather than rectangular frames. Existing project
+artwork is printed into each face; the Claim2Code image remains its real UI.
 
-On wide screens one shared illustration accompanies the current note. At 900px
-and below, and when preview scripting is unavailable, small illustrations sit
-within each note. Scroll selection also works on touch layouts. Reduced motion
-settles the paper immediately and switches previews without animation. Native
-links, wheel and touch scrolling, and browser history remain in control.
+A grouped catalog provides native tabs with arrow-key and Home/End navigation.
+Touch users can tap sheets or catalog names and swipe horizontally through the
+stack; vertical page scrolling and pinch zoom retain browser behavior. Reduced
+motion removes the fan transitions, pointer drift, and introduction animation.
+The component has no perpetual animation loop. Without JavaScript or supported
+3D transforms, all six grouped notes and links remain readable, using the earlier
+fiber-edged paper material in `assets/project-rag-paper.svg`.
+
+The visual reference is the user-provided screenshot of
+[Jacob How's index](https://www.jcubhow.com/). The live site was blocked by this
+environment's destination policy, so its animation was not inspected live and
+none of its code or assets are bundled. The implementation uses CSS perspective
+and native browser APIs, with no new runtime library.
 
 The [Claim2Code project](https://github.com/noxYJZeng/claim2code) is marked
 completed and describes paper-to-code verification, cited evidence, mismatch
-explanations, and optional reference tests. Its React interface is included in
-the technology list. `assets/claim2code.jpg` is the actual LoRA verification
-screenshot; the note links to the full example in the project repository.
-`assets/gba-pixel.svg` is an original console illustration rather than a game
-screenshot.
-
-Paper presentation and reveal references were the official Codrops sources for
-[PFold](https://github.com/codrops/PFold) and
-[Item Revealer](https://github.com/codrops/ItemRevealer). The material and behavior
-are implemented locally with SVG, CSS, and native browser APIs. No demo code,
-photographs, jQuery, animation library, or fonts are bundled from these references.
+explanations, and optional reference tests. Its note links to the actual LoRA
+verification screenshot in the project repository. `assets/gba-pixel.svg` is an
+original console illustration rather than a screenshot of the game.
 
 Contact uses three visibly offset sheets: ivory lace, deckled sage paper,
 and smoky rose writing paper with a folded corner. The lower stocks have
@@ -246,8 +248,8 @@ stepped edges and a small fixed palette. GitHub and LinkedIn use accessible icon
 The navigation includes all four sections. Small section labels use Intro,
 Selected Projects, Find Me, and Know More About Me.
 The butterfly habitat uses a graphite instrument casing, recessed glass,
-subtle reflections, corner screws, and a small vent. The current project gains
-a fiber-edged paper note, while Contact and Interests keep their own tactile
+subtle reflections, corner screws, and a small vent. Projects use a fan of
+different torn paper stocks; Contact and Interests keep their own tactile
 materials. The page keeps direct section titles.
 Interests use four full-width rows, with personal text on the left and pixel
 artwork on the right, including on narrow screens. A clothbound book, film strip,
