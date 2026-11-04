@@ -38,8 +38,7 @@
   register(".about-main h2", { y: 30, duration: 700 });
   register(".about-copy", { y: 46, delay: 80, duration: 850 });
   register(".work .section-heading, .offscreen .section-heading", { y: 34 });
-  register(".project-focus", { y: 72, solid: true, duration: 1000 });
-  register(".project-preview img", { y: 0, mask: true, solid: true, duration: 1100 });
+  register(".project-group-title", { y: 20, duration: 650 });
   register(".project-list > li", { y: 24, solid: true, duration: 650 });
   register(".contact-stack", { y: 76, solid: true, duration: 1100 });
   register(".contact-paper", { y: 30, delay: 90, solid: true, duration: 1000 });

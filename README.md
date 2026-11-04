@@ -33,9 +33,9 @@ interactions, and PixelPlanets' pixel shading. The existing artwork and drawings
 remain original to this site; no external sprites or animation library are bundled.
 
 The homepage also has a scroll choreography in `js/scroll.js` and `scroll.css`.
-The greeting and terminal move at different depths as the hero leaves. The featured
-project image resolves through a stepped pixel reveal, and work directory rows
-arrive with a short vertical movement. The contact papers spread as their section
+The greeting and terminal move at different depths as the hero leaves. Project
+groups and notes arrive with a short vertical movement; the current note gains
+a cotton-paper surface as the shared illustration changes. The contact papers spread as their section
 passes through the viewport, and Interests pair text entrances with a slower
 artwork layer. A low-resolution night background
 changes its dark green tone by section. The existing navigation stays at the top;
@@ -204,28 +204,38 @@ ZTE, and AI research tooling. The ARR note records a paper submission.
 The biography briefly includes both the Georgia Tech B.S. and M.S., plus the
 current team-matching stage for Google's 2027 SWE internship.
 
-The featured [Claim2Code project](https://github.com/noxYJZeng/claim2code) is
-marked completed and describes paper-to-code verification, cited paper and code
-evidence, mismatch explanations, and optional reference tests. The stack now
-includes its React web interface. `assets/claim2code.jpg` is the project's actual
-LoRA verification screenshot from `docs/screenshots/verification.jpg`; it links
-to the full screenshot in the project repository. An open two-column feature keeps
-the screenshot beside the description on desktop and below it on small screens.
+Projects are grouped by purpose: **ML & AI** contains Claim2Code and LBM Fluid
+Simulation, **SWE** contains NASA Explorer, HealthTracker, and ATLSFW, and
+**C & Systems** contains Pacman GBA. All six use the same note component, with
+project descriptions and technology lists available directly in the page.
 
-The other five projects form a compact, numbered directory, with descriptions and
-technology lists visible on every link. `js/projects.js` adds a single shared
-preview on desktop: pointer hover, keyboard focus, and the row nearest the
-viewport center select its image. There is no timed slideshow, extra selection
-step, or change to the link destinations. At 900px and below, and when the script
-is unavailable, each row has its own small thumbnail. Reduced motion switches
-previews immediately. `assets/gba-pixel.svg` is an original illustration of the
-handheld console, rather than a screenshot of the game.
+`js/projects.js` follows pointer movement, keyboard focus, or the note nearest
+the viewport center. One active note gains a gray-sage rag-paper surface with
+irregular edges, exposed cotton fibers, and pulp grain. `assets/project-rag-paper.svg`
+is original vector artwork. Paper and ink colors change together; the arrival
+moves only the material beneath the text, keeping the text readable and still.
+Links use an underline for keyboard focus. There are no project card outlines,
+row rules, category filter buttons, or separate featured-project layout.
 
-Composition and image-reveal references were the official Codrops sources for
-[Double Image Hover Effects](https://github.com/codrops/DoubleImageHoverEffects)
-and [On-Scroll Image Layout Animations](https://github.com/codrops/ScrollBasedLayoutAnimations).
-The implementation uses native HTML links, CSS layout, and Web Animations, with
-no imported demo code, photos, fonts, or runtime dependencies.
+On wide screens one shared illustration accompanies the current note. At 900px
+and below, and when preview scripting is unavailable, small illustrations sit
+within each note. Scroll selection also works on touch layouts. Reduced motion
+settles the paper immediately and switches previews without animation. Native
+links, wheel and touch scrolling, and browser history remain in control.
+
+The [Claim2Code project](https://github.com/noxYJZeng/claim2code) is marked
+completed and describes paper-to-code verification, cited evidence, mismatch
+explanations, and optional reference tests. Its React interface is included in
+the technology list. `assets/claim2code.jpg` is the actual LoRA verification
+screenshot; the note links to the full example in the project repository.
+`assets/gba-pixel.svg` is an original console illustration rather than a game
+screenshot.
+
+Paper presentation and reveal references were the official Codrops sources for
+[PFold](https://github.com/codrops/PFold) and
+[Item Revealer](https://github.com/codrops/ItemRevealer). The material and behavior
+are implemented locally with SVG, CSS, and native browser APIs. No demo code,
+photographs, jQuery, animation library, or fonts are bundled from these references.
 
 Contact uses three visibly offset sheets: ivory lace, deckled sage paper,
 and smoky rose writing paper with a folded corner. The lower stocks have
@@ -237,9 +247,9 @@ stepped edges and a small fixed palette. GitHub and LinkedIn use accessible icon
 The navigation includes all four sections. Small section labels use Intro,
 Selected Projects, Find Me, and Know More About Me.
 The butterfly habitat uses a graphite instrument casing, recessed glass,
-subtle reflections, corner screws, and a small vent. Projects use open typography
-and one shared illustration area; the tactile paper materials remain in Contact
-and Interests. The page keeps direct section titles.
+subtle reflections, corner screws, and a small vent. The current project gains
+a fiber-edged paper note, while Contact and Interests keep their own tactile
+materials. The page keeps direct section titles.
 Interests use four full-width rows, with personal text on the left and pixel
 artwork on the right, including on narrow screens. A clothbound book, film strip,
 sketchbook, and folded field note hold the artwork. The sketchbook has no inner

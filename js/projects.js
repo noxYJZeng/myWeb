@@ -1,14 +1,14 @@
 "use strict";
 
-// The work directory is a normal list of links. Its shared desktop preview is
-// optional: touch layouts and script failures keep thumbnails beside each link.
+// Grouped notes remain ordinary HTML. Scroll, pointer, and keyboard attention
+// choose one cotton-paper note; a shared image accompanies it on wide screens.
 (() => {
   const directory = document.querySelector(".project-index");
   if (!directory) return;
-  const rows = [...directory.querySelectorAll(".project-row")];
+  const notes = [...directory.querySelectorAll(".project-note")];
   const previews = new Map([...directory.querySelectorAll("[data-preview]")]
     .map((node) => [node.dataset.preview, node]));
-  const track = [...directory.querySelectorAll(".project-stage-track > i")];
+  if (!notes.length) return;
   const desktop = matchMedia("(min-width: 901px)");
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   let current = null;
@@ -23,23 +23,19 @@
     animation = null;
   }
 
-  function select(row, animate = true) {
-    if (!desktop.matches || current === row) return;
-    const preview = previews.get(row.dataset.project);
+  function select(note) {
+    if (current === note) return;
+    const preview = previews.get(note.dataset.project);
     if (!preview) return;
     cancelAnimation();
-    current = row;
-    rows.forEach((item, index) => {
-      item.dataset.active = String(item === row);
-      track[index]?.classList.toggle("is-active", item === row);
-    });
+    current = note;
+    notes.forEach((item) => { item.dataset.active = String(item === note); });
     previews.forEach((node) => { node.hidden = node !== preview; });
-    if (!animate || motion.matches || document.hidden || !preview.animate) return;
-    // One short arrival, without stacking outgoing images or blurring text.
+    if (!desktop.matches || motion.matches || document.hidden || !preview.animate) return;
     animation = preview.animate([
-      { opacity: 0.55, translate: "0 8px" },
+      { opacity: 0.65, translate: "0 8px" },
       { opacity: 1, translate: "0 0" },
-    ], { duration: 240, easing: "cubic-bezier(.2,.7,.3,1)" });
+    ], { duration: 280, easing: "cubic-bezier(.2,.7,.3,1)" });
     const arrival = animation;
     arrival.addEventListener("finish", () => {
       if (animation === arrival) cancelAnimation();
@@ -48,46 +44,48 @@
 
   function update() {
     frame = null;
-    if (!desktop.matches || document.hidden) return;
-    if (focused || pointed) {
-      select(intent === "pointer" ? pointed || focused : focused || pointed);
-      return;
-    }
+    if (document.hidden) return;
     const rect = directory.getBoundingClientRect();
     if (rect.bottom < 100 || rect.top > innerHeight) return;
+    const geometry = notes.map((note) => ({ note, rect: note.getBoundingClientRect() }));
+    const visible = (note) => geometry.some((item) => item.note === note &&
+      item.rect.bottom > 100 && item.rect.top < innerHeight - 40);
+    const preferred = intent === "pointer" ? pointed || focused : focused || pointed;
+    if (preferred && visible(preferred)) {
+      select(preferred);
+      return;
+    }
     const target = innerHeight * 0.5;
-    const nearest = rows.reduce((best, row) => {
-      const rect = row.getBoundingClientRect();
-      const distance = Math.abs(rect.top + rect.height / 2 - target);
-      return !best || distance < best.distance ? { row, distance } : best;
+    const nearest = geometry.reduce((best, item) => {
+      const distance = Math.abs(item.rect.top + item.rect.height / 2 - target);
+      return !best || distance < best.distance ? { note: item.note, distance } : best;
     }, null);
-    if (nearest) select(nearest.row);
+    if (nearest) select(nearest.note);
   }
 
   function requestUpdate() {
-    if (desktop.matches && frame === null && !document.hidden) {
-      frame = requestAnimationFrame(update);
-    }
+    if (frame === null && !document.hidden) frame = requestAnimationFrame(update);
   }
 
-  rows.forEach((row) => {
-    row.addEventListener("pointerenter", (event) => {
+  notes.forEach((note) => {
+    note.addEventListener("pointermove", (event) => {
       if (event.pointerType === "touch") return;
-      pointed = row;
+      if (pointed === note && intent === "pointer") return;
+      pointed = note;
       intent = "pointer";
       requestUpdate();
     });
-    row.addEventListener("pointerleave", () => {
-      if (pointed === row) pointed = null;
+    note.addEventListener("pointerleave", () => {
+      if (pointed === note) pointed = null;
       requestUpdate();
     });
-    row.addEventListener("focusin", () => {
-      focused = row;
+    note.addEventListener("focusin", () => {
+      focused = note;
       intent = "focus";
       requestUpdate();
     });
-    row.addEventListener("focusout", () => {
-      if (focused === row) focused = null;
+    note.addEventListener("focusout", () => {
+      if (focused === note) focused = null;
       requestUpdate();
     });
   });
@@ -96,17 +94,13 @@
     cancelAnimation();
     if (frame !== null) cancelAnimationFrame(frame);
     frame = null;
+    pointed = null;
+    focused = notes.find((note) => note.contains(document.activeElement)) || null;
     directory.classList.toggle("is-preview-ready", desktop.matches);
-    if (!desktop.matches) {
-      rows.forEach((row) => { delete row.dataset.active; });
-      current = pointed = focused = null;
-    } else {
-      focused = rows.find((row) => row.contains(document.activeElement)) || null;
-      if (!current) select(focused || rows[0], false);
-      requestUpdate();
-    }
+    requestUpdate();
   }
 
+  directory.classList.add("has-project-interaction");
   addEventListener("scroll", requestUpdate, { passive: true });
   addEventListener("resize", resize, { passive: true });
   motion.addEventListener("change", cancelAnimation);
