@@ -198,11 +198,10 @@ upper roller and in front of the lower casing. Exterior reference:
 [SX-70 project photograph](https://github.com/udut7/Polaroid-SX70-RPi/blob/master/SX70_Raspberry_Pi.jpg).
 The reference photograph is not bundled with the site.
 
-The biography reflects the latest supplied resume:
-Georgia Tech M.S. in Computer Science (Machine Learning), LLM agent training at
-ZTE, and AI research tooling. The ARR note records a paper submission.
-The biography briefly includes both the Georgia Tech B.S. and M.S., plus the
-current team-matching stage for Google's 2027 SWE internship.
+The biography includes the Georgia Tech B.S. and M.S. in Computer Science,
+current RSI research, and experience with LLM agents and reinforcement learning
+at ZTE. It records a first-author paper under review at NAACL and the current
+team-matching stage for Google's 2027 SWE internship.
 
 Projects are grouped by purpose: **ML & AI** contains Claim2Code and LBM Fluid
 Simulation, **SWE** contains NASA Explorer, HealthTracker, and ATLSFW, and
