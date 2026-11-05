@@ -2186,7 +2186,7 @@ html.has-scroll-scene {
 
 </style>
     <style>
-/* Six paper planes share real perspective, including their three pulp layers. */
+/* Whole sheets composite in order; each sheet retains its own 3D pulp layers. */
 .paper-enhanced {
   display: block !important;
 }
@@ -2197,10 +2197,11 @@ html.has-scroll-scene {
   min-width: 0;
 }
 .paper-stage {
+  --paper-perspective: 1500px;
   position: relative;
   height: clamp(440px, 49vw, 570px);
   margin: -12px -28px 10px;
-  perspective: 1500px;
+  perspective: var(--paper-perspective);
   perspective-origin: 50% 44%;
   overflow: clip;
   touch-action: pan-y pinch-zoom;
@@ -2209,7 +2210,10 @@ html.has-scroll-scene {
 .paper-scene {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
+  /* Separate card rendering contexts prevent their tilted surfaces intersecting. */
+  transform-style: flat;
+  perspective: var(--paper-perspective);
+  perspective-origin: 50% 44%;
   transition: transform .6s cubic-bezier(.2,.7,.3,1);
 }
 .paper-card {
@@ -2438,9 +2442,9 @@ html.has-scroll-scene {
 }
 @media (max-width: 620px) {
   .paper-stage {
+    --paper-perspective: 1200px;
     height: 375px;
     margin: -10px -16px 8px;
-    perspective: 1200px;
   }
   .paper-card .paper-face {
     padding: 25px 26px 26px;
@@ -4711,7 +4715,12 @@ sections.forEach((section) => observer.observe(section));
     n = Math.max(0, Math.min(items.length - 1, n));
     if (current !== n) {
       current = n;
-      cards.forEach((card, i) => { card.dataset.selected = String(i === n); });
+      cards.forEach((card, i) => {
+        card.dataset.selected = String(i === n);
+        // Order complete sheets, including their shadows and backing planes.
+        // Shared 3D depth sorting can otherwise cut a neighbor through a face.
+        card.style.zIndex = i === n ? items.length + 1 : items.length - i;
+      });
       tabs.forEach((tab, i) => {
         tab.tabIndex = i === n ? 0 : -1;
         tab.setAttribute("aria-selected", String(i === n));
@@ -4781,7 +4790,9 @@ sections.forEach((section) => observer.observe(section));
   });
   stage.addEventListener("pointerdown", (event) => {
     if (event.pointerType !== "touch") return;
-    touch = { x: event.clientX, y: event.clientY, n: event.target.closest(".paper-card")?.dataset.paperIndex };
+    // Use the visible contact point rather than a browser-adjusted touch target.
+    const hit = document.elementFromPoint(event.clientX, event.clientY);
+    touch = { x: event.clientX, y: event.clientY, n: hit?.closest(".paper-card")?.dataset.paperIndex };
     stage.setPointerCapture(event.pointerId);
   }, { passive: true });
   stage.addEventListener("pointerup", (event) => {
@@ -4792,6 +4803,7 @@ sections.forEach((section) => observer.observe(section));
       ignoreClickUntil = performance.now() + 450;
     } else if (Math.abs(dx) < 12 && Math.abs(dy) < 12 && touch.n !== undefined) {
       select(Number(touch.n));
+      ignoreClickUntil = performance.now() + 450;
     }
     touch = null;
   }, { passive: true });

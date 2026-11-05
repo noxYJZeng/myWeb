@@ -1,4 +1,4 @@
-/* Six paper planes share real perspective, including their three pulp layers. */
+/* Whole sheets composite in order; each sheet retains its own 3D pulp layers. */
 .paper-enhanced {
   display: block !important;
 }
@@ -9,10 +9,11 @@
   min-width: 0;
 }
 .paper-stage {
+  --paper-perspective: 1500px;
   position: relative;
   height: clamp(440px, 49vw, 570px);
   margin: -12px -28px 10px;
-  perspective: 1500px;
+  perspective: var(--paper-perspective);
   perspective-origin: 50% 44%;
   overflow: clip;
   touch-action: pan-y pinch-zoom;
@@ -21,7 +22,10 @@
 .paper-scene {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
+  /* Separate card rendering contexts prevent their tilted surfaces intersecting. */
+  transform-style: flat;
+  perspective: var(--paper-perspective);
+  perspective-origin: 50% 44%;
   transition: transform .6s cubic-bezier(.2,.7,.3,1);
 }
 .paper-card {
@@ -250,9 +254,9 @@
 }
 @media (max-width: 620px) {
   .paper-stage {
+    --paper-perspective: 1200px;
     height: 375px;
     margin: -10px -16px 8px;
-    perspective: 1200px;
   }
   .paper-card .paper-face {
     padding: 25px 26px 26px;

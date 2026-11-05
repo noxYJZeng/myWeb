@@ -101,7 +101,12 @@
     n = Math.max(0, Math.min(items.length - 1, n));
     if (current !== n) {
       current = n;
-      cards.forEach((card, i) => { card.dataset.selected = String(i === n); });
+      cards.forEach((card, i) => {
+        card.dataset.selected = String(i === n);
+        // Order complete sheets, including their shadows and backing planes.
+        // Shared 3D depth sorting can otherwise cut a neighbor through a face.
+        card.style.zIndex = i === n ? items.length + 1 : items.length - i;
+      });
       tabs.forEach((tab, i) => {
         tab.tabIndex = i === n ? 0 : -1;
         tab.setAttribute("aria-selected", String(i === n));
@@ -171,7 +176,9 @@
   });
   stage.addEventListener("pointerdown", (event) => {
     if (event.pointerType !== "touch") return;
-    touch = { x: event.clientX, y: event.clientY, n: event.target.closest(".paper-card")?.dataset.paperIndex };
+    // Use the visible contact point rather than a browser-adjusted touch target.
+    const hit = document.elementFromPoint(event.clientX, event.clientY);
+    touch = { x: event.clientX, y: event.clientY, n: hit?.closest(".paper-card")?.dataset.paperIndex };
     stage.setPointerCapture(event.pointerId);
   }, { passive: true });
   stage.addEventListener("pointerup", (event) => {
@@ -182,6 +189,7 @@
       ignoreClickUntil = performance.now() + 450;
     } else if (Math.abs(dx) < 12 && Math.abs(dy) < 12 && touch.n !== undefined) {
       select(Number(touch.n));
+      ignoreClickUntil = performance.now() + 450;
     }
     touch = null;
   }, { passive: true });

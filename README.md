@@ -217,6 +217,8 @@ kraft board. Different torn outlines, loose fibers, grain, ruling, and creases
 make the surfaces distinct. Backing planes at different depths give them varied
 thickness, with contour shadows rather than rectangular frames. Existing project
 artwork is printed into each face; the Claim2Code image remains its real UI.
+Each sheet composites as a whole in its own 3D context, with the selected sheet
+in front, so neighboring edges cannot cut through its face during transitions.
 
 A grouped catalog provides native tabs with arrow-key and Home/End navigation.
 Touch users can tap sheets or catalog names and swipe horizontally through the
