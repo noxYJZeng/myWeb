@@ -2195,13 +2195,46 @@ html.has-scroll-scene {
   display: none;
 }
 .paper-gallery {
+  position: relative;
   min-width: 0;
+}
+.work-paper-layout {
+  position: relative;
+}
+.work-paper-layout > .section-heading {
+  position: absolute;
+  top: 65px;
+  left: 0;
+  z-index: 1;
+  display: block;
+  width: max-content;
+  max-width: 35%;
+  margin: 0;
+}
+.work-paper-layout > .section-heading .eyebrow {
+  margin: 0 0 10px;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.work-paper-layout > .section-heading h2 {
+  margin: 0;
+  font-size: 32px;
+}
+.paper-heading-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 12px;
+}
+.paper-heading-meta .text-link {
+  margin: 0;
+  font-size: 10px;
 }
 .paper-stage {
   --paper-perspective: 1500px;
   position: relative;
-  height: clamp(440px, 49vw, 570px);
-  margin: 140px -28px 90px;
+  height: clamp(620px, 56vw, 700px);
+  margin: 0 -28px 24px;
   perspective: var(--paper-perspective);
   perspective-origin: 50% 44%;
   /* Torn edges and shadows remain visible beyond the layout box. */
@@ -2306,28 +2339,18 @@ html.has-scroll-scene {
 }
 .paper-hint,
 .paper-position {
-  position: absolute;
-  bottom: 8px;
   color: #9caf9b;
-  font: 8px/1.6 var(--mono);
-  letter-spacing: .7px;
-  pointer-events: none;
+  font: 10px/1.6 var(--mono);
 }
 .paper-hint {
-  left: 30px;
-  top: 8px;
-  bottom: auto;
-  margin: 0;
-}
-.paper-position {
-  right: 30px;
+  margin: 8px 0 0;
 }
 .paper-below {
   display: grid;
   grid-template-columns: minmax(0, .95fr) minmax(0, 1.1fr);
   align-items: start;
   gap: 48px;
-  padding-top: 16px;
+  padding-top: 0;
 }
 .paper-catalog {
   display: grid;
@@ -2371,7 +2394,11 @@ html.has-scroll-scene {
 }
 .paper-details {
   min-width: 0;
-  min-height: 245px;
+  min-height: 180px;
+  width: min(100%, 350px);
+  justify-self: end;
+  margin-top: -132px;
+  text-align: right;
 }
 .paper-enhanced .project-note {
   --note-ink: #d0ded3;
@@ -2398,6 +2425,7 @@ html.has-scroll-scene {
   align-items: baseline;
   flex-wrap: wrap;
   gap: 0 12px;
+  justify-content: flex-end;
 }
 .paper-enhanced .project-note h4 {
   font-size: 23px;
@@ -2417,7 +2445,7 @@ html.has-scroll-scene {
 }
 @media (max-width: 900px) {
   .paper-stage {
-    margin-block: 112px 80px;
+    height: 600px;
     margin-inline: -18px;
   }
   .paper-below {
@@ -2426,24 +2454,18 @@ html.has-scroll-scene {
   }
   .paper-catalog {
     gap: 12px;
-    grid-template-columns: 1fr;
-  }
-  .paper-catalog-group {
-    display: grid;
-    grid-template-columns: 90px 1fr;
-    align-items: start;
-    gap: 0 12px;
-  }
-  .paper-catalog-group h3 {
-    grid-column: 1;
-    grid-row: 1 / span 4;
-    padding-top: 11px;
-  }
-  .paper-tab {
-    grid-column: 2;
   }
 }
 @media (max-width: 620px) {
+  .work-paper-layout > .section-heading {
+    position: static;
+    width: 100%;
+    max-width: none;
+    margin-bottom: 0;
+  }
+  .work-paper-layout > .section-heading h2 {
+    font-size: 28px;
+  }
   .paper-stage {
     --paper-perspective: 1200px;
     height: 375px;
@@ -2466,7 +2488,7 @@ html.has-scroll-scene {
   .paper-below {
     grid-template-columns: minmax(0, 1fr);
     gap: 22px;
-    padding-top: 8px;
+    padding-top: 0;
   }
   .paper-catalog {
     grid-template-columns: 1fr 1.15fr .9fr;
@@ -2477,6 +2499,10 @@ html.has-scroll-scene {
   }
   .paper-details {
     grid-row: 1;
+    width: 100%;
+    min-height: 0;
+    margin-top: 0;
+    text-align: left;
   }
   .paper-catalog {
     grid-row: 2;
@@ -2489,11 +2515,9 @@ html.has-scroll-scene {
     font-size: 10px;
     padding-block: 10px;
   }
-  .paper-hint { left: 18px; font-size: 7px; }
-  .paper-position { right: 18px; font-size: 7px; }
+  .paper-enhanced .project-note-heading { justify-content: flex-start; }
   .paper-enhanced .project-note h4 { font-size: 22px; }
   .paper-enhanced .project-note-copy > p { font-size: 13px; }
-  .paper-details { min-height: 245px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .paper-scene,
@@ -4710,7 +4734,7 @@ sections.forEach((section) => observer.observe(section));
     cards.push(card);
     scene.append(card);
   });
-  stage.append(scene, hint, count);
+  stage.append(scene);
   below.append(catalog, details);
   gallery.append(stage, below);
 
@@ -4825,10 +4849,21 @@ sections.forEach((section) => observer.observe(section));
   directory.hidden = true;
   index.querySelector(".project-stage")?.remove();
   index.classList.add("paper-enhanced");
+  const section = index.closest(".work");
+  const heading = section?.querySelector(".section-heading");
+  if (heading) {
+    const meta = element("div", "paper-heading-meta");
+    const github = heading.querySelector(".text-link");
+    heading.querySelector("div").append(hint);
+    if (github) meta.append(github);
+    meta.append(count);
+    heading.append(meta);
+    section.classList.add("work-paper-layout");
+  }
   function preference() {
     driftX = driftY = 0;
     details.getAnimations().forEach((animation) => animation.cancel());
-    hint.textContent = coarse.matches ? "SWIPE OR TAP A SHEET" : "HOVER A SHEET TO EXPLORE";
+    hint.textContent = coarse.matches ? "Tap a sheet, or swipe to explore." : "Hover a sheet to explore.";
     if (motion.matches) opened = true;
     requestPose();
   }

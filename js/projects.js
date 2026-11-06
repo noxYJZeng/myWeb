@@ -93,7 +93,7 @@
     cards.push(card);
     scene.append(card);
   });
-  stage.append(scene, hint, count);
+  stage.append(scene);
   below.append(catalog, details);
   gallery.append(stage, below);
 
@@ -208,10 +208,21 @@
   directory.hidden = true;
   index.querySelector(".project-stage")?.remove();
   index.classList.add("paper-enhanced");
+  const section = index.closest(".work");
+  const heading = section?.querySelector(".section-heading");
+  if (heading) {
+    const meta = element("div", "paper-heading-meta");
+    const github = heading.querySelector(".text-link");
+    heading.querySelector("div").append(hint);
+    if (github) meta.append(github);
+    meta.append(count);
+    heading.append(meta);
+    section.classList.add("work-paper-layout");
+  }
   function preference() {
     driftX = driftY = 0;
     details.getAnimations().forEach((animation) => animation.cancel());
-    hint.textContent = coarse.matches ? "SWIPE OR TAP A SHEET" : "HOVER A SHEET TO EXPLORE";
+    hint.textContent = coarse.matches ? "Tap a sheet, or swipe to explore." : "Hover a sheet to explore.";
     if (motion.matches) opened = true;
     requestPose();
   }
