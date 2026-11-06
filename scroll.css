@@ -4,6 +4,7 @@
 }
 html.has-scroll-scene {
   scroll-padding-top: 108px;
+  overflow-x: clip;
 }
 .has-scroll-scene body {
   isolation: isolate;

@@ -219,6 +219,9 @@ thickness, with contour shadows rather than rectangular frames. Existing project
 artwork is printed into each face; the Claim2Code image remains its real UI.
 Each sheet composites as a whole in its own 3D context, with the selected sheet
 in front, so neighboring edges cannot cut through its face during transitions.
+The stage allows paper and shadows to overflow its layout box. Spacing keeps
+the full torn edges clear of the heading and reading area, and the fan scales
+to fit narrower screens instead of clipping its outer sheets.
 
 A grouped catalog provides native tabs with arrow-key and Home/End navigation.
 Touch users can tap sheets or catalog names and swipe horizontally through the

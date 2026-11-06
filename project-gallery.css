@@ -12,10 +12,11 @@
   --paper-perspective: 1500px;
   position: relative;
   height: clamp(440px, 49vw, 570px);
-  margin: -12px -28px 10px;
+  margin: 140px -28px 90px;
   perspective: var(--paper-perspective);
   perspective-origin: 50% 44%;
-  overflow: clip;
+  /* Torn edges and shadows remain visible beyond the layout box. */
+  overflow: visible;
   touch-action: pan-y pinch-zoom;
   user-select: none;
 }
@@ -227,6 +228,7 @@
 }
 @media (max-width: 900px) {
   .paper-stage {
+    margin-block: 112px 80px;
     margin-inline: -18px;
   }
   .paper-below {
@@ -256,7 +258,7 @@
   .paper-stage {
     --paper-perspective: 1200px;
     height: 375px;
-    margin: -10px -16px 8px;
+    margin: clamp(20px, calc(25vw - 77px), 80px) -16px clamp(24px, calc(17vw - 42px), 64px);
   }
   .paper-card .paper-face {
     padding: 25px 26px 26px;

@@ -134,10 +134,12 @@
     const paperWidth = small ? Math.min(240, Math.max(190, width * .66)) : Math.min(320, width * .3);
     const spread = small ? width * .12 : Math.min(154, width * .135);
     const center = (items.length - 1) / 2;
-    const pan = -(current - center) * (small ? 28 : 18);
+    const pan = -(current - center) * (small ? 8 : 18);
     const rect = stage.getBoundingClientRect();
     const passage = motion.matches ? 0 : Math.max(-1, Math.min(1, (innerHeight * .5 - rect.top - rect.height * .5) / innerHeight));
     stage.style.setProperty("--paper-width", `${Math.round(paperWidth)}px`);
+    // Fit the complete fan to the screen rather than cropping its outer sheets.
+    scene.style.scale = Math.min(1, (width - (small ? 24 : 40)) / (paperWidth + spread * (items.length - 1) + 70)).toFixed(3);
     scene.style.transform = `translate3d(${Math.round(pan + driftX)}px,${Math.round(driftY + passage * 9)}px,0) rotateX(${motion.matches ? 0 : (3 + passage * 2).toFixed(2)}deg) rotateZ(-5deg)`;
     cards.forEach((card, i) => {
       const relative = i - center;
