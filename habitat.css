@@ -1,0 +1,139 @@
+/* A little desktop of living specimens; the page itself is the backdrop. */
+.garden {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.garden::before,
+.garden::after {
+  content: none;
+}
+.garden .garden-stage {
+  aspect-ratio: 1 / 1;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+  isolation: isolate;
+}
+.garden .garden-stage::before,
+.garden .garden-stage::after {
+  content: none;
+}
+.specimen-window {
+  --rim: #617967;
+  --bar: #1d2c23;
+  position: absolute;
+  border: 1px solid var(--rim);
+  border-radius: 2px;
+  background: #07130d;
+  box-shadow: 4px 5px 0 #0007, 0 12px 25px #0005, inset 0 0 0 1px #b8ceab12;
+}
+.specimen-window[data-front="true"] {
+  border-color: #b0bea0;
+  box-shadow: 4px 5px 0 #0008, 0 15px 30px #0006, 0 0 12px #86b78a0b;
+}
+.specimen-window--swallowtail { left: 3%; top: 3%; width: 34%; z-index: 1; }
+.specimen-window--blue { left: 48%; top: 0; width: 50%; z-index: 2; --rim: #597c7c; --bar: #1b2b2b; }
+.specimen-window--luna { left: 25%; top: 21%; width: 50%; z-index: 3; }
+.specimen-window--amber { left: 1%; top: 66%; width: 54%; z-index: 4; --rim: #8a8167; --bar: #2c2c21; }
+.specimen-window--ink { left: 51%; top: 65%; width: 47%; z-index: 5; --rim: #777486; --bar: #26262e; }
+.specimen-window--comet { left: 73%; top: 36%; width: 27%; z-index: 6; --rim: #747e5c; --bar: #252d20; }
+.specimen-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 27px;
+  padding: 4px 7px;
+  border: 0;
+  border-bottom: 1px solid var(--rim);
+  background: linear-gradient(90deg, var(--bar), #101a14);
+  color: #bdcbbb;
+  text-align: left;
+  font: 9px/1.4 var(--mono);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.specimen-titlebar:active { cursor: grabbing; }
+.specimen-titlebar:focus-visible {
+  outline: 1px dashed #d2c49f;
+  outline-offset: -4px;
+}
+.specimen-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.specimen-signal {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 10px;
+  height: 12px;
+  border: 1px solid #b8ac7b80;
+  color: #c5b886;
+  font-size: 8px;
+  line-height: 1;
+}
+.specimen-chrome {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: #8ca18e;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.specimen-window--comet .specimen-chrome { display: none; }
+.specimen-body {
+  position: relative;
+  background: #07130d url("assets/butterfly.svg") center / 40% auto no-repeat;
+}
+.specimen-body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(transparent 0 3px, #0002 3px 4px);
+  pointer-events: none;
+}
+.specimen-body canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+.specimen-label {
+  position: absolute;
+  bottom: 5px;
+  left: 7px;
+  right: 7px;
+  z-index: 1;
+  margin: 0;
+  overflow: hidden;
+  color: #81977f;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 6px/1.4 var(--mono);
+  letter-spacing: .4px;
+  pointer-events: none;
+}
+.garden figcaption {
+  padding: 20px 0 8px;
+  font-size: 7px;
+}
+.garden .species-controls {
+  padding: 0 0 8px;
+  gap: 4px;
+}
+@media (max-width: 1100px) {
+  .specimen-titlebar { font-size: 8px; gap: 5px; padding-inline: 5px; min-height: 24px; }
+}
+@media (max-width: 620px) {
+  .specimen-titlebar { font-size: 7px; min-height: 26px; }
+  .specimen-chrome { font-size: 7px; }
+  .specimen-label { font-size: 5px; letter-spacing: .1px; bottom: 4px; left: 5px; right: 5px; }
+  .garden figcaption { font-size: 6px; padding-top: 22px; }
+}

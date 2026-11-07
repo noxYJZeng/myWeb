@@ -12,10 +12,11 @@
     <link rel="icon" type="image/svg+xml" href="assets/butterfly.svg" />
     <link rel="apple-touch-icon" href="assets/favicon.png" />
     <link rel="stylesheet" href="style.css?v=ea512a56f874" />
+    <link rel="stylesheet" href="habitat.css?v=391e2219143f" />
     <link rel="stylesheet" href="scroll.css?v=ac0d58e6155d" />
     <link rel="stylesheet" href="project-gallery.css?v=baf8307e848e" />
     <script src="js/intro.js?v=c462114d2ba2"></script>
-    <script src="js/garden.js?v=49ab7bac1bf5" defer></script>
+    <script src="js/garden.js?v=1f2010d651cf" defer></script>
     <script src="js/site.js?v=141482794531" defer></script>
     <script src="js/projects.js?v=765ea501371c" defer></script>
     <script src="js/scroll.js?v=1a4454100a49" defer></script>
@@ -73,35 +74,48 @@
           </div>
         </div>
         <figure class="garden" aria-labelledby="garden-caption">
-          <div class="garden-topline">
-            <span class="window-dots" aria-hidden="true"
-              ><i></i><i></i><i></i></span
-            ><span>~/pixel-habitat</span
-            ><span class="render-state"
-              ><span class="status-light"></span> RUNNING</span
-            >
-          </div>
-          <div class="garden-stage">
-            <canvas
-              id="pixel-garden"
-              width="720"
-              height="500"
-              role="img"
-              aria-label="A pixel habitat with nine butterflies and moths following separate flight paths, taking turns to perch on plants, and reacting gently to a nearby pointer. Twelve designs are available."
-              >A pixel habitat showing nine butterflies and moths, with twelve
-              available designs and a faint warm light.</canvas
-            >
-            <span class="garden-coordinate coordinate-top" aria-hidden="true"
-              >HABITAT_01 / LIVE RENDER</span
-            >
-            <span class="garden-coordinate coordinate-bottom" aria-hidden="true"
-              >LEPIDOPTERA / PIXEL LIFE</span
-            >
+          <div class="garden-stage" role="group" aria-label="Overlapping butterfly specimen terminals">
+            <article class="specimen-window specimen-window--swallowtail" data-forms="swallowtail">
+              <button class="specimen-titlebar" type="button" aria-label="Bring swallowtail window to front; drag to move">
+                <span class="specimen-signal" aria-hidden="true">!</span><span class="specimen-title">swallowtail.exe</span><span class="specimen-chrome" aria-hidden="true">− □</span>
+              </button>
+              <div class="specimen-body"><canvas width="240" height="230" role="img" aria-label="An animated pixel swallowtail butterfly">Pixel swallowtail.</canvas><p class="specimen-label" aria-hidden="true">SWALLOWTAIL</p></div>
+            </article>
+            <article class="specimen-window specimen-window--blue" data-forms="morpho glasswing">
+              <button class="specimen-titlebar" type="button" aria-label="Bring blue morpho and glasswing window to front; drag to move">
+                <span class="specimen-signal" aria-hidden="true">!</span><span class="specimen-title">wing_buffer.log</span><span class="specimen-chrome" aria-hidden="true">− □</span>
+              </button>
+              <div class="specimen-body"><canvas width="360" height="200" role="img" aria-label="Animated pixel blue morpho and glasswing butterflies">Pixel blue morpho and glasswing.</canvas><p class="specimen-label" aria-hidden="true">MORPHO · GLASSWING</p></div>
+            </article>
+            <article class="specimen-window specimen-window--luna" data-forms="luna">
+              <button class="specimen-titlebar" type="button" aria-label="Bring luna moth window to front; drag to move">
+                <span class="specimen-signal" aria-hidden="true">!</span><span class="specimen-title">luna.exe</span><span class="specimen-chrome" aria-hidden="true">− □</span>
+              </button>
+              <div class="specimen-body"><canvas width="320" height="300" role="img" aria-label="An animated pixel luna moth">Pixel luna moth.</canvas><p class="specimen-label" aria-hidden="true">LUNA MOTH</p></div>
+            </article>
+            <article class="specimen-window specimen-window--amber" data-forms="atlas monarch">
+              <button class="specimen-titlebar" type="button" aria-label="Bring atlas moth and monarch window to front; drag to move">
+                <span class="specimen-signal" aria-hidden="true">!</span><span class="specimen-title">specimens_04</span><span class="specimen-chrome" aria-hidden="true">− □</span>
+              </button>
+              <div class="specimen-body"><canvas width="360" height="180" role="img" aria-label="Animated pixel atlas moth and monarch">Pixel atlas moth and monarch.</canvas><p class="specimen-label" aria-hidden="true">ATLAS · MONARCH</p></div>
+            </article>
+            <article class="specimen-window specimen-window--ink" data-forms="peacock emperor">
+              <button class="specimen-titlebar" type="button" aria-label="Bring peacock and purple emperor window to front; drag to move">
+                <span class="specimen-signal" aria-hidden="true">!</span><span class="specimen-title">colour_study</span><span class="specimen-chrome" aria-hidden="true">− □</span>
+              </button>
+              <div class="specimen-body"><canvas width="340" height="205" role="img" aria-label="Animated pixel peacock and purple emperor butterflies">Pixel peacock and purple emperor.</canvas><p class="specimen-label" aria-hidden="true">PEACOCK · EMPEROR</p></div>
+            </article>
+            <article class="specimen-window specimen-window--comet" data-forms="comet">
+              <button class="specimen-titlebar" type="button" aria-label="Bring comet moth window to front; drag to move">
+                <span class="specimen-signal" aria-hidden="true">!</span><span class="specimen-title">comet.exe</span><span class="specimen-chrome" aria-hidden="true">− □</span>
+              </button>
+              <div class="specimen-body"><canvas width="190" height="240" role="img" aria-label="An animated pixel comet moth">Pixel comet moth.</canvas><p class="specimen-label" aria-hidden="true">COMET MOTH</p></div>
+            </article>
           </div>
           <figcaption id="garden-caption">
             <span
               ><span class="caption-dot"></span> 12 FORMS /
-              <span class="flight-count">09 IN FLIGHT</span></span
+              <span class="flight-count">09 SPECIMENS / 06 WINDOWS</span></span
             ><span class="pixel-species-status" aria-live="polite"
               >ALL FORMS</span
             >

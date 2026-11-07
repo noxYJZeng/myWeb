@@ -1,12 +1,17 @@
 "use strict";
 
 (() => {
-  const canvas = document.getElementById("pixel-garden");
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-  ctx.imageSmoothingEnabled = false;
-  const W = 720;
-  const H = 500;
+  const stage = document.querySelector(".garden-stage");
+  if (!stage) return;
+  const surfaces = [...stage.querySelectorAll(".specimen-window")].map((node, index) => {
+    const canvas = node.querySelector("canvas");
+    return { node, canvas, ctx: canvas.getContext("2d"), index,
+      original: node.dataset.forms.split(" "), members: [], pointer: null, pointerUntil: 0 };
+  });
+  if (!surfaces.length || surfaces.some((surface) => !surface.ctx)) return;
+  let canvas = surfaces[0].canvas;
+  let ctx = surfaces[0].ctx;
+  let W = canvas.width, H = canvas.height;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let reduced = reducedMotion.matches;
   let visible = true;
@@ -14,8 +19,6 @@
   let time = 0;
   let previous = 0;
   let lastDraw = 0;
-  let pointer = null;
-  let pointerUntil = 0;
   let selectedSpecies = "all";
   let randomState = 43;
   const random = () => {
@@ -41,139 +44,11 @@
     }
   }
 
-  function leaf(x, y, dx, dy, color, size = 2) {
-    const length = Math.hypot(dx, dy);
-    for (let i = 0; i < length; i += size) {
-      const progress = i / length;
-      const width = Math.sin(progress * Math.PI) * length * 0.19;
-      for (let j = -width; j <= width; j += size) {
-        pixel(
-          x + dx * progress - (dy / length) * j,
-          y + dy * progress + (dx / length) * j,
-          color,
-          size,
-        );
-      }
-    }
-  }
-
-  // Cache the still layers; only repaint the low-resolution pixel display.
-  const background = document.createElement("canvas");
-  background.width = W;
-  background.height = H;
-  function makeBackground() {
-    ctx.save();
-    ctx.scale(W / 560, H / 450);
-    ctx.fillStyle = "#06110b";
-    ctx.fillRect(0, 0, W, H);
-    const glow = ctx.createRadialGradient(305, 205, 10, 305, 205, 270);
-    glow.addColorStop(0, "#0b2c18");
-    glow.addColorStop(1, "#06110b");
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, W, H);
-    for (let x = 20; x < W; x += 24) {
-      for (let y = 18; y < H; y += 24) pixel(x, y, "#35845135", 1);
-    }
-    for (let i = 0; i < 2000; i++) {
-      pixel(
-        random() * W,
-        random() * H,
-        random() > 0.5 ? "#c8d5a907" : "#00000012",
-        1,
-      );
-    }
-    // Rectangular traces and registration marks on a small electronic display.
-    const traces = [
-      [
-        [21, 112],
-        [21, 61],
-        [92, 61],
-        [105, 48],
-        [191, 48],
-      ],
-      [
-        [365, 43],
-        [474, 43],
-        [489, 58],
-        [539, 58],
-        [539, 129],
-      ],
-      [
-        [24, 235],
-        [24, 351],
-        [39, 366],
-        [66, 366],
-      ],
-      [
-        [491, 344],
-        [527, 344],
-        [539, 332],
-        [539, 205],
-      ],
-    ];
-    for (const trace of traces) {
-      for (let i = 1; i < trace.length; i++) {
-        line(...trace[i - 1], ...trace[i], "#276a3c55", 1);
-      }
-      const [x, y] = trace[trace.length - 1];
-      pixel(x - 2, y - 2, "#4ed68b80", 4);
-      pixel(x - 1, y - 1, "#09180d", 2);
-    }
-    for (const [x, y] of [
-      [70, 100],
-      [472, 153],
-      [296, 283],
-      [475, 308],
-    ]) {
-      line(x - 4, y, x + 4, y, "#3f9b5e66", 1);
-      line(x, y - 4, x, y + 4, "#3f9b5e66", 1);
-    }
-    for (let x = 113; x < 453; x += 10) {
-      line(x, 56, x, x % 3 === 0 ? 61 : 59, "#3f9b5e55", 1);
-    }
-    ctx.font = "7px monospace";
-    ctx.fillStyle = "#6bbc8255";
-    ctx.fillText("X: 0280 / Y: 0225", 203, 72);
-    ctx.fillText("ENV_01", 457, 388);
-    // Pixel botanicals: fine stems, fern-like leaves, and a few seed heads.
-    const plants = [
-      [63, 401, -7, 125, "#344b2b"],
-      [105, 406, 18, 81, "#4e6440"],
-      [139, 399, -8, 104, "#3c5831"],
-      [181, 406, 15, 62, "#4c6139"],
-      [356, 408, -8, 81, "#425a31"],
-      [400, 407, 14, 131, "#53693d"],
-      [455, 400, -8, 91, "#3d5532"],
-      [501, 406, 16, 149, "#374e2c"],
-    ];
-    for (const [x, y, bend, height, color] of plants) {
-      line(x, y, x + bend, y - height, color, 2);
-      for (let i = 16; i < height - 9; i += 15) {
-        const stemX = x + (bend * i) / height;
-        const reach = (1 - i / height) * 23 + 5;
-        leaf(stemX, y - i, -reach, -reach * 0.8, color);
-        leaf(stemX + 2, y - i - 5, reach * 0.85, -reach * 0.6, color);
-      }
-      pixel(x + bend - 1, y - height - 3, "#8b956655", 3);
-    }
-    // A low horizon made of individual, uneven pixels.
-    for (let x = 23; x < 538; x += 4) {
-      const y = 401 + Math.round(random() * 6);
-      pixel(x, y, "#4c623539", 2);
-      if (random() > 0.6) pixel(x + 1, y + 6, "#697e4333", 1);
-    }
-    ctx.restore();
-    background.getContext("2d").drawImage(canvas, 0, 0);
-  }
-
   // Distinct silhouettes and markings, rather than recoloring one sprite.
   const forms = [
     {
       id: "luna",
       name: "LUNA MOTH",
-      x: 365,
-      y: 185,
-      scale: 4,
       speed: 2.5,
       upper: [
         [0, 1],
@@ -202,9 +77,6 @@
     {
       id: "swallowtail",
       name: "SWALLOWTAIL",
-      x: 157,
-      y: 138,
-      scale: 3,
       speed: 3.2,
       upper: [
         [0, 1],
@@ -233,9 +105,6 @@
     {
       id: "morpho",
       name: "BLUE MORPHO",
-      x: 555,
-      y: 255,
-      scale: 3,
       speed: 2.9,
       upper: [
         [0, 0],
@@ -263,9 +132,6 @@
     {
       id: "monarch",
       name: "MONARCH",
-      x: 264,
-      y: 329,
-      scale: 2,
       speed: 3.6,
       upper: [
         [0, 1],
@@ -291,9 +157,6 @@
     {
       id: "glasswing",
       name: "GLASSWING",
-      x: 562,
-      y: 114,
-      scale: 2,
       speed: 4.1,
       upper: [
         [0, 0],
@@ -318,9 +181,6 @@
     {
       id: "atlas",
       name: "ATLAS MOTH",
-      x: 126,
-      y: 292,
-      scale: 2,
       speed: 2.1,
       upper: [
         [0, 1],
@@ -348,9 +208,6 @@
     {
       id: "peacock",
       name: "PEACOCK BUTTERFLY",
-      x: 474,
-      y: 338,
-      scale: 2,
       speed: 2.8,
       upper: [
         [0, 1],
@@ -377,9 +234,6 @@
     {
       id: "zebra",
       name: "ZEBRA LONGWING",
-      x: 79,
-      y: 193,
-      scale: 2,
       speed: 3.8,
       upper: [
         [0, 2],
@@ -405,9 +259,6 @@
     {
       id: "paper-kite",
       name: "PAPER KITE",
-      x: 631,
-      y: 323,
-      scale: 2,
       speed: 2.4,
       upper: [
         [0, 2],
@@ -436,9 +287,6 @@
     {
       id: "emperor",
       name: "PURPLE EMPEROR",
-      x: 269,
-      y: 87,
-      scale: 2,
       speed: 3.1,
       upper: [
         [0, 1],
@@ -465,9 +313,6 @@
     {
       id: "sunset",
       name: "SUNSET MOTH",
-      x: 390,
-      y: 355,
-      scale: 1,
       speed: 3.5,
       upper: [
         [0, 1],
@@ -496,9 +341,6 @@
     {
       id: "comet",
       name: "COMET MOTH",
-      x: 468,
-      y: 115,
-      scale: 2,
       speed: 2.2,
       upper: [
         [0, 1],
@@ -526,15 +368,6 @@
       pattern: "comet",
     },
   ];
-
-  const overviewIds = new Set([
-    "luna",
-    "swallowtail",
-    "morpho",
-    "monarch",
-    "glasswing",
-    "atlas",
-  ]);
 
   function inside(x, y, polygon) {
     let contained = false;
@@ -679,284 +512,222 @@
     }
   }
 
-  const ease = (p) => {
-    p = Math.max(0, Math.min(1, p));
-    return p * p * (3 - 2 * p);
-  };
-  const perches = {
-    luna: [421, 344],
-    swallowtail: [168, 298],
-    morpho: [532, 274],
-    monarch: [252, 362],
-    glasswing: [665, 264],
-    atlas: [73, 285],
-  };
-  const residents = forms.filter((form) => overviewIds.has(form.id));
-  const visitors = [
-    { form: forms.find((form) => form.id === "morpho"), x: 641, y: 192 },
-    { form: forms.find((form) => form.id === "glasswing"), x: 350, y: 360 },
-    { form: forms.find((form) => form.id === "swallowtail"), x: 463, y: 84 },
-  ];
-  for (const flier of [...forms, ...visitors]) {
-    flier.motion = { x: 0, y: 0, alert: 0 };
+  // Each terminal has its own pixel buffer, mounting marks, and one or two forms.
+  function selectSurface(surface) {
+    canvas = surface.canvas;
+    ctx = surface.ctx;
+    W = canvas.width;
+    H = canvas.height;
+    ctx.imageSmoothingEnabled = false;
   }
-
-  // One resident lands at a time. The other eight keep their own quiet routes;
-  // these are the existing butterflies, rather than additional particle sprites.
-  function flight(form, index, t, delta, visitor = null) {
-    const focused = selectedSpecies !== "all";
-    const scale = focused
-      ? form.id === "comet" || form.id === "zebra"
-        ? 5
-        : 7
-      : visitor
-        ? 1
-        : form.scale;
-    const phase = index * 1.7;
-    const radiusX = focused ? 7 : visitor ? 12 : 17;
-    const radiusY = focused ? 6 : visitor ? 8 : 13;
-    const home = [
-      (focused ? W / 2 : visitor ? visitor.x : form.x) +
-        Math.sin(t * (0.33 + index * 0.013) + phase) * radiusX +
-        Math.sin(t * 0.17 + index) * 4,
-      (focused ? 210 : visitor ? visitor.y : form.y) +
-        Math.sin(t * (0.51 + index * 0.019) + index * 0.9) * radiusY,
-    ];
-    const motion = (visitor || form).motion;
-    let landing = 0;
-    let lift = 0;
-    if (!focused && !visitor && !reduced) {
-      const slot = t % 16;
-      if (residents[Math.floor(t / 16) % residents.length] === form) {
-        if (slot < 5) {
-          const progress = ease((slot - 2) / 3);
-          landing = progress;
-          lift = -Math.sin(progress * Math.PI) * 22;
-        } else if (slot < 10) {
-          landing = 1;
-        } else {
-          const progress = ease((slot - 10) / 3);
-          landing = 1 - progress;
-          lift = -Math.sin(progress * Math.PI) * 38;
-        }
-      }
-    }
-    const perch = perches[form.id] || home;
-    let x = home[0] + (perch[0] - home[0]) * landing;
-    let y = home[1] + (perch[1] - home[1]) * landing + lift;
-    const dx = pointer ? x - pointer.x : 0;
-    const dy = pointer ? y - pointer.y : 0;
-    const distance = Math.hypot(dx, dy);
-    const attention =
-      pointer && !reduced ? 1 - ease(distance / (42 + scale * 18)) : 0;
-    const follow = 1 - Math.exp(-delta * 5);
-    motion.alert += (attention - motion.alert) * follow;
-    const avoidance = focused ? 24 : 34;
-    motion.x +=
-      ((distance ? dx / distance : 1) * attention * avoidance - motion.x) * follow;
-    motion.y +=
-      ((distance ? dy / distance : -1) * attention * avoidance - motion.y) * follow;
-    // A perched butterfly lifts toward its route when approached, then settles
-    // again gently. No rotation of the canvas: every wing edge stays pixel sharp.
-    x += (home[0] - x) * motion.alert + motion.x;
-    y += (home[1] - y) * motion.alert + motion.y;
-    const side = form.bounds.maxX * scale * 1.12 + 4;
-    x = Math.max(side + 12, Math.min(W - side - 12, x));
-    y = Math.max(
-      24 - form.bounds.minY * scale,
-      Math.min(H - 22 - form.bounds.maxY * scale, y),
-    );
-    const rest = landing * (1 - motion.alert);
-    const bank = reduced ? 0 : Math.cos(t * 0.55 + phase) * 0.07 * (1 - rest);
-    butterfly(
-      form,
-      x,
-      y,
-      scale,
-      reduced ? 0 : t * (12 + form.speed) + phase,
-      rest,
-      bank,
-    );
+  function mount(surface, ids) {
+    surface.members = ids.map((id) => ({ form: forms.find((form) => form.id === id), x: 0, y: 0, alert: 0 }));
+    surface.node.dataset.forms = ids.join(" ");
+    surface.canvas.setAttribute("aria-label", `Pixel specimens: ${surface.members.map((m) => m.form.name.toLowerCase()).join(" and ")}. Their wings move gently.`);
+    surface.node.querySelector(".specimen-label").textContent = surface.members.map((m) => m.form.name).join(" · ");
+    surface.node.querySelector(".specimen-titlebar").setAttribute("aria-label", `Bring ${surface.members.map((m) => m.form.name.toLowerCase()).join(" and ")} window to front; drag or use arrow keys to move`);
   }
-
-  const motes = Array.from({ length: 32 }, () => ({
-    x: 55 + random() * (W - 110),
-    y: 70 + random() * (H - 140),
-    phase: random() * Math.PI * 2,
-    speed: 0.2 + random() * 0.35,
-  }));
-  function fire(t) {
-    const glow = ctx.createRadialGradient(264, 374, 0, 264, 374, 72);
-    glow.addColorStop(0, "#bf8a4430");
-    glow.addColorStop(1, "#bf8a4400");
+  function makeBackground(surface) {
+    selectSurface(surface);
+    ctx.fillStyle = "#07130d";
+    ctx.fillRect(0, 0, W, H);
+    const glow = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W * .7);
+    glow.addColorStop(0, surface.index === 3 ? "#252b183b" : "#153d254a");
+    glow.addColorStop(1, "#06120c00");
     ctx.fillStyle = glow;
-    ctx.fillRect(192, 302, 144, 144);
-    const flameRows = [
-      ".....a....",
-      ".....aa...",
-      "....aaa...",
-      "....aba...",
-      "...abbaa..",
-      "..aabbaa..",
-      "..abbcbaa.",
-      ".aabbcbaa.",
-      ".abcccbba.",
-      "..bbccba..",
-      "...bbbb...",
-    ];
-    const flamePalette = { a: "#8d703f", b: "#ceaa67", c: "#ece1b2" };
-    const flicker = [0, 1, 0, -1][Math.floor(t * 4) % 4];
-    for (let y = 0; y < flameRows.length; y++) {
-      for (let x = 0; x < flameRows[y].length; x++) {
-        const color = flamePalette[flameRows[y][x]];
-        if (color)
-          pixel(248 + x * 3 + (y < 5 ? flicker * 3 : 0), 360 + y * 3, color, 3);
-      }
+    ctx.fillRect(0, 0, W, H);
+    for (let x = 10; x < W; x += 12) for (let y = 10; y < H; y += 12) pixel(x, y, "#64816b20", 1);
+    for (let n = 0; n < W * H / 110; n++) pixel(random() * W, random() * H, "#c5d5ae08", 1);
+    const slots = surface.original.length;
+    for (let n = 0; n < slots; n++) {
+      const x = (n + .5) * W / slots;
+      line(x - 4, H / 2, x + 4, H / 2, "#72967a48", 1);
+      line(x, H / 2 - 4, x, H / 2 + 4, "#72967a48", 1);
+      line(x, 13, x, 21, "#829b7355", 1);
+      pixel(x - 1, 12, "#aabb8c80", 3);
+      line(x - 8, H - 23, x + 8, H - 23, "#7484694d", 1);
     }
-    line(252, 395, 278, 395, "#6e7750", 2);
-    line(255, 399, 275, 399, "#4b5539", 2);
-    for (let i = 0; i < 5; i++) {
-      const rise = (t * 13 + i * 17) % 67;
-      ctx.globalAlpha = (1 - rise / 67) * 0.65;
-      pixel(265 + Math.round(Math.sin(i + t) * 9), 356 - rise, "#c9b077", 2);
+    for (const [x, y, dx, dy] of [[8, 8, 1, 1], [W - 9, 8, -1, 1], [8, H - 9, 1, -1], [W - 9, H - 9, -1, -1]]) {
+      line(x, y, x + dx * 7, y, "#67856c55", 1);
+      line(x, y, x, y + dy * 7, "#67856c55", 1);
     }
-    ctx.globalAlpha = 1;
+    surface.background = document.createElement("canvas");
+    surface.background.width = W;
+    surface.background.height = H;
+    surface.background.getContext("2d").drawImage(canvas, 0, 0);
   }
-
-  function render(t, delta = 0) {
+  function render(t, delta = .033) {
     if (reduced) t = 0;
-    if (pointer && t > pointerUntil) pointer = null;
-    ctx.drawImage(background, 0, 0);
-    for (const mote of motes) {
-      const light = 0.3 + Math.sin(t * mote.speed + mote.phase) * 0.2;
-      ctx.globalAlpha = light;
-      pixel(
-        mote.x + Math.round(Math.sin(t * 0.25 + mote.phase) * 4),
-        mote.y + Math.round(Math.cos(t * 0.3 + mote.phase) * 5),
-        "#c0d08f",
-        2,
-      );
-      ctx.globalAlpha = 1;
+    for (const surface of surfaces) {
+      selectSurface(surface);
+      ctx.drawImage(surface.background, 0, 0);
+      if (surface.pointer && t > surface.pointerUntil) surface.pointer = null;
+      surface.members.forEach((member, index) => {
+        const form = member.form;
+        const slot = W / surface.members.length;
+        const scale = Math.max(1, Math.floor(Math.min(slot * .9 / (form.bounds.maxX * 2 + 8), H * .83 / (form.bounds.maxY - form.bounds.minY + 8))));
+        const x = slot * (index + .5);
+        const y = (H - (form.bounds.maxY + form.bounds.minY) * scale) / 2;
+        const dx = surface.pointer ? x - surface.pointer.x : 0;
+        const dy = surface.pointer ? y - surface.pointer.y : 0;
+        const distance = Math.hypot(dx, dy);
+        const attention = surface.pointer && !reduced ? Math.max(0, 1 - distance / (40 + scale * 12)) : 0;
+        const ease = 1 - Math.exp(-delta * 5);
+        member.alert += (attention - member.alert) * ease;
+        member.x += ((distance ? dx / distance : 0) * attention * 5 - member.x) * ease;
+        member.y += ((distance ? dy / distance : 0) * attention * 4 - member.y) * ease;
+        const phase = surface.index * .8 + index * 1.7;
+        butterfly(form,
+          x + (reduced ? 0 : Math.sin(t * .7 + phase) * 1.5 + member.x),
+          y + (reduced ? 0 : Math.sin(t * .6 + phase) + member.y),
+          scale, reduced ? 0 : t * (2.5 + form.speed * .2 + member.alert * 12) + phase,
+          reduced ? 0 : .76 - member.alert * .6, 0);
+      });
     }
-    // Small stepped data streams recall the original terminal animation.
-    ctx.font = "7px monospace";
-    ctx.fillStyle = "#46be6d40";
-    for (let i = 0; i < 12; i++) {
-      ctx.fillText((i + Math.floor(t * 2)) % 2 ? "01" : "10", 30, 112 + i * 9);
-      ctx.fillText(
-        (i + Math.floor(t * 3)) % 3 ? "1" : "0",
-        W - 36,
-        150 + i * 9,
-      );
-    }
-    for (let i = 0; i < forms.length; i++) {
-      const form = forms[i];
-      if (selectedSpecies === "all" && !overviewIds.has(form.id)) continue;
-      if (selectedSpecies !== "all" && selectedSpecies !== form.id) continue;
-      flight(form, i, t, delta);
-      if (selectedSpecies !== "all") {
-        ctx.fillStyle = "#83ca98";
-        ctx.font = "8px monospace";
-        ctx.fillText(form.name, 32, 78);
-        line(32, 88, 105, 88, "#3e8c5766", 1);
-      }
-    }
-    if (selectedSpecies === "all") {
-      for (const [i, visitor] of visitors.entries()) {
-        flight(visitor.form, i + 6, t, delta, visitor);
-      }
-    }
-    ctx.save();
-    ctx.translate(80, 55);
-    fire(t);
-    ctx.restore();
   }
-
+  let opened = false;
+  let drag = null;
+  function raise(surface) {
+    // Rank the six complete windows; z values stay bounded across long sessions.
+    const ordered = [...surfaces].sort((a, b) => (Number(a.node.style.zIndex) || a.index + 1) - (Number(b.node.style.zIndex) || b.index + 1));
+    ordered.splice(ordered.indexOf(surface), 1);
+    ordered.push(surface);
+    ordered.forEach((item, i) => {
+      item.node.style.zIndex = i + 1;
+      item.node.dataset.front = String(item === surface);
+    });
+  }
+  function reveal() {
+    const root = document.documentElement;
+    if (opened || !visible || document.hidden || (root.classList.contains("intro-active") && !root.classList.contains("intro-revealing"))) return;
+    opened = true;
+    openingObserver.disconnect();
+    if (reduced) return;
+    for (const [i, surface] of surfaces.entries()) {
+      surface.node.animate([
+        { opacity: 0, transform: "translate(8px, 6px) scale(.97)" },
+        { opacity: 1, transform: "translate(0, 0) scale(1)" },
+      ], { duration: 240, delay: i * 90, easing: "steps(4, end)", fill: "backwards" });
+    }
+  }
   function tick(now) {
     frameId = null;
-    syncMotionPreference();
     if (reduced || !visible || document.hidden) return;
     if (previous) time += Math.min(now - previous, 100) / 1000;
     previous = now;
-    if (now - lastDraw >= 1000 / 30) {
-      render(time, Math.min((now - lastDraw) / 1000, 0.1));
+    if (now - lastDraw >= 1000 / 24) {
+      render(time, Math.min((now - lastDraw) / 1000, .1));
       lastDraw = now;
     }
     frameId = requestAnimationFrame(tick);
   }
   function schedule() {
-    syncMotionPreference();
+    reduced = reducedMotion.matches;
     if (frameId !== null) cancelAnimationFrame(frameId);
     frameId = null;
     previous = 0;
-    if (!reduced && visible && !document.hidden)
-      frameId = requestAnimationFrame(tick);
-  }
-  function syncMotionPreference() {
-    if (reduced === reducedMotion.matches) return;
-    reduced = reducedMotion.matches;
-    if (reduced) {
-      pointer = null;
-      for (const flier of [...forms, ...visitors]) {
-        flier.motion = { x: 0, y: 0, alert: 0 };
+    if (reduced || document.hidden) {
+      for (const surface of surfaces) {
+        surface.pointer = null;
+        surface.node.getAnimations().forEach((animation) => animation.cancel());
+        for (const member of surface.members) member.x = member.y = member.alert = 0;
       }
-      render(0);
+      if (reduced) render(0);
     }
+    reveal();
+    if (!reduced && visible && !document.hidden) frameId = requestAnimationFrame(tick);
   }
-  reducedMotion.addEventListener("change", schedule);
-  window.addEventListener("focus", schedule);
-  document.addEventListener("visibilitychange", schedule);
-  new IntersectionObserver(
-    (entries) => {
-      visible = entries[0].isIntersecting;
-      schedule();
-    },
-    { rootMargin: "100px" },
-  ).observe(canvas);
-  canvas.addEventListener("pointermove", (event) => {
-    if (reduced !== reducedMotion.matches) schedule();
-    if (reduced || event.pointerType !== "mouse") return;
-    const rect = canvas.getBoundingClientRect();
-    pointer = {
-      x: ((event.clientX - rect.left) / rect.width) * W,
-      y: ((event.clientY - rect.top) / rect.height) * H,
-    };
-    pointerUntil = Infinity;
-  });
-  canvas.addEventListener("pointerdown", (event) => {
-    if (reduced !== reducedMotion.matches) schedule();
-    if (reduced || event.pointerType === "mouse") return;
-    const rect = canvas.getBoundingClientRect();
-    pointer = {
-      x: ((event.clientX - rect.left) / rect.width) * W,
-      y: ((event.clientY - rect.top) / rect.height) * H,
-    };
-    pointerUntil = time + 1.4;
-  });
-  canvas.addEventListener("pointerleave", (event) => {
-    if (event.pointerType === "mouse") pointer = null;
-  });
-  for (const button of document.querySelectorAll("[data-species]")) {
-    button.addEventListener("focus", () => {
-      button.scrollIntoView({ block: "nearest", inline: "nearest" });
+  function move(surface, x, y) {
+    const stageRect = stage.getBoundingClientRect();
+    const w = surface.node.offsetWidth, h = surface.node.offsetHeight;
+    // Dragging stays inside the collage, clear of the greeting and controls.
+    x = Math.max(0, Math.min(stageRect.width - w, x));
+    y = Math.max(0, Math.min(Math.max(0, stageRect.height - h), y));
+    surface.node.style.left = `${x / stageRect.width * 100}%`;
+    surface.node.style.top = `${y / stageRect.height * 100}%`;
+  }
+  for (const surface of surfaces) {
+    mount(surface, surface.original);
+    makeBackground(surface);
+    const bar = surface.node.querySelector(".specimen-titlebar");
+    bar.addEventListener("focus", () => raise(surface));
+    bar.addEventListener("click", () => raise(surface));
+    bar.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      raise(surface);
+      const rect = surface.node.getBoundingClientRect(), bounds = stage.getBoundingClientRect();
+      drag = { surface, id: event.pointerId, x: event.clientX, y: event.clientY, left: rect.left - bounds.left, top: rect.top - bounds.top };
+      bar.setPointerCapture(event.pointerId);
     });
+    bar.addEventListener("pointermove", (event) => {
+      if (!drag || drag.surface !== surface || drag.id !== event.pointerId) return;
+      move(surface, drag.left + event.clientX - drag.x, drag.top + event.clientY - drag.y);
+    });
+    const endDrag = () => { if (drag?.surface === surface) drag = null; };
+    bar.addEventListener("pointerup", endDrag);
+    bar.addEventListener("pointercancel", endDrag);
+    bar.addEventListener("lostpointercapture", endDrag);
+    bar.addEventListener("keydown", (event) => {
+      const offsets = { ArrowLeft: [-8, 0], ArrowRight: [8, 0], ArrowUp: [0, -8], ArrowDown: [0, 8] };
+      if (!offsets[event.key]) return;
+      event.preventDefault();
+      raise(surface);
+      move(surface, surface.node.offsetLeft + offsets[event.key][0], surface.node.offsetTop + offsets[event.key][1]);
+    });
+    surface.canvas.addEventListener("pointermove", (event) => {
+      if (reduced || event.pointerType !== "mouse") return;
+      const rect = surface.canvas.getBoundingClientRect();
+      surface.pointer = { x: (event.clientX - rect.left) / rect.width * surface.canvas.width, y: (event.clientY - rect.top) / rect.height * surface.canvas.height };
+      surface.pointerUntil = Infinity;
+    });
+    surface.canvas.addEventListener("pointerdown", (event) => {
+      raise(surface);
+      if (reduced || event.pointerType === "mouse") return;
+      const rect = surface.canvas.getBoundingClientRect();
+      surface.pointer = { x: (event.clientX - rect.left) / rect.width * surface.canvas.width, y: (event.clientY - rect.top) / rect.height * surface.canvas.height };
+      surface.pointerUntil = time + 1.4;
+    });
+    surface.canvas.addEventListener("pointerleave", () => { surface.pointer = null; });
+  }
+  for (const button of document.querySelectorAll("[data-species]")) {
+    button.addEventListener("focus", () => button.scrollIntoView({ block: "nearest", inline: "nearest" }));
     button.addEventListener("click", () => {
       selectedSpecies = button.dataset.species;
-      for (const option of document.querySelectorAll("[data-species]")) {
-        option.setAttribute("aria-pressed", String(option === button));
+      for (const option of document.querySelectorAll("[data-species]")) option.setAttribute("aria-pressed", String(option === button));
+      const form = forms.find((item) => item.id === selectedSpecies);
+      if (form) {
+        let surface = surfaces.find((item) => item.members.some((member) => member.form.id === form.id));
+        if (!surface) {
+          surface = surfaces.find((item) => item.original[0] === "luna");
+          mount(surface, [form.id]);
+          surface.node.querySelector(".specimen-title").textContent = `${form.id}.exe`;
+        }
+        raise(surface);
+      } else {
+        surfaces.forEach((surface) => {
+          mount(surface, surface.original);
+          surface.node.style.removeProperty("left");
+          surface.node.style.removeProperty("top");
+          surface.node.style.removeProperty("z-index");
+          surface.node.dataset.front = "false";
+        });
+        surfaces.find((item) => item.original[0] === "luna").node.querySelector(".specimen-title").textContent = "luna.exe";
       }
-      canvas.dataset.activeSpecies = selectedSpecies;
-      const form = forms.find((form) => form.id === selectedSpecies);
-      document.querySelector(".pixel-species-status").textContent = form
-        ? form.name
-        : "ALL FORMS";
-      document.querySelector(".flight-count").textContent =
-        selectedSpecies === "all" ? "09 IN FLIGHT" : "01 IN VIEW";
-      render(time); // Filters also work with reduced motion enabled.
+      stage.dataset.activeSpecies = selectedSpecies;
+      document.querySelector(".pixel-species-status").textContent = form ? form.name : "ALL FORMS";
+      render(time);
     });
   }
-  canvas.dataset.activeSpecies = selectedSpecies;
-  makeBackground();
+  const openingObserver = new MutationObserver(reveal);
+  openingObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  reducedMotion.addEventListener("change", schedule);
+  document.addEventListener("visibilitychange", schedule);
+  window.addEventListener("focus", schedule);
+  new IntersectionObserver((entries) => {
+    visible = entries[0].isIntersecting;
+    schedule();
+  }, { rootMargin: "100px" }).observe(stage);
+  stage.dataset.activeSpecies = selectedSpecies;
   render(0);
   schedule();
 })();

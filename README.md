@@ -1,18 +1,24 @@
 # Nox's personal website
 
-Static HTML, CSS, and a terminal-style pixel habitat showing nine butterflies and moths
-at a time, with twelve designs available through the filters. The greeting, eight introductions from the original site, and an AI research introduction type and delete
+Static HTML, CSS, and six overlapping specimen terminals containing nine pixel
+butterflies and moths, with twelve designs available through the filters. The greeting, eight introductions from the original site, and an AI research introduction type and delete
 in the same large hero heading, repeating as one loop. The first word is white,
 and shared prefixes stay visible while only the changed suffix is retyped. The closing section has
 separate pixel animations for books, instant photography, painting, historic
 sites, and a waxwing that looks around, preens, stretches its wings, hops along
 its branch, and picks at berries. No package installation or build is needed to run the site.
 
-The nine habitat butterflies follow separate routes. One resident at a time
-approaches a plant, rests with gently opening wings, and takes off again. A nearby
-mouse or a brief touch makes the nearby butterflies ease away; their return is
-damped, and their flight is kept inside the display. Flight positions repaint at
-up to 30 fps while wing poses retain six pixel frames.
+The six terminals have different sizes, muted graphite, sage, blue, violet, and
+brass edges, mounting marks, and specimen labels. Each holds one or two original
+pixel butterflies. Their wings move slowly through six poses and briefly flutter
+when approached. The windows appear in a short stepped cascade as the homepage
+emerges after the green flame clears. Title bars raise windows on focus or activation and support dragging or
+arrow-key movement within the collage. Body touch gestures retain page scrolling.
+The single filter row brings an existing species window forward, or mounts one
+of the three additional designs in the large central window. All restores the
+original arrangement. Nine specimens remain visible across the six windows.
+The six cached canvas buffers redraw at up to 24 fps, pause outside the viewport
+or in a hidden tab, and settle into open-wing poses with reduced motion.
 
 The book, SX-70, and watercolor brush also respond to hovering their row, clicking
 the artwork, or focusing and activating its keyboard control. The controls are
@@ -255,8 +261,8 @@ stepped edges and a small fixed palette. GitHub and LinkedIn use accessible icon
 `assets/bootstrap-icons-LICENSE.txt`). The email stays a direct text link.
 The navigation includes all four sections. Small section labels use Intro,
 Selected Projects, Find Me, and Know More About Me.
-The butterfly habitat uses a graphite instrument casing, recessed glass,
-subtle reflections, corner screws, and a small vent. Projects use a fan of
+The butterfly habitat is a frameless cluster of overlapping terminal windows
+that double as living specimen cases. Projects use a fan of
 different torn paper stocks; Contact and Interests keep their own tactile
 materials. The page keeps direct section titles.
 Interests use four full-width rows, with personal text on the left and pixel
