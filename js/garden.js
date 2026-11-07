@@ -543,6 +543,74 @@
     leaf(x + bend * .65, y - height * .65, height * .2, -height * .16, "#6c8050", size);
     flower(x + bend, y - height, color, size);
   }
+  function rosemary(x, y, height, bend, size = 2) {
+    // Woody stems and paired, narrow needles with a silver upper edge.
+    line(x, y, x + bend, y - height, "#756b4b", size);
+    for (const [side, reach] of [[-1, .68], [1, .84], [0, 1]]) {
+      const rootY = y - height * .18;
+      const tipX = x + bend + side * height * .15;
+      const tipY = y - height * reach;
+      line(x + bend * .18, rootY, tipX, tipY, "#4f6b53", size);
+      for (let p = .14; p < 1; p += .1) {
+        const sx = x + bend * .18 + (tipX - x - bend * .18) * p;
+        const sy = rootY + (tipY - rootY) * p;
+        const length = height * .065 * (1.2 - p * .4);
+        line(sx, sy, sx - length * .65, sy - length, "#5f836d", size);
+        line(sx + size, sy, sx + length * .75, sy - length * .9, "#91a18a", size);
+      }
+      pixel(tipX, tipY, "#b4b5cb", size + 1);
+    }
+  }
+  function sageLeaf(x, y, dx, dy, size) {
+    const length = Math.hypot(dx, dy);
+    for (let i = 0; i < length; i += size) {
+      const p = i / length, width = Math.sin(p * Math.PI) * length * .34;
+      for (let j = -width; j <= width; j += size) {
+        const light = (Math.round(i / size) + Math.round(j / size)) % 4 === 0;
+        pixel(x + dx * p - dy / length * j, y + dy * p + dx / length * j, light ? "#9ca88e" : "#637f6d", size);
+      }
+    }
+    line(x, y, x + dx * .85, y + dy * .85, "#b0baa033", size);
+  }
+  function sage(x, y, height, bend, size = 2) {
+    // Broad, softly mottled leaves and tiered violet flower whorls.
+    line(x, y, x + bend, y - height, "#7a8961", size);
+    for (const rise of [.18, .35, .52]) {
+      const sx = x + bend * rise, sy = y - height * rise;
+      const reach = height * .28 * (1 - rise * .55);
+      sageLeaf(sx, sy, -reach, -reach * .42, size);
+      sageLeaf(sx + size, sy - size * 3, reach * .9, -reach * .55, size);
+    }
+    for (let i = 0; i < 5; i++) {
+      const sx = x + bend * (1 - i * .055), sy = y - height + i * size * 5;
+      const spread = size * (i < 2 ? 1 : 2);
+      pixel(sx - spread, sy, "#8f7f9f", size * 2);
+      pixel(sx + size, sy - size, "#b5a3be", size * 2);
+      pixel(sx, sy - size * 2, "#d0bbca", size);
+    }
+  }
+  function lavender(x, y, height, bend, size = 2) {
+    for (const [side, reach] of [[-1, .78], [0, 1], [1, .86]]) {
+      const tipX = x + bend + side * height * .14, tipY = y - height * reach;
+      line(x, y, tipX, tipY, "#738164", size);
+      leaf(x, y - height * .12, side ? side * height * .16 : -height * .08, -height * .34, "#687d64", size);
+      for (let i = 0; i < 6; i++) {
+        const yy = tipY + i * size * 3;
+        pixel(tipX - (i % 2 ? size : 0), yy, i % 2 ? "#b39bc7" : "#8779a3", size * 2);
+        pixel(tipX + size, yy - size, "#cbb7d2", size);
+      }
+    }
+  }
+  function thyme(x, y, width, size = 2) {
+    // A low creeping stem, round paired leaves, and blush flower clusters.
+    line(x, y, x + width, y - width * .1, "#526e4c", size);
+    for (let step = 0; step < width; step += size * 6) {
+      const sy = y - step * .1;
+      pixel(x + step, sy - size * 3, "#82936b", size * 2);
+      pixel(x + step + size, sy + size, "#5d7f59", size * 2);
+      if (step % (size * 12) === 0) flower(x + step, sy - size * 6, "#b99aa9", size);
+    }
+  }
   function makeBotanicals() {
     const target = stage.querySelector(".habitat-botanicals");
     const context = target?.getContext("2d");
@@ -551,7 +619,7 @@
     canvas = target; ctx = context; W = target.width; H = target.height;
     ctx.clearRect(0, 0, W, H);
     ctx.imageSmoothingEnabled = false;
-    fern(38, 679, 325, 18, 2);
+    fern(60, 679, 325, 18, 2);
     fern(109, 703, 160, -13, 2);
     fern(672, 691, 335, -12, 2);
     fern(615, 706, 176, 13, 2);
@@ -564,6 +632,10 @@
     sprig(342, 712, 55, 7, "#d0c3a0", 2);
     sprig(703, 271, 40, -4, "#bfa98c", 2);
     sprig(408, 173, 39, -9, "#d0c3a0", 2);
+    rosemary(44, 640, 270, 12, 2);
+    sage(101, 493, 148, 8, 2);
+    lavender(385, 712, 121, -4, 2);
+    thyme(337, 713, 82, 2);
     canvas = saved.canvas; ctx = saved.ctx; W = saved.W; H = saved.H;
   }
 
@@ -606,11 +678,13 @@
       line(x, y, x + dx * 7, y, "#67856c55", 1);
       line(x, y, x, y + dy * 7, "#67856c55", 1);
     }
-    fern(15, H - 15, Math.min(82, H * .32), 5, 1);
+    if (surface.index % 3 === 0) rosemary(16, H - 15, Math.min(82, H * .34), 4, 1);
+    else if (surface.index % 3 === 1) sage(17, H - 15, Math.min(64, H * .36), 3, 1);
+    else lavender(17, H - 15, Math.min(78, H * .34), 4, 1);
     fern(W - 17, H - 17, Math.min(60, H * .27), -4, 1);
     if (surface.index % 2 === 0) sprig(W - 22, H - 25, 41, -6, "#b5a89a", 1);
     if (surface.index === 2) {
-      fern(18, H * .64, 118, 8, 1);
+      sage(21, H * .64, 104, 7, 1);
       sprig(W - 24, H * .42, 48, -9, "#c6b7a2", 1);
     }
     surface.background = document.createElement("canvas");

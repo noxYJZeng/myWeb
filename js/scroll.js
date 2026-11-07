@@ -13,12 +13,19 @@
   let armed = false;
   let frame = null;
   let backdropKey = "";
+  let lastScroll = Math.max(0, scrollY);
+  let direction = 1;
   const entrances = new Map();
   const running = new Map();
   const seen = new WeakSet();
   const depth = new Set();
   const compact = () => innerWidth <= 620;
   const clamp = (value) => Math.max(0, Math.min(1, value));
+  function sampleDirection() {
+    const position = Math.max(0, scrollY);
+    if (Math.abs(position - lastScroll) > 1) direction = position > lastScroll ? 1 : -1;
+    lastScroll = position;
+  }
   const mix = (a, b, p) => a + (b - a) * p;
   const lift = (node, x, y) => {
     if (node) node.style.translate = `${Math.round(x)}px ${Math.round(y)}px`;
@@ -50,9 +57,10 @@
 
   const heroCopy = document.querySelector(".hero-copy");
   const garden = document.querySelector(".garden");
+  const aboutMain = document.querySelector(".about-main");
   const paperBack = document.querySelector(".paper-layer-back");
   const paperMiddle = document.querySelector(".paper-layer-middle");
-  [heroCopy, garden, paperBack, paperMiddle].filter(Boolean).forEach((node) => {
+  [heroCopy, garden, aboutMain, paperBack, paperMiddle].filter(Boolean).forEach((node) => {
     node.dataset.scrollDepth = "";
     depth.add(node);
   });
@@ -134,9 +142,11 @@
     seen.add(node);
     node.dataset.scrollState = "settled";
     const rect = node.getBoundingClientRect();
-    if (reduced || document.hidden || rect.bottom <= 80 || !node.animate) return;
+    const focused = document.activeElement !== document.body && node.contains(document.activeElement);
+    if (reduced || document.hidden || focused || !node.animate) return;
+    sampleDirection();
     let x = options.x || 0;
-    let y = options.y ?? 32;
+    let y = (options.y ?? 32) * direction;
     let delay = options.delay || 0;
     if (compact()) {
       x = Math.max(-12, Math.min(12, x));
@@ -166,6 +176,7 @@
         fill: "backwards",
       });
       node.dataset.scrollState = "entering";
+      node.dataset.scrollDirection = direction > 0 ? "down" : "up";
       running.set(node, animation);
       const settle = () => {
         if (running.get(node) !== animation) return;
@@ -182,19 +193,39 @@
     }
   }
 
-  const observer = new IntersectionObserver((entries) => {
-    syncPreference();
+  let observer = null;
+  let observedCompact = compact();
+  // Reset only beyond the viewport plus a gutter. An entrance cannot rearm
+  // itself merely by translating across the visible edge during its animation.
+  const resetObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      reveal(entry.target, entrances.get(entry.target));
-      observer.unobserve(entry.target);
+      if (entry.isIntersecting) return;
+      running.get(entry.target)?.cancel();
+      seen.delete(entry.target);
+      entry.target.dataset.scrollState = "waiting";
     });
-  }, { rootMargin: "0px", threshold: 0.01 });
+  }, { rootMargin: "112px 0px", threshold: 0 });
+  function observeEntrances() {
+    observer?.disconnect();
+    observedCompact = compact();
+    observer = new IntersectionObserver((entries) => {
+      syncPreference();
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) reveal(entry.target, entrances.get(entry.target));
+        else if (!running.has(entry.target)) {
+          seen.delete(entry.target);
+          entry.target.dataset.scrollState = "waiting";
+        }
+      });
+    }, { rootMargin: `-${observedCompact ? 72 : 108}px 0px 0px 0px`, threshold: 0.01 });
+    entrances.forEach((options, node) => observer.observe(node));
+  }
 
   function update() {
     frame = null;
     if (!armed || document.hidden) return;
     syncPreference();
+    sampleDirection();
     const scroll = Math.max(0, scrollY);
     const height = innerHeight;
     const small = compact();
@@ -206,6 +237,9 @@
     if (!reduced) {
       lift(heroCopy, 0, -exit * (small ? 18 : 28));
       lift(garden, 0, exit * (small ? 16 : 40));
+      const about = rects.get(document.querySelector("#about"));
+      const aboutPassage = clamp((height - about.top) / (height + about.height));
+      lift(aboutMain, 0, (.5 - aboutPassage) * (small ? 10 : 16));
       interests.forEach(({ art }, index) => {
         const rect = artRects[index];
         const progress = clamp((height - rect.top) / (height + rect.height));
@@ -250,8 +284,10 @@
       if (rect.bottom <= 80 || beforeAnchor || (sectionEntry && rect.top < innerHeight)) {
         seen.add(node);
         node.dataset.scrollState = "settled";
-      } else observer.observe(node);
+      }
+      resetObserver.observe(node);
     });
+    observeEntrances();
     update();
   }
   const opening = new MutationObserver(() => {
@@ -265,6 +301,7 @@
   addEventListener("scroll", requestUpdate, { passive: true });
   addEventListener("resize", () => {
     running.forEach((animation) => animation.cancel());
+    if (armed && observedCompact !== compact()) observeEntrances();
     requestUpdate();
   }, { passive: true });
   addEventListener("focus", requestUpdate);
@@ -275,7 +312,6 @@
       seen.add(node);
       running.get(node)?.cancel();
       node.dataset.scrollState = "settled";
-      observer.unobserve(node);
     });
     requestUpdate();
   });

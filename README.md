@@ -10,8 +10,10 @@ its branch, and picks at berries. No package installation or build is needed to 
 
 The six terminals mix a large central case, a broad shallow window, smaller
 landscape cases, and narrow portrait windows. Muted graphite, sage, blue, violet,
-and brass edges frame one or two original pixel butterflies each. Ferns, leafy
-stems, and small cream and blush flowers grow through the gaps and inside the
+and brass edges frame one or two original pixel butterflies each. Rosemary has
+slender paired needles, sage has mottled gray-green leaves and violet whorls,
+lavender has long flower spikes, and creeping thyme has small leaves and blush
+flowers. They grow among the ferns and cream flowers between and inside the
 cases, drawn once into cached pixel layers. Wings keep a continuous slow cycle;
 hovering gently opens them without changing their animation clock. The windows
 appear in a short stepped cascade as the homepage
@@ -51,9 +53,13 @@ changes its dark green tone by section. The existing navigation stays at the top
 on phones its wordmark scrolls away while the navigation row remains available.
 Scrolling keeps the browser's native wheel, touch, anchor, and history behavior.
 
-Entrances run once with temporary Web Animations rather than permanently hidden
-CSS states. Focusing a link or jumping to a section settles its entrance; hiding
-the tab cancels active entrances. Reduced motion keeps the finished composition
+Entrances replay when sections return to view in either scroll direction, using
+temporary Web Animations rather than permanently hidden CSS states. Returning
+from below reverses their vertical movement. Observation remains active, with
+an outside gutter that prevents an animation from repeatedly triggering itself.
+The About Me text also has gentle scroll depth. Focusing a link or jumping to a
+section settles its entrance; hiding the tab cancels active entrances.
+Reduced motion keeps the finished composition
 and removes scroll depth and reveal effects. The scroll layer waits for the green
 match opening to finish, and its background redraws only when the view changes.
 No new runtime dependencies are needed.
