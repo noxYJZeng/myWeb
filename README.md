@@ -1,7 +1,7 @@
 # Nox's personal website
 
 Static HTML, CSS, and six overlapping specimen terminals containing nine pixel
-butterflies and moths, with twelve designs available through the filters. The greeting, eight introductions from the original site, and an AI research introduction type and delete
+butterflies and moths. The greeting, eight introductions from the original site, and an AI research introduction type and delete
 in the same large hero heading, repeating as one loop. The first word is white,
 and shared prefixes stay visible while only the changed suffix is retyped. The closing section has
 separate pixel animations for books, instant photography, painting, historic
@@ -19,9 +19,8 @@ hovering gently opens them without changing their animation clock. The windows
 appear in a short stepped cascade as the homepage
 emerges after the green flame clears. Title bars raise windows on focus or activation and support dragging or
 arrow-key movement within the collage. Body touch gestures retain page scrolling.
-The single filter row brings an existing species window forward, or mounts one
-of the three additional designs in the large central window. All restores the
-original arrangement. Nine specimens remain visible across the six windows.
+The collage ends with the windows and plants, without a statistics strip or
+species selector. Nine specimens remain across the six windows.
 The six cached canvas buffers redraw at up to 24 fps, pause outside the viewport
 or in a hidden tab, and settle into open-wing poses with reduced motion.
 

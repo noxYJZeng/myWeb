@@ -582,45 +582,6 @@ figcaption {
 figcaption > span:last-child {
   color: var(--green);
 }
-.caption-dot {
-  display: inline-block;
-  width: 3px;
-  height: 3px;
-  background: var(--warm);
-  vertical-align: 2px;
-  margin-right: 6px;
-}
-.species-controls {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 5px;
-  padding: 0 11px 11px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #4e6b55 #0d1510;
-}
-.species-controls button {
-  flex: 0 0 auto;
-  border: 0;
-  border-bottom: 1px solid transparent;
-  padding: 6px 7px;
-  background: transparent;
-  color: #92baa0;
-  font-size: 7px;
-  line-height: 1.4;
-  letter-spacing: 0.3px;
-  min-height: 28px;
-  white-space: nowrap;
-}
-.species-controls button:hover {
-  color: var(--green);
-  border-color: #738b72;
-}
-.species-controls button[aria-pressed="true"] {
-  border-color: var(--warm);
-  color: #e0cfac;
-}
 .scroll-cue {
   position: absolute;
   bottom: 28px;
@@ -1333,10 +1294,6 @@ figcaption > span:last-child {
   .section-heading h2 {
     font-size: 30px;
   }
-  .species-controls button {
-    font-size: 6px;
-    padding-inline: 5px;
-  }
 }
 @media (max-width: 800px) {
   .section-wrap {
@@ -1406,14 +1363,6 @@ figcaption > span:last-child {
   .coordinate-bottom {
     left: 11px;
     bottom: 16px;
-  }
-  .species-controls {
-    gap: 4px;
-    padding: 0 8px 8px;
-  }
-  .species-controls button {
-    font-size: 6px;
-    padding: 6px;
   }
   figcaption {
     font-size: 6px;
@@ -1544,16 +1493,6 @@ figcaption > span:last-child {
   figcaption {
     font-size: 6px;
     padding: 11px 10px 8px;
-  }
-  .species-controls {
-    padding-inline: 10px;
-    padding-bottom: 10px;
-    gap: 5px;
-  }
-  .species-controls button {
-    min-height: 32px;
-    padding: 7px 8px;
-    font-size: 7px;
   }
   .scroll-cue {
     bottom: 24px;

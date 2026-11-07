@@ -19,7 +19,6 @@
   let time = 0;
   let previous = 0;
   let lastDraw = 0;
-  let selectedSpecies = "all";
   let randomState = 43;
   const random = () => {
     randomState = (randomState * 1664525 + 1013904223) >>> 0;
@@ -827,35 +826,6 @@
     });
     surface.canvas.addEventListener("pointerleave", () => { surface.pointer = null; });
   }
-  for (const button of document.querySelectorAll("[data-species]")) {
-    button.addEventListener("focus", () => button.scrollIntoView({ block: "nearest", inline: "nearest" }));
-    button.addEventListener("click", () => {
-      selectedSpecies = button.dataset.species;
-      for (const option of document.querySelectorAll("[data-species]")) option.setAttribute("aria-pressed", String(option === button));
-      const form = forms.find((item) => item.id === selectedSpecies);
-      if (form) {
-        let surface = surfaces.find((item) => item.members.some((member) => member.form.id === form.id));
-        if (!surface) {
-          surface = surfaces.find((item) => item.original[0] === "luna");
-          mount(surface, [form.id]);
-          surface.node.querySelector(".specimen-title").textContent = `${form.id}.exe`;
-        }
-        raise(surface);
-      } else {
-        surfaces.forEach((surface) => {
-          mount(surface, surface.original);
-          surface.node.style.removeProperty("left");
-          surface.node.style.removeProperty("top");
-          surface.node.style.removeProperty("z-index");
-          surface.node.dataset.front = "false";
-        });
-        surfaces.find((item) => item.original[0] === "luna").node.querySelector(".specimen-title").textContent = "luna.exe";
-      }
-      stage.dataset.activeSpecies = selectedSpecies;
-      document.querySelector(".pixel-species-status").textContent = form ? form.name : "ALL FORMS";
-      render(time);
-    });
-  }
   const openingObserver = new MutationObserver(reveal);
   openingObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
   reducedMotion.addEventListener("change", schedule);
@@ -865,7 +835,6 @@
     visible = entries[0].isIntersecting;
     schedule();
   }, { rootMargin: "100px" }).observe(stage);
-  stage.dataset.activeSpecies = selectedSpecies;
   render(0);
   schedule();
 })();

@@ -129,14 +129,6 @@
   letter-spacing: .4px;
   pointer-events: none;
 }
-.garden figcaption {
-  padding: 20px 0 8px;
-  font-size: 7px;
-}
-.garden .species-controls {
-  padding: 0 0 8px;
-  gap: 4px;
-}
 @media (max-width: 1100px) {
   .specimen-titlebar { font-size: 8px; gap: 5px; padding-inline: 5px; min-height: 24px; }
 }
@@ -144,5 +136,4 @@
   .specimen-titlebar { font-size: 7px; min-height: 26px; }
   .specimen-chrome { font-size: 7px; }
   .specimen-label { font-size: 5px; letter-spacing: .1px; bottom: 4px; left: 5px; right: 5px; }
-  .garden figcaption { font-size: 6px; padding-top: 22px; }
 }
