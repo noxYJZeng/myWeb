@@ -42,15 +42,6 @@
 .specimen-window--amber { left: 1%; top: 69%; width: 44%; z-index: 4; --rim: #8a8167; --bar: #2c2c21; }
 .specimen-window--ink { left: 60%; top: 66%; width: 36%; z-index: 5; --rim: #777486; --bar: #26262e; }
 .specimen-window--comet { left: 80%; top: 34%; width: 19%; z-index: 6; --rim: #747e5c; --bar: #252d20; }
-.habitat-botanicals {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  image-rendering: pixelated;
-  pointer-events: none;
-}
 .specimen-titlebar {
   display: flex;
   align-items: center;
@@ -99,6 +90,7 @@
 .specimen-window--comet .specimen-chrome { display: none; }
 .specimen-body {
   position: relative;
+  overflow: hidden;
   background: #07130d url("assets/butterfly.svg") center / 40% auto no-repeat;
 }
 .specimen-body::after {
@@ -115,13 +107,12 @@
   image-rendering: pixelated;
 }
 .specimen-label {
-  position: absolute;
-  bottom: 5px;
-  left: 7px;
-  right: 7px;
+  position: relative;
   z-index: 1;
   margin: 0;
+  padding: 3px 7px 4px;
   overflow: hidden;
+  background: #07130d;
   color: #81977f;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -133,7 +124,8 @@
   .specimen-titlebar { font-size: 8px; gap: 5px; padding-inline: 5px; min-height: 24px; }
 }
 @media (max-width: 620px) {
+  .garden { margin-bottom: 16px; }
   .specimen-titlebar { font-size: 7px; min-height: 26px; }
   .specimen-chrome { font-size: 7px; }
-  .specimen-label { font-size: 5px; letter-spacing: .1px; bottom: 4px; left: 5px; right: 5px; }
+  .specimen-label { font-size: 5px; letter-spacing: .1px; padding-inline: 5px; }
 }

@@ -10,11 +10,13 @@ its branch, and picks at berries. No package installation or build is needed to 
 
 The six terminals mix a large central case, a broad shallow window, smaller
 landscape cases, and narrow portrait windows. Muted graphite, sage, blue, violet,
-and brass edges frame one or two original pixel butterflies each. Rosemary has
-slender paired needles, sage has mottled gray-green leaves and violet whorls,
-lavender has long flower spikes, and creeping thyme has small leaves and blush
-flowers. They grow among the ferns and cream flowers between and inside the
-cases, drawn once into cached pixel layers. Wings keep a continuous slow cycle;
+and brass edges frame one or two original pixel butterflies each. Each interior
+has a separate composition: swallowtail over flowering sage, two blue specimens
+above a shared rosemary branch, luna in an open botanical crescent, the amber
+pair around a cream bouquet, purple wings flanking lavender, and comet beside a
+curved flowering stem. Specimen positions and plant silhouettes are arranged
+together. All foliage stays inside the terminal bodies, with no exterior plant
+layer. The botanical backgrounds are cached. Wings keep a continuous slow cycle;
 hovering gently opens them without changing their animation clock. The windows
 appear in a short stepped cascade as the homepage
 emerges after the green flame clears. Title bars raise windows on focus or activation and support dragging or

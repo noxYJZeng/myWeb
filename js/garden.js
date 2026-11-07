@@ -602,40 +602,126 @@
   }
   function thyme(x, y, width, size = 2) {
     // A low creeping stem, round paired leaves, and blush flower clusters.
-    line(x, y, x + width, y - width * .1, "#526e4c", size);
+    const heightAt = (step) => y - step * .1 - Math.sin(step / width * Math.PI) * size * 5;
+    for (let step = 0; step < width; step += size * 3) {
+      const next = Math.min(width, step + size * 3);
+      line(x + step, heightAt(step), x + next, heightAt(next), "#526e4c", size);
+    }
     for (let step = 0; step < width; step += size * 6) {
-      const sy = y - step * .1;
+      const sy = heightAt(step), n = Math.round(step / (size * 6));
       pixel(x + step, sy - size * 3, "#82936b", size * 2);
       pixel(x + step + size, sy + size, "#5d7f59", size * 2);
-      if (step % (size * 12) === 0) flower(x + step, sy - size * 6, "#b99aa9", size);
+      if (n % 3 !== 1) {
+        const tip = sy - size * [6, 10, 5, 8][n % 4];
+        line(x + step, sy, x + step - size, tip, "#697b58", size);
+        flower(x + step - size, tip, n % 3 ? "#c7bca7" : "#b99aa9", size);
+      }
     }
   }
-  function makeBotanicals() {
-    const target = stage.querySelector(".habitat-botanicals");
-    const context = target?.getContext("2d");
-    if (!context) return;
-    const saved = { canvas, ctx, W, H };
-    canvas = target; ctx = context; W = target.width; H = target.height;
-    ctx.clearRect(0, 0, W, H);
-    ctx.imageSmoothingEnabled = false;
-    fern(60, 679, 325, 18, 2);
-    fern(109, 703, 160, -13, 2);
-    fern(672, 691, 335, -12, 2);
-    fern(615, 706, 176, 13, 2);
-    line(53, 701, 646, 687, "#344c3455", 2);
-    for (let x = 80; x < 640; x += 43) leaf(x, 701 - (x - 53) * .024, 12, -17, "#536744", 2);
-    sprig(55, 477, 68, -8, "#c8bda3", 3);
-    sprig(64, 477, 47, 9, "#c4b8a1", 2);
-    sprig(365, 704, 82, -8, "#c4a1aa", 3);
-    sprig(408, 708, 45, 13, "#c4c6a5", 2);
-    sprig(342, 712, 55, 7, "#d0c3a0", 2);
-    sprig(703, 271, 40, -4, "#bfa98c", 2);
-    sprig(408, 173, 39, -9, "#d0c3a0", 2);
-    rosemary(44, 640, 270, 12, 2);
-    sage(101, 493, 148, 8, 2);
-    lavender(385, 712, 121, -4, 2);
-    thyme(337, 713, 82, 2);
-    canvas = saved.canvas; ctx = saved.ctx; W = saved.W; H = saved.H;
+  const arrangements = {
+    swallowtail: { botany: "flowering sage and rosemary", specimens: [{ x: .43, y: .35, scale: 3 }] },
+    morpho: { botany: "one sweeping rosemary branch", specimens: [{ x: .28, y: .43, scale: 3 }, { x: .74, y: .45, scale: 3 }] },
+    luna: { botany: "a crescent of sage, rosemary, and pale flowers", specimens: [{ x: .54, y: .39, scale: 5 }] },
+    atlas: { botany: "a shared bouquet of thyme and cream flowers", specimens: [{ x: .27, y: .41, scale: 3 }, { x: .74, y: .43, scale: 3 }] },
+    peacock: { botany: "lavender spikes and soft sage leaves", specimens: [{ x: .25, y: .35, scale: 2 }, { x: .74, y: .41, scale: 2 }] },
+    comet: { botany: "a curved flowering rosemary stem", specimens: [{ x: .57, y: .40, scale: 2 }] },
+  };
+  function stem(points, color = "#687e58", size = 1) {
+    for (let n = 1; n < points.length; n++) line(...points[n - 1], ...points[n], color, size);
+  }
+  function needleStem(points, length = 10, size = 1) {
+    stem(points, "#647359", size);
+    for (let n = 1; n < points.length; n++) {
+      const [ax, ay] = points[n - 1], [bx, by] = points[n];
+      const distance = Math.hypot(bx - ax, by - ay);
+      const dx = (bx - ax) / distance, dy = (by - ay) / distance;
+      for (let step = 7; step < distance; step += 8) {
+        const x = ax + dx * step, y = ay + dy * step;
+        const reach = length * (.78 + ((n + Math.round(step)) % 3) * .11);
+        line(x, y, x - dy * reach + dx * 4, y + dx * reach + dy * 4, "#577a61", size);
+        line(x, y, x + dy * reach + dx * 5, y - dx * reach + dy * 5, "#8ca08a", size);
+      }
+    }
+  }
+  function violetSpike(x, y, size = 1) {
+    line(x, y + 19 * size, x, y - 3 * size, "#798364", size);
+    for (let n = 0; n < 5; n++) {
+      pixel(x - (n % 2 ? 2 : 1) * size, y + n * 4 * size, "#9b87ad", size * 2);
+      pixel(x + size, y + n * 4 * size - size, "#c4adcc", size);
+    }
+  }
+  function composePlants(surface) {
+    // Coordinates belong to each complete plate, including the specimen poses.
+    // No shared corner decorations: stems, flowers, and wings share a silhouette.
+    switch (surface.original[0]) {
+      case "swallowtail":
+        sage(137, 224, 156, 20, 2);
+        rosemary(50, 221, 67, 8, 1);
+        stem([[50, 221], [38, 188], [44, 151]], "#788461");
+        sageLeaf(39, 188, -17, -10, 1);
+        sageLeaf(40, 184, 14, -13, 1);
+        flower(44, 149, "#d3c9ad", 2);
+        thyme(53, 228, 89, 1);
+        break;
+      case "morpho":
+        needleStem([[24, 148], [103, 135], [206, 147], [298, 133], [397, 143]], 9);
+        stem([[116, 135], [120, 111]], "#738568");
+        stem([[309, 136], [310, 115]], "#738568");
+        flower(81, 125, "#b0a1b8", 1);
+        flower(229, 135, "#d0c5a7", 1);
+        flower(375, 128, "#c0b3c4", 1);
+        break;
+      case "luna": {
+        const left = [[184, 288], [114, 273], [64, 227], [38, 171], [42, 112], [65, 63], [101, 35]];
+        const right = [[184, 288], [253, 273], [302, 230], [326, 177], [327, 117], [307, 63], [271, 37]];
+        stem(left, "#758164");
+        for (const [x, y, dx, dy] of [[113, 272, -30, -12], [111, 270, 15, -28], [64, 226, -21, -23], [65, 225, 23, -20], [39, 170, -18, -21], [40, 169, 22, -18], [43, 112, -14, -20], [44, 110, 25, -12], [66, 63, 1, -22]]) sageLeaf(x, y, dx, dy, 1);
+        needleStem(right, 12);
+        violetSpike(102, 27, 2);
+        flower(270, 35, "#d4c5ad", 2);
+        flower(283, 46, "#b7a7ae", 1);
+        stem([[183, 285], [179, 255], [191, 221], [194, 182]], "#657754");
+        leaf(181, 252, -22, -16, "#708260", 1);
+        leaf(185, 239, 19, -14, "#657d5e", 1);
+        fern(247, 286, 62, -12, 1);
+        flower(166, 281, "#c8a4ae", 2);
+        flower(202, 283, "#d1c4a4", 2);
+        thyme(140, 294, 81, 1);
+        break;
+      }
+      case "atlas":
+        stem([[39, 152], [121, 151], [188, 138], [298, 146]], "#857958");
+        sprig(180, 151, 96, 4, "#d5c8a7", 1);
+        flower(184, 55, "#d5c8a7", 2);
+        stem([[182, 99], [171, 72]], "#7d805b");
+        stem([[183, 115], [193, 88]], "#7d805b");
+        flower(172, 71, "#c6ab9d", 1);
+        flower(193, 87, "#dbd0b4", 1);
+        sageLeaf(68, 145, -24, -10, 1);
+        sageLeaf(109, 149, 19, -16, 1);
+        sageLeaf(235, 141, 18, -19, 1);
+        sageLeaf(287, 145, -13, -17, 1);
+        thyme(105, 155, 62, 1);
+        thyme(206, 153, 51, 1);
+        break;
+      case "peacock":
+        stem([[35, 157], [94, 151], [133, 164], [222, 147]], "#6c7b5b");
+        lavender(131, 155, 99, -2, 2);
+        sageLeaf(128, 154, -35, -20, 1);
+        sageLeaf(136, 157, 29, -17, 1);
+        leaf(71, 152, -18, -13, "#74876b", 1);
+        leaf(192, 152, 21, -15, "#617d64", 1);
+        thyme(105, 164, 59, 1);
+        break;
+      case "comet":
+        needleStem([[24, 175], [19, 125], [27, 77], [38, 37], [50, 24]], 7);
+        sageLeaf(22, 151, 17, -12, 1);
+        sageLeaf(24, 163, 21, -8, 1);
+        flower(50, 24, "#d6c9a8", 2);
+        flower(36, 58, "#bba4b5", 1);
+        thyme(31, 176, 73, 1);
+        break;
+    }
   }
 
   // Each terminal has its own pixel buffer, mounting marks, and one or two forms.
@@ -647,9 +733,10 @@
     ctx.imageSmoothingEnabled = false;
   }
   function mount(surface, ids) {
-    surface.members = ids.map((id) => ({ form: forms.find((form) => form.id === id), x: 0, y: 0, alert: 0 }));
+    surface.arrangement = arrangements[ids[0]];
+    surface.members = ids.map((id, index) => ({ form: forms.find((form) => form.id === id), placement: surface.arrangement.specimens[index], x: 0, y: 0, alert: 0 }));
     surface.node.dataset.forms = ids.join(" ");
-    surface.canvas.setAttribute("aria-label", `Pixel specimens: ${surface.members.map((m) => m.form.name.toLowerCase()).join(" and ")}. Their wings move gently.`);
+    surface.canvas.setAttribute("aria-label", `Pixel specimens: ${surface.members.map((m) => m.form.name.toLowerCase()).join(" and ")}, arranged with ${surface.arrangement.botany}. Their wings move gently.`);
     surface.node.querySelector(".specimen-label").textContent = surface.members.map((m) => m.form.name).join(" · ");
     surface.node.querySelector(".specimen-titlebar").setAttribute("aria-label", `Bring ${surface.members.map((m) => m.form.name.toLowerCase()).join(" and ")} window to front; drag or use arrow keys to move`);
   }
@@ -664,28 +751,18 @@
     ctx.fillRect(0, 0, W, H);
     for (let x = 10; x < W; x += 12) for (let y = 10; y < H; y += 12) pixel(x, y, "#64816b20", 1);
     for (let n = 0; n < W * H / 110; n++) pixel(random() * W, random() * H, "#c5d5ae08", 1);
-    const slots = surface.original.length;
-    for (let n = 0; n < slots; n++) {
-      const x = (n + .5) * W / slots;
-      line(x - 4, H / 2, x + 4, H / 2, "#72967a48", 1);
-      line(x, H / 2 - 4, x, H / 2 + 4, "#72967a48", 1);
-      line(x, 13, x, 21, "#829b7355", 1);
-      pixel(x - 1, 12, "#aabb8c80", 3);
-      line(x - 8, H - 23, x + 8, H - 23, "#7484694d", 1);
+    for (const { placement } of surface.members) {
+      const x = placement.x * W, y = placement.y * H;
+      line(x - 4, y, x + 4, y, "#72967a38", 1);
+      line(x, y - 4, x, y + 4, "#72967a38", 1);
+      line(x, 13, x, 19, "#829b7344", 1);
+      pixel(x - 1, 12, "#aabb8c66", 2);
     }
     for (const [x, y, dx, dy] of [[8, 8, 1, 1], [W - 9, 8, -1, 1], [8, H - 9, 1, -1], [W - 9, H - 9, -1, -1]]) {
       line(x, y, x + dx * 7, y, "#67856c55", 1);
       line(x, y, x, y + dy * 7, "#67856c55", 1);
     }
-    if (surface.index % 3 === 0) rosemary(16, H - 15, Math.min(82, H * .34), 4, 1);
-    else if (surface.index % 3 === 1) sage(17, H - 15, Math.min(64, H * .36), 3, 1);
-    else lavender(17, H - 15, Math.min(78, H * .34), 4, 1);
-    fern(W - 17, H - 17, Math.min(60, H * .27), -4, 1);
-    if (surface.index % 2 === 0) sprig(W - 22, H - 25, 41, -6, "#b5a89a", 1);
-    if (surface.index === 2) {
-      sage(21, H * .64, 104, 7, 1);
-      sprig(W - 24, H * .42, 48, -9, "#c6b7a2", 1);
-    }
+    composePlants(surface);
     surface.background = document.createElement("canvas");
     surface.background.width = W;
     surface.background.height = H;
@@ -699,10 +776,9 @@
       if (surface.pointer && t > surface.pointerUntil) surface.pointer = null;
       surface.members.forEach((member, index) => {
         const form = member.form;
-        const slot = W / surface.members.length;
-        const scale = Math.max(1, Math.floor(Math.min(slot * .9 / (form.bounds.maxX * 2 + 8), H * .83 / (form.bounds.maxY - form.bounds.minY + 8))));
-        const x = slot * (index + .5);
-        const y = (H - (form.bounds.maxY + form.bounds.minY) * scale) / 2;
+        const scale = member.placement.scale;
+        const x = member.placement.x * W;
+        const y = member.placement.y * H;
         const dx = surface.pointer ? x - surface.pointer.x : 0;
         const dy = surface.pointer ? y - surface.pointer.y : 0;
         const distance = Math.hypot(dx, dy);
@@ -782,7 +858,6 @@
     surface.node.style.left = `${x / stageRect.width * 100}%`;
     surface.node.style.top = `${y / stageRect.height * 100}%`;
   }
-  makeBotanicals();
   for (const surface of surfaces) {
     mount(surface, surface.original);
     makeBackground(surface);
