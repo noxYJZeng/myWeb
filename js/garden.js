@@ -464,9 +464,10 @@
     }
   }
 
-  function butterfly(form, x, y, scale, phase, rest = 0, bank = 0) {
+  function butterfly(form, x, y, scale, phase, rest = 0, bank = 0, attention = 0) {
     const beat = [1, 0.8, 0.48, 0.24, 0.48, 0.8][Math.floor(phase) % 6];
-    const flap = beat * (1 - rest) + (0.84 + Math.sin(time * 0.9) * 0.06) * rest;
+    const restingFlap = beat * (1 - rest) + (0.84 + Math.sin(time * 0.9) * 0.06) * rest;
+    const flap = restingFlap + (1 - restingFlap) * attention;
     const cellW = Math.max(1, Math.ceil(scale * flap));
     x = Math.round(x);
     y = Math.round(y);
@@ -512,6 +513,60 @@
     }
   }
 
+  function leaf(x, y, dx, dy, color, size = 2) {
+    const length = Math.hypot(dx, dy);
+    for (let i = 0; i < length; i += size) {
+      const progress = i / length;
+      const width = Math.sin(progress * Math.PI) * length * .19;
+      for (let j = -width; j <= width; j += size) {
+        pixel(x + dx * progress - dy / length * j, y + dy * progress + dx / length * j, color, size);
+      }
+    }
+  }
+  function fern(x, y, height, bend, size = 2) {
+    line(x, y, x + bend, y - height, "#435a38", size);
+    for (let rise = height * .15; rise < height * .92; rise += height * .1) {
+      const stem = x + bend * rise / height;
+      const reach = (1 - rise / height) * height * .19 + 3;
+      leaf(stem, y - rise, -reach, -reach * .68, "#354e35", size);
+      leaf(stem + size, y - rise - height * .035, reach * .85, -reach * .6, "#526847", size);
+    }
+  }
+  function flower(x, y, color = "#c8bda3", size = 2) {
+    for (const [dx, dy] of [[0, -2], [2, -1], [2, 1], [0, 2], [-2, 1], [-2, -1]]) pixel(x + dx * size, y + dy * size, color, size + 1);
+    pixel(x, y, "#b99d60", size + 1);
+    pixel(x, y - size, "#dfd3aa", size);
+  }
+  function sprig(x, y, height, bend, color, size = 2) {
+    line(x, y, x + bend, y - height, "#546b43", size);
+    leaf(x + bend * .4, y - height * .4, -height * .24, -height * .19, "#516843", size);
+    leaf(x + bend * .65, y - height * .65, height * .2, -height * .16, "#6c8050", size);
+    flower(x + bend, y - height, color, size);
+  }
+  function makeBotanicals() {
+    const target = stage.querySelector(".habitat-botanicals");
+    const context = target?.getContext("2d");
+    if (!context) return;
+    const saved = { canvas, ctx, W, H };
+    canvas = target; ctx = context; W = target.width; H = target.height;
+    ctx.clearRect(0, 0, W, H);
+    ctx.imageSmoothingEnabled = false;
+    fern(38, 679, 325, 18, 2);
+    fern(109, 703, 160, -13, 2);
+    fern(672, 691, 335, -12, 2);
+    fern(615, 706, 176, 13, 2);
+    line(53, 701, 646, 687, "#344c3455", 2);
+    for (let x = 80; x < 640; x += 43) leaf(x, 701 - (x - 53) * .024, 12, -17, "#536744", 2);
+    sprig(55, 477, 68, -8, "#c8bda3", 3);
+    sprig(64, 477, 47, 9, "#c4b8a1", 2);
+    sprig(365, 704, 82, -8, "#c4a1aa", 3);
+    sprig(408, 708, 45, 13, "#c4c6a5", 2);
+    sprig(342, 712, 55, 7, "#d0c3a0", 2);
+    sprig(703, 271, 40, -4, "#bfa98c", 2);
+    sprig(408, 173, 39, -9, "#d0c3a0", 2);
+    canvas = saved.canvas; ctx = saved.ctx; W = saved.W; H = saved.H;
+  }
+
   // Each terminal has its own pixel buffer, mounting marks, and one or two forms.
   function selectSurface(surface) {
     canvas = surface.canvas;
@@ -551,6 +606,13 @@
       line(x, y, x + dx * 7, y, "#67856c55", 1);
       line(x, y, x, y + dy * 7, "#67856c55", 1);
     }
+    fern(15, H - 15, Math.min(82, H * .32), 5, 1);
+    fern(W - 17, H - 17, Math.min(60, H * .27), -4, 1);
+    if (surface.index % 2 === 0) sprig(W - 22, H - 25, 41, -6, "#b5a89a", 1);
+    if (surface.index === 2) {
+      fern(18, H * .64, 118, 8, 1);
+      sprig(W - 24, H * .42, 48, -9, "#c6b7a2", 1);
+    }
     surface.background = document.createElement("canvas");
     surface.background.width = W;
     surface.background.height = H;
@@ -572,16 +634,17 @@
         const dy = surface.pointer ? y - surface.pointer.y : 0;
         const distance = Math.hypot(dx, dy);
         const attention = surface.pointer && !reduced ? Math.max(0, 1 - distance / (40 + scale * 12)) : 0;
-        const ease = 1 - Math.exp(-delta * 5);
+        const ease = 1 - Math.exp(-delta * 3);
         member.alert += (attention - member.alert) * ease;
-        member.x += ((distance ? dx / distance : 0) * attention * 5 - member.x) * ease;
-        member.y += ((distance ? dy / distance : 0) * attention * 4 - member.y) * ease;
+        member.x += (dx / (distance + 24) * attention * 2 - member.x) * ease;
+        member.y += (dy / (distance + 24) * attention * 1.5 - member.y) * ease;
         const phase = surface.index * .8 + index * 1.7;
         butterfly(form,
-          x + (reduced ? 0 : Math.sin(t * .7 + phase) * 1.5 + member.x),
-          y + (reduced ? 0 : Math.sin(t * .6 + phase) + member.y),
-          scale, reduced ? 0 : t * (2.5 + form.speed * .2 + member.alert * 12) + phase,
-          reduced ? 0 : .76 - member.alert * .6, 0);
+          x + (reduced ? 0 : Math.sin(t * .7 + phase) * .6 + member.x),
+          y + (reduced ? 0 : Math.sin(t * .6 + phase) * .4 + member.y),
+          // Hover changes the pose, never the clock driving the wing cycle.
+          scale, reduced ? 0 : t * (2.2 + form.speed * .08) + phase,
+          reduced ? 0 : .9, 0, reduced ? 0 : member.alert * .55);
       });
     }
   }
@@ -646,6 +709,7 @@
     surface.node.style.left = `${x / stageRect.width * 100}%`;
     surface.node.style.top = `${y / stageRect.height * 100}%`;
   }
+  makeBotanicals();
   for (const surface of surfaces) {
     mount(surface, surface.original);
     makeBackground(surface);

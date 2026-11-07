@@ -8,10 +8,13 @@ separate pixel animations for books, instant photography, painting, historic
 sites, and a waxwing that looks around, preens, stretches its wings, hops along
 its branch, and picks at berries. No package installation or build is needed to run the site.
 
-The six terminals have different sizes, muted graphite, sage, blue, violet, and
-brass edges, mounting marks, and specimen labels. Each holds one or two original
-pixel butterflies. Their wings move slowly through six poses and briefly flutter
-when approached. The windows appear in a short stepped cascade as the homepage
+The six terminals mix a large central case, a broad shallow window, smaller
+landscape cases, and narrow portrait windows. Muted graphite, sage, blue, violet,
+and brass edges frame one or two original pixel butterflies each. Ferns, leafy
+stems, and small cream and blush flowers grow through the gaps and inside the
+cases, drawn once into cached pixel layers. Wings keep a continuous slow cycle;
+hovering gently opens them without changing their animation clock. The windows
+appear in a short stepped cascade as the homepage
 emerges after the green flame clears. Title bars raise windows on focus or activation and support dragging or
 arrow-key movement within the collage. Body touch gestures retain page scrolling.
 The single filter row brings an existing species window forward, or mounts one
