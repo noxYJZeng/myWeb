@@ -616,6 +616,18 @@
       pixel(cx, cy - 1, petals.lilac[3], 1);
     }
   }
+  function rosemarySprig(x, y, dx, dy, length) {
+    line(x, y, x + dx * length, y + dy * length, "#7b7d5e", 1);
+    for (let n = 1; n < 8; n++) {
+      const reach = n / 8, cx = x + dx * length * reach, cy = y + dy * length * reach;
+      const needle = 6 * (1.2 - reach * .4);
+      for (const side of [-1, 1]) {
+        line(cx, cy, cx + (dx * .55 - dy * side) * needle,
+          cy + (dy * .55 + dx * side) * needle, side < 0 ? "#5d826c" : "#9baa8e", 1);
+      }
+    }
+    blossom(x + dx * length, y + dy * length, 3, petals.lilac);
+  }
   function tiedStems(x, y, size = 1) {
     line(x - 12 * size, y - 3 * size, x + 9 * size, y + 6 * size, "#938668", size);
     line(x + 12 * size, y - 3 * size, x - 9 * size, y + 6 * size, "#aca07b", size);
@@ -628,23 +640,24 @@
   }
 
   const arrangements = {
-    swallowtail: { botany: "an open laurel crown with small blush flowers", specimens: [{ x: .50, y: .42, scale: 3 }] },
+    swallowtail: { botany: "a small rosemary sprig and a single cream flower", specimens: [{ x: .50, y: .42, scale: 3 }] },
     morpho: { botany: "a silver-leaf floral wreath", specimens: [{ x: .29, y: .42, scale: 3 }, { x: .73, y: .44, scale: 2 }] },
     luna: { botany: "a full sage-green wreath with cream and blush flower clusters", specimens: [{ x: .54, y: .39, scale: 5 }] },
-    atlas: { botany: "a warm olive laurel crown tied with linen", specimens: [{ x: .27, y: .41, scale: 3 }, { x: .74, y: .43, scale: 3 }] },
-    peacock: { botany: "a lavender and silver-leaf wreath", specimens: [{ x: .30, y: .40, scale: 2 }, { x: .70, y: .40, scale: 2 }] },
-    comet: { botany: "a slender laurel wreath with pale flowers", specimens: [{ x: .50, y: .38, scale: 2 }] },
+    atlas: { botany: "two loose wildflower stems and a few olive leaves", specimens: [{ x: .27, y: .41, scale: 3 }, { x: .74, y: .43, scale: 3 }] },
+    peacock: { botany: "a small lavender sprig and a few silver-green leaves", specimens: [{ x: .30, y: .40, scale: 2 }, { x: .70, y: .40, scale: 2 }] },
+    comet: { botany: "a short rosemary sprig and a pale blossom", specimens: [{ x: .50, y: .38, scale: 2 }] },
   };
   function composePlants(surface) {
-    // Six complete specimen plates: curved foliage encloses, rather than fills,
-    // the negative space around the wings. Every pixel stays inside its terminal.
+    // Wreaths belong to the two large cases. Smaller cases keep loose botanical
+    // accents and open space around their wings, all inside their terminals.
     switch (surface.original[0]) {
       case "swallowtail":
-        laurelSpray([[105, 223], [6, 231], [4, 91], [57, 59]], foliage.laurel, 19, 16);
-        laurelSpray([[105, 223], [204, 231], [206, 91], [153, 59]], foliage.laurel, 19, 16, 1);
-        flowerCluster(57, 201, 7, petals.blush, -.65);
-        flowerCluster(153, 201, 6, petals.cream, .65);
-        tiedStems(105, 224);
+        rosemarySprig(47, 225, .27, -.96, 58);
+        laurelLeaf(48, 220, -21, -13, foliage.silver, 1.4);
+        laurelLeaf(50, 213, 20, -18, foliage.silver, 1.4);
+        line(161, 222, 171, 206, foliage.silver[1], 1);
+        laurelLeaf(166, 215, -9, -9, foliage.silver, 1.3);
+        blossom(171, 206, 4, petals.cream);
         break;
       case "morpho":
         laurelSpray([[210, 149], [-24, 158], [-22, 12], [210, 16]], foliage.blue, 14, 15);
@@ -670,27 +683,30 @@
         tiedStems(180, 300);
         break;
       case "atlas":
-        laurelSpray([[170, 158], [-16, 164], [-22, 48], [112, 23]], foliage.olive, 16, 15);
-        laurelSpray([[170, 158], [356, 164], [362, 48], [228, 23]], foliage.olive, 16, 15, 1);
-        flowerCluster(102, 140, 6, petals.cream, .3, foliage.olive);
-        flowerCluster(246, 139, 6, petals.blush, -.3, foliage.olive);
-        tiedStems(170, 159);
+        line(169, 157, 158, 126, foliage.olive[1], 1);
+        line(169, 157, 184, 132, foliage.olive[1], 1);
+        laurelLeaf(165, 145, -16, -9, foliage.olive, 1.4);
+        laurelLeaf(175, 145, 13, -7, foliage.olive, 1.4);
+        blossom(158, 126, 6, petals.cream);
+        blossom(184, 132, 4, petals.blush);
+        laurelLeaf(299, 151, 13, -9, foliage.olive, 1.3);
         break;
       case "peacock":
-        laurelSpray([[130, 168], [1, 175], [-5, 32], [106, 23]], foliage.blue, 14, 13);
-        laurelSpray([[130, 168], [259, 175], [265, 32], [154, 23]], foliage.silver, 14, 13, 1);
-        lavenderTip(84, 38, .86, -.5, 23);
-        lavenderTip(178, 40, -.8, -.6, 24);
-        flowerCluster(60, 145, 7, petals.lilac, .6);
-        flowerCluster(210, 143, 7, petals.lilac, -.6);
-        blossom(130, 166, 5, petals.cream);
+        lavenderTip(203, 160, .35, -.94, 39);
+        lavenderTip(209, 162, .75, -.66, 31);
+        lavenderTip(198, 163, -.06, -1, 24);
+        laurelLeaf(203, 160, -15, -12, foliage.silver, .8);
+        laurelLeaf(209, 162, 15, -8, foliage.silver, .8);
+        laurelLeaf(51, 155, -18, -11, foliage.silver, 1.5);
+        laurelLeaf(51, 155, 15, -14, foliage.silver, 1.5);
+        blossom(49, 149, 4, petals.lilac);
         break;
       case "comet":
-        laurelSpray([[70, 179], [3, 177], [-3, 55], [49, 30]], foliage.olive, 11, 11);
-        laurelSpray([[70, 179], [137, 177], [143, 55], [91, 30]], foliage.silver, 11, 11, 1);
-        flowerCluster(49, 30, 5, petals.cream, -.5);
-        blossom(91, 30, 4, petals.blush);
-        flowerCluster(70, 175, 5, petals.cream);
+        rosemarySprig(29, 178, -.1, -.995, 32);
+        laurelLeaf(30, 176, 13, -10, foliage.silver, 1.4);
+        line(108, 178, 108, 169, foliage.silver[1], 1);
+        laurelLeaf(108, 176, -8, -4, foliage.silver, 1.4);
+        blossom(108, 169, 4, petals.cream);
         break;
     }
   }
