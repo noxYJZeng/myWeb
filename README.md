@@ -20,7 +20,8 @@ layer. The botanical backgrounds are cached. Wings keep a continuous slow cycle;
 hovering gently opens them without changing their animation clock. The windows
 appear in a short stepped cascade as the homepage
 emerges after the green flame clears. Title bars raise windows on focus or activation and support dragging or
-arrow-key movement within the collage. Body touch gestures retain page scrolling.
+arrow-key movement within the collage. Tapping an illustration raises its
+window; swiping over it scrolls the page without changing the stacking order.
 The collage ends with the windows and plants, without a statistics strip or
 species selector. Nine specimens remain across the six windows.
 The six cached canvas buffers redraw at up to 24 fps, pause outside the viewport

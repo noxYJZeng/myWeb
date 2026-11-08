@@ -4452,12 +4452,14 @@ html.has-scroll-scene {
       surface.pointerUntil = Infinity;
     });
     surface.canvas.addEventListener("pointerdown", (event) => {
-      raise(surface);
       if (reduced || event.pointerType === "mouse") return;
       const rect = surface.canvas.getBoundingClientRect();
       surface.pointer = { x: (event.clientX - rect.left) / rect.width * surface.canvas.width, y: (event.clientY - rect.top) / rect.height * surface.canvas.height };
       surface.pointerUntil = time + 1.4;
     });
+    // Native clicks distinguish a tap from a page pan; touchstart cannot.
+    surface.canvas.addEventListener("click", () => raise(surface));
+    surface.canvas.addEventListener("pointercancel", () => { surface.pointer = null; });
     surface.canvas.addEventListener("pointerleave", () => { surface.pointer = null; });
   }
   const openingObserver = new MutationObserver(reveal);
