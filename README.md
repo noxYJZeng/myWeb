@@ -11,12 +11,14 @@ its branch, and picks at berries. No package installation or build is needed to 
 The six terminals mix a large central case, a broad shallow window, smaller
 landscape cases, and narrow portrait windows. Muted graphite, sage, blue, violet,
 and brass edges frame one or two original pixel butterflies each. Each interior
-has a separate composition: swallowtail over flowering sage, two blue specimens
-above a shared rosemary branch, luna in an open botanical crescent, the amber
-pair around a cream bouquet, purple wings flanking lavender, and comet beside a
-curved flowering stem. Specimen positions and plant silhouettes are arranged
-together. All foliage stays inside the terminal bodies, with no exterior plant
-layer. The botanical backgrounds are cached. Wings keep a continuous slow cycle;
+has a separate wreath composition: an open laurel crown for swallowtail, a wide
+silver-leaf floral ring around the blue pair, a fuller cream-and-blush flower
+wreath for luna, an olive laurel crown with crossed linen-tied stems for the
+amber pair, a lavender wreath around the purple wings, and a slender portrait
+wreath for comet. Pointed leaves follow curved branches in overlapping pairs;
+shaded flower clusters gather along the arcs. Specimen positions and plant
+silhouettes are arranged together. All foliage stays inside the terminal bodies,
+with no exterior plant layer. The botanical backgrounds are cached. Wings keep a continuous slow cycle;
 hovering gently opens them without changing their animation clock. The windows
 appear in a short stepped cascade as the homepage
 emerges after the green flame clears. Title bars raise windows on focus or activation and support dragging or
@@ -26,6 +28,11 @@ The collage ends with the windows and plants, without a statistics strip or
 species selector. Nine specimens remain across the six windows.
 The six cached canvas buffers redraw at up to 24 fps, pause outside the viewport
 or in a hidden tab, and settle into open-wing poses with reduced motion.
+
+Laurel references: [Tabler's laurel wreath](https://tabler.io/icons/icon/laurel-wreath)
+and [Game-icons' laurel crown](https://game-icons.net/1x1/lorc/laurel-crown.html).
+The site draws its own pixel leaves, blossoms, stems, and butterflies in canvas;
+reference SVG artwork is not bundled.
 
 The book, SX-70, and watercolor brush also respond to hovering their row, clicking
 the artwork, or focusing and activating its keyboard control. The controls are

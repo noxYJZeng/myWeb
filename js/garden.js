@@ -512,214 +512,185 @@
     }
   }
 
-  function leaf(x, y, dx, dy, color, size = 2) {
-    const length = Math.hypot(dx, dy);
-    for (let i = 0; i < length; i += size) {
-      const progress = i / length;
-      const width = Math.sin(progress * Math.PI) * length * .19;
-      for (let j = -width; j <= width; j += size) {
-        pixel(x + dx * progress - dy / length * j, y + dy * progress + dx / length * j, color, size);
-      }
-    }
-  }
-  function fern(x, y, height, bend, size = 2) {
-    line(x, y, x + bend, y - height, "#435a38", size);
-    for (let rise = height * .15; rise < height * .92; rise += height * .1) {
-      const stem = x + bend * rise / height;
-      const reach = (1 - rise / height) * height * .19 + 3;
-      leaf(stem, y - rise, -reach, -reach * .68, "#354e35", size);
-      leaf(stem + size, y - rise - height * .035, reach * .85, -reach * .6, "#526847", size);
-    }
-  }
-  function flower(x, y, color = "#c8bda3", size = 2) {
-    for (const [dx, dy] of [[0, -2], [2, -1], [2, 1], [0, 2], [-2, 1], [-2, -1]]) pixel(x + dx * size, y + dy * size, color, size + 1);
-    pixel(x, y, "#b99d60", size + 1);
-    pixel(x, y - size, "#dfd3aa", size);
-  }
-  function sprig(x, y, height, bend, color, size = 2) {
-    line(x, y, x + bend, y - height, "#546b43", size);
-    leaf(x + bend * .4, y - height * .4, -height * .24, -height * .19, "#516843", size);
-    leaf(x + bend * .65, y - height * .65, height * .2, -height * .16, "#6c8050", size);
-    flower(x + bend, y - height, color, size);
-  }
-  function rosemary(x, y, height, bend, size = 2) {
-    // Woody stems and paired, narrow needles with a silver upper edge.
-    line(x, y, x + bend, y - height, "#756b4b", size);
-    for (const [side, reach] of [[-1, .68], [1, .84], [0, 1]]) {
-      const rootY = y - height * .18;
-      const tipX = x + bend + side * height * .15;
-      const tipY = y - height * reach;
-      line(x + bend * .18, rootY, tipX, tipY, "#4f6b53", size);
-      for (let p = .14; p < 1; p += .1) {
-        const sx = x + bend * .18 + (tipX - x - bend * .18) * p;
-        const sy = rootY + (tipY - rootY) * p;
-        const length = height * .065 * (1.2 - p * .4);
-        line(sx, sy, sx - length * .65, sy - length, "#5f836d", size);
-        line(sx + size, sy, sx + length * .75, sy - length * .9, "#91a18a", size);
-      }
-      pixel(tipX, tipY, "#b4b5cb", size + 1);
-    }
-  }
-  function sageLeaf(x, y, dx, dy, size) {
-    const length = Math.hypot(dx, dy);
-    for (let i = 0; i < length; i += size) {
-      const p = i / length, width = Math.sin(p * Math.PI) * length * .34;
-      for (let j = -width; j <= width; j += size) {
-        const light = (Math.round(i / size) + Math.round(j / size)) % 4 === 0;
-        pixel(x + dx * p - dy / length * j, y + dy * p + dx / length * j, light ? "#9ca88e" : "#637f6d", size);
-      }
-    }
-    line(x, y, x + dx * .85, y + dy * .85, "#b0baa033", size);
-  }
-  function sage(x, y, height, bend, size = 2) {
-    // Broad, softly mottled leaves and tiered violet flower whorls.
-    line(x, y, x + bend, y - height, "#7a8961", size);
-    for (const rise of [.18, .35, .52]) {
-      const sx = x + bend * rise, sy = y - height * rise;
-      const reach = height * .28 * (1 - rise * .55);
-      sageLeaf(sx, sy, -reach, -reach * .42, size);
-      sageLeaf(sx + size, sy - size * 3, reach * .9, -reach * .55, size);
-    }
-    for (let i = 0; i < 5; i++) {
-      const sx = x + bend * (1 - i * .055), sy = y - height + i * size * 5;
-      const spread = size * (i < 2 ? 1 : 2);
-      pixel(sx - spread, sy, "#8f7f9f", size * 2);
-      pixel(sx + size, sy - size, "#b5a3be", size * 2);
-      pixel(sx, sy - size * 2, "#d0bbca", size);
-    }
-  }
-  function lavender(x, y, height, bend, size = 2) {
-    for (const [side, reach] of [[-1, .78], [0, 1], [1, .86]]) {
-      const tipX = x + bend + side * height * .14, tipY = y - height * reach;
-      line(x, y, tipX, tipY, "#738164", size);
-      leaf(x, y - height * .12, side ? side * height * .16 : -height * .08, -height * .34, "#687d64", size);
-      for (let i = 0; i < 6; i++) {
-        const yy = tipY + i * size * 3;
-        pixel(tipX - (i % 2 ? size : 0), yy, i % 2 ? "#b39bc7" : "#8779a3", size * 2);
-        pixel(tipX + size, yy - size, "#cbb7d2", size);
-      }
-    }
-  }
-  function thyme(x, y, width, size = 2) {
-    // A low creeping stem, round paired leaves, and blush flower clusters.
-    const heightAt = (step) => y - step * .1 - Math.sin(step / width * Math.PI) * size * 5;
-    for (let step = 0; step < width; step += size * 3) {
-      const next = Math.min(width, step + size * 3);
-      line(x + step, heightAt(step), x + next, heightAt(next), "#526e4c", size);
-    }
-    for (let step = 0; step < width; step += size * 6) {
-      const sy = heightAt(step), n = Math.round(step / (size * 6));
-      pixel(x + step, sy - size * 3, "#82936b", size * 2);
-      pixel(x + step + size, sy + size, "#5d7f59", size * 2);
-      if (n % 3 !== 1) {
-        const tip = sy - size * [6, 10, 5, 8][n % 4];
-        line(x + step, sy, x + step - size, tip, "#697b58", size);
-        flower(x + step - size, tip, n % 3 ? "#c7bca7" : "#b99aa9", size);
-      }
-    }
-  }
-  const arrangements = {
-    swallowtail: { botany: "flowering sage and rosemary", specimens: [{ x: .43, y: .35, scale: 3 }] },
-    morpho: { botany: "one sweeping rosemary branch", specimens: [{ x: .28, y: .43, scale: 3 }, { x: .74, y: .45, scale: 3 }] },
-    luna: { botany: "a crescent of sage, rosemary, and pale flowers", specimens: [{ x: .54, y: .39, scale: 5 }] },
-    atlas: { botany: "a shared bouquet of thyme and cream flowers", specimens: [{ x: .27, y: .41, scale: 3 }, { x: .74, y: .43, scale: 3 }] },
-    peacock: { botany: "lavender spikes and soft sage leaves", specimens: [{ x: .25, y: .35, scale: 2 }, { x: .74, y: .41, scale: 2 }] },
-    comet: { botany: "a curved flowering rosemary stem", specimens: [{ x: .57, y: .40, scale: 2 }] },
+  const foliage = {
+    laurel: ["#2b4732", "#607d50", "#8fa075", "#b1bb90"],
+    silver: ["#2e4940", "#668373", "#9baa91", "#bdc2a4"],
+    olive: ["#454a2f", "#7e8953", "#a8ac70", "#c4c28e"],
+    blue: ["#2b4841", "#557e70", "#86a18c", "#b0bdab"],
   };
-  function stem(points, color = "#687e58", size = 1) {
-    for (let n = 1; n < points.length; n++) line(...points[n - 1], ...points[n], color, size);
-  }
-  function needleStem(points, length = 10, size = 1) {
-    stem(points, "#647359", size);
-    for (let n = 1; n < points.length; n++) {
-      const [ax, ay] = points[n - 1], [bx, by] = points[n];
-      const distance = Math.hypot(bx - ax, by - ay);
-      const dx = (bx - ax) / distance, dy = (by - ay) / distance;
-      for (let step = 7; step < distance; step += 8) {
-        const x = ax + dx * step, y = ay + dy * step;
-        const reach = length * (.78 + ((n + Math.round(step)) % 3) * .11);
-        line(x, y, x - dy * reach + dx * 4, y + dx * reach + dy * 4, "#577a61", size);
-        line(x, y, x + dy * reach + dx * 5, y - dx * reach + dy * 5, "#8ca08a", size);
+  const petals = {
+    cream: ["#7c7962", "#b7ad8e", "#ded0ad", "#eee0bd"],
+    blush: ["#70565e", "#a37f88", "#c8a1aa", "#e2bcc0"],
+    lilac: ["#594f6d", "#8d7d9f", "#b4a0bf", "#d3bdd4"],
+  };
+
+  function laurelLeaf(x, y, dx, dy, palette, broad = 1) {
+    const length = Math.hypot(dx, dy), ux = dx / length, uy = dy / length;
+    const width = length * .24 * broad;
+    const outline = [[0, 0], [.18, .56], [.47, 1], [.78, .66], [1, 0], [.78, -.66], [.47, -1], [.18, -.56]]
+      .map(([along, across]) => [x + dx * along - uy * width * across, y + dy * along + ux * width * across]);
+    const xs = outline.map(p => p[0]), ys = outline.map(p => p[1]);
+    for (let py = Math.floor(Math.min(...ys)); py <= Math.ceil(Math.max(...ys)); py++) {
+      for (let px = Math.floor(Math.min(...xs)); px <= Math.ceil(Math.max(...xs)); px++) {
+        if (!inside(px + .5, py + .5, outline)) continue;
+        const edge = [[-1, 0], [1, 0], [0, -1], [0, 1]].some(([ox, oy]) => !inside(px + .5 + ox, py + .5 + oy, outline));
+        const across = (px - x) * -uy + (py - y) * ux;
+        pixel(px, py, palette[edge ? 0 : across < -.5 ? 2 : 1], 1);
       }
     }
+    line(x + dx * .12, y + dy * .12, x + dx * .87, y + dy * .87, palette[3], 1);
   }
-  function violetSpike(x, y, size = 1) {
-    line(x, y + 19 * size, x, y - 3 * size, "#798364", size);
-    for (let n = 0; n < 5; n++) {
-      pixel(x - (n % 2 ? 2 : 1) * size, y + n * 4 * size, "#9b87ad", size * 2);
-      pixel(x + size, y + n * 4 * size - size, "#c4adcc", size);
+
+  function curvePoint(points, t) {
+    const s = 1 - t, [a, b, c, d] = points;
+    return [s ** 3 * a[0] + 3 * s ** 2 * t * b[0] + 3 * s * t ** 2 * c[0] + t ** 3 * d[0],
+      s ** 3 * a[1] + 3 * s ** 2 * t * b[1] + 3 * s * t ** 2 * c[1] + t ** 3 * d[1]];
+  }
+  function laurelSpray(points, palette, length, spacing, seed = 0) {
+    // Arc-length spacing keeps each overlapping leaf pair on the curved branch.
+    const samples = Array.from({ length: 97 }, (_, n) => curvePoint(points, n / 96));
+    for (let n = 1; n < samples.length; n++) line(...samples[n - 1], ...samples[n], palette[1], 1);
+    let traveled = 0, next = 10, count = 0;
+    for (let n = 1; n < samples.length - 1; n++) {
+      const [ax, ay] = samples[n - 1], [x, y] = samples[n];
+      const segment = Math.hypot(x - ax, y - ay);
+      traveled += segment;
+      if (traveled < next) continue;
+      next += spacing;
+      const dx = (x - ax) / segment, dy = (y - ay) / segment;
+      const taper = 1 - Math.max(0, n / 96 - .68) * .7;
+      const reach = length * taper * (1 + Math.sin(count++ * 2.1 + seed) * .08);
+      for (const side of [-1, 1]) {
+        const l = reach * (side < 0 ? .88 : 1);
+        laurelLeaf(x, y, (dx * .64 - dy * side * .77) * l, (dy * .64 + dx * side * .77) * l, palette);
+      }
+    }
+    const [x, y] = points[3], near = curvePoint(points, .96);
+    const distance = Math.hypot(x - near[0], y - near[1]);
+    laurelLeaf(x - (x - near[0]) / distance * 3, y - (y - near[1]) / distance * 3,
+      (x - near[0]) / distance * length * .65, (y - near[1]) / distance * length * .65, palette);
+  }
+
+  function blossom(x, y, radius, palette, phase = 0) {
+    // Staggered, shaded petals retain a legible rosette on the small pixel buffers.
+    for (const layer of [1, .62]) {
+      for (let n = 0; n < 5; n++) {
+        const angle = n * Math.PI * .4 + phase + (layer < 1 ? .35 : 0);
+        const ux = Math.cos(angle), uy = Math.sin(angle);
+        const cx = x + ux * radius * layer * .48, cy = y + uy * radius * layer * .48;
+        const long = radius * layer * .56, wide = radius * layer * .38;
+        for (let py = Math.floor(cy - radius * layer); py <= Math.ceil(cy + radius * layer); py++) {
+          for (let px = Math.floor(cx - radius * layer); px <= Math.ceil(cx + radius * layer); px++) {
+            const along = (px - cx) * ux + (py - cy) * uy;
+            const across = (px - cx) * -uy + (py - cy) * ux;
+            const d = along ** 2 / long ** 2 + across ** 2 / wide ** 2;
+            if (d <= 1) pixel(px, py, palette[d > .7 ? 0 : across < 0 ? 3 : 2], 1);
+          }
+        }
+      }
+    }
+    pixel(x - 1, y - 1, "#8c7546", 3);
+    pixel(x - 1, y - 1, "#d9bd78", 2);
+    pixel(x, y - 2, "#f0d59a", 1);
+  }
+  function flowerCluster(x, y, radius, palette, angle = 0, green = foliage.silver) {
+    const dx = Math.cos(angle), dy = Math.sin(angle);
+    // A small bouquet follows the wreath instead of becoming a row of dots.
+    for (const side of [-1, 1]) {
+      laurelLeaf(x + dx * side * radius * .4, y + dy * side * radius * .4,
+        dx * side * radius * 1.8 - dy * radius * .7, dy * side * radius * 1.8 + dx * radius * .7, green, 1.3);
+    }
+    blossom(x + dx * radius * 1.02 - dy * radius * .35, y + dy * radius * 1.02 + dx * radius * .35, radius * .62, palette, .7);
+    blossom(x - dx * radius * 1.06 - dy * radius * .2, y - dy * radius * 1.06 + dx * radius * .2, radius * .7, petals.cream, .2);
+    blossom(x, y, radius, palette, .1);
+    pixel(x - dy * radius * 1.15, y + dx * radius * 1.15, palette[1], 3);
+    pixel(x - dy * radius * 1.15, y + dx * radius * 1.15 - 1, palette[3], 1);
+  }
+  function lavenderTip(x, y, dx, dy, length) {
+    line(x, y, x + dx * length, y + dy * length, foliage.silver[1], 1);
+    for (let n = 0; n < 6; n++) {
+      const reach = length * (.48 + n * .09), span = n === 5 ? 1 : 2;
+      const cx = x + dx * reach, cy = y + dy * reach;
+      pixel(cx - dy * span, cy + dx * span, petals.lilac[1], 2);
+      pixel(cx + dy * span, cy - dx * span, petals.lilac[2], 2);
+      pixel(cx, cy - 1, petals.lilac[3], 1);
     }
   }
+  function tiedStems(x, y, size = 1) {
+    line(x - 12 * size, y - 3 * size, x + 9 * size, y + 6 * size, "#938668", size);
+    line(x + 12 * size, y - 3 * size, x - 9 * size, y + 6 * size, "#aca07b", size);
+    for (const side of [-1, 1]) {
+      line(x, y, x + side * 5 * size, y - 3 * size, "#b8b294", size);
+      line(x + side * 5 * size, y - 3 * size, x + side * 7 * size, y + size, "#b8b294", size);
+      line(x + side * 7 * size, y + size, x, y, "#9b967c", size);
+    }
+    pixel(x - size, y - size, "#d0c8a6", size * 2);
+  }
+
+  const arrangements = {
+    swallowtail: { botany: "an open laurel crown with small blush flowers", specimens: [{ x: .50, y: .42, scale: 3 }] },
+    morpho: { botany: "a silver-leaf floral wreath", specimens: [{ x: .29, y: .42, scale: 3 }, { x: .73, y: .44, scale: 2 }] },
+    luna: { botany: "a full sage-green wreath with cream and blush flower clusters", specimens: [{ x: .54, y: .39, scale: 5 }] },
+    atlas: { botany: "a warm olive laurel crown tied with linen", specimens: [{ x: .27, y: .41, scale: 3 }, { x: .74, y: .43, scale: 3 }] },
+    peacock: { botany: "a lavender and silver-leaf wreath", specimens: [{ x: .30, y: .40, scale: 2 }, { x: .70, y: .40, scale: 2 }] },
+    comet: { botany: "a slender laurel wreath with pale flowers", specimens: [{ x: .50, y: .38, scale: 2 }] },
+  };
   function composePlants(surface) {
-    // Coordinates belong to each complete plate, including the specimen poses.
-    // No shared corner decorations: stems, flowers, and wings share a silhouette.
+    // Six complete specimen plates: curved foliage encloses, rather than fills,
+    // the negative space around the wings. Every pixel stays inside its terminal.
     switch (surface.original[0]) {
       case "swallowtail":
-        sage(137, 224, 156, 20, 2);
-        rosemary(50, 221, 67, 8, 1);
-        stem([[50, 221], [38, 188], [44, 151]], "#788461");
-        sageLeaf(39, 188, -17, -10, 1);
-        sageLeaf(40, 184, 14, -13, 1);
-        flower(44, 149, "#d3c9ad", 2);
-        thyme(53, 228, 89, 1);
+        laurelSpray([[105, 223], [6, 231], [4, 91], [57, 59]], foliage.laurel, 19, 16);
+        laurelSpray([[105, 223], [204, 231], [206, 91], [153, 59]], foliage.laurel, 19, 16, 1);
+        flowerCluster(57, 201, 7, petals.blush, -.65);
+        flowerCluster(153, 201, 6, petals.cream, .65);
+        tiedStems(105, 224);
         break;
       case "morpho":
-        needleStem([[24, 148], [103, 135], [206, 147], [298, 133], [397, 143]], 9);
-        stem([[116, 135], [120, 111]], "#738568");
-        stem([[309, 136], [310, 115]], "#738568");
-        flower(81, 125, "#b0a1b8", 1);
-        flower(229, 135, "#d0c5a7", 1);
-        flower(375, 128, "#c0b3c4", 1);
+        laurelSpray([[210, 149], [-24, 158], [-22, 12], [210, 16]], foliage.blue, 14, 15);
+        laurelSpray([[210, 149], [444, 158], [442, 12], [210, 16]], foliage.silver, 14, 15, 2);
+        flowerCluster(62, 130, 7, petals.lilac, .55);
+        flowerCluster(358, 130, 7, petals.cream, -.55);
+        blossom(210, 16, 6, petals.blush);
+        flowerCluster(210, 150, 5, petals.cream);
         break;
-      case "luna": {
-        const left = [[184, 288], [114, 273], [64, 227], [38, 171], [42, 112], [65, 63], [101, 35]];
-        const right = [[184, 288], [253, 273], [302, 230], [326, 177], [327, 117], [307, 63], [271, 37]];
-        stem(left, "#758164");
-        for (const [x, y, dx, dy] of [[113, 272, -30, -12], [111, 270, 15, -28], [64, 226, -21, -23], [65, 225, 23, -20], [39, 170, -18, -21], [40, 169, 22, -18], [43, 112, -14, -20], [44, 110, 25, -12], [66, 63, 1, -22]]) sageLeaf(x, y, dx, dy, 1);
-        needleStem(right, 12);
-        violetSpike(102, 27, 2);
-        flower(270, 35, "#d4c5ad", 2);
-        flower(283, 46, "#b7a7ae", 1);
-        stem([[183, 285], [179, 255], [191, 221], [194, 182]], "#657754");
-        leaf(181, 252, -22, -16, "#708260", 1);
-        leaf(185, 239, 19, -14, "#657d5e", 1);
-        fern(247, 286, 62, -12, 1);
-        flower(166, 281, "#c8a4ae", 2);
-        flower(202, 283, "#d1c4a4", 2);
-        thyme(140, 294, 81, 1);
+      case "luna":
+        laurelSpray([[180, 287], [18, 294], [9, 90], [99, 43]], foliage.silver, 26, 20);
+        laurelSpray([[180, 287], [340, 294], [353, 96], [268, 45]], foliage.laurel, 26, 20, 2);
+        laurelSpray([[99, 43], [135, 22], [184, 19], [215, 26]], foliage.silver, 15, 14, 1);
+        laurelSpray([[268, 45], [254, 34], [238, 29], [215, 26]], foliage.laurel, 14, 14, 3);
+        lavenderTip(55, 210, -.35, -.94, 31);
+        lavenderTip(303, 208, .27, -.96, 30);
+        flowerCluster(99, 43, 10, petals.cream, -.55);
+        flowerCluster(268, 45, 9, petals.blush, .6);
+        flowerCluster(191, 25, 7, petals.cream);
+        flowerCluster(93, 260, 10, petals.blush, .55);
+        flowerCluster(275, 261, 9, petals.cream, -.55);
+        flowerCluster(180, 289, 8, petals.cream);
+        tiedStems(180, 300);
         break;
-      }
       case "atlas":
-        stem([[39, 152], [121, 151], [188, 138], [298, 146]], "#857958");
-        sprig(180, 151, 96, 4, "#d5c8a7", 1);
-        flower(184, 55, "#d5c8a7", 2);
-        stem([[182, 99], [171, 72]], "#7d805b");
-        stem([[183, 115], [193, 88]], "#7d805b");
-        flower(172, 71, "#c6ab9d", 1);
-        flower(193, 87, "#dbd0b4", 1);
-        sageLeaf(68, 145, -24, -10, 1);
-        sageLeaf(109, 149, 19, -16, 1);
-        sageLeaf(235, 141, 18, -19, 1);
-        sageLeaf(287, 145, -13, -17, 1);
-        thyme(105, 155, 62, 1);
-        thyme(206, 153, 51, 1);
+        laurelSpray([[170, 158], [-16, 164], [-22, 48], [112, 23]], foliage.olive, 16, 15);
+        laurelSpray([[170, 158], [356, 164], [362, 48], [228, 23]], foliage.olive, 16, 15, 1);
+        flowerCluster(102, 140, 6, petals.cream, .3, foliage.olive);
+        flowerCluster(246, 139, 6, petals.blush, -.3, foliage.olive);
+        tiedStems(170, 159);
         break;
       case "peacock":
-        stem([[35, 157], [94, 151], [133, 164], [222, 147]], "#6c7b5b");
-        lavender(131, 155, 99, -2, 2);
-        sageLeaf(128, 154, -35, -20, 1);
-        sageLeaf(136, 157, 29, -17, 1);
-        leaf(71, 152, -18, -13, "#74876b", 1);
-        leaf(192, 152, 21, -15, "#617d64", 1);
-        thyme(105, 164, 59, 1);
+        laurelSpray([[130, 168], [1, 175], [-5, 32], [106, 23]], foliage.blue, 14, 13);
+        laurelSpray([[130, 168], [259, 175], [265, 32], [154, 23]], foliage.silver, 14, 13, 1);
+        lavenderTip(84, 38, .86, -.5, 23);
+        lavenderTip(178, 40, -.8, -.6, 24);
+        flowerCluster(60, 145, 7, petals.lilac, .6);
+        flowerCluster(210, 143, 7, petals.lilac, -.6);
+        blossom(130, 166, 5, petals.cream);
         break;
       case "comet":
-        needleStem([[24, 175], [19, 125], [27, 77], [38, 37], [50, 24]], 7);
-        sageLeaf(22, 151, 17, -12, 1);
-        sageLeaf(24, 163, 21, -8, 1);
-        flower(50, 24, "#d6c9a8", 2);
-        flower(36, 58, "#bba4b5", 1);
-        thyme(31, 176, 73, 1);
+        laurelSpray([[70, 179], [3, 177], [-3, 55], [49, 30]], foliage.olive, 11, 11);
+        laurelSpray([[70, 179], [137, 177], [143, 55], [91, 30]], foliage.silver, 11, 11, 1);
+        flowerCluster(49, 30, 5, petals.cream, -.5);
+        blossom(91, 30, 4, petals.blush);
+        flowerCluster(70, 175, 5, petals.cream);
         break;
     }
   }
