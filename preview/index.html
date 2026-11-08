@@ -4643,7 +4643,6 @@ sections.forEach((section) => observer.observe(section));
   catalog.setAttribute("aria-label", "Projects by subject");
   const details = element("div", "paper-details");
   let current = -1;
-  let opened = false;
   let visible = false;
   let frame = null;
   let driftX = 0, driftY = 0;
@@ -4743,6 +4742,16 @@ sections.forEach((section) => observer.observe(section));
     const center = (items.length - 1) / 2;
     const pan = -(current - center) * (small ? 8 : 18);
     const rect = stage.getBoundingClientRect();
+    const midpoint = rect.top + rect.height * .5;
+    const range = Math.min(360, innerHeight * .45);
+    const readingTop = innerWidth <= 620 ? 72 : 108;
+    // Fold at either viewport edge, then keep the fan open for reading.
+    // Using the stage midpoint makes the motion visible on the sheets themselves.
+    const edge = Math.max(0, Math.min(1,
+      Math.min(innerHeight - midpoint, midpoint - readingTop) / range + .35));
+    const keyboardFocus = gallery.contains(document.activeElement) && document.activeElement.matches(":focus-visible");
+    const openness = motion.matches || keyboardFocus
+      ? 1 : edge * edge * (3 - 2 * edge);
     const passage = motion.matches ? 0 : Math.max(-1, Math.min(1, (innerHeight * .5 - rect.top - rect.height * .5) / innerHeight));
     stage.style.setProperty("--paper-width", `${Math.round(paperWidth)}px`);
     // Fit the complete fan to the screen rather than cropping its outer sheets.
@@ -4752,7 +4761,7 @@ sections.forEach((section) => observer.observe(section));
       const relative = i - center;
       const active = i === current;
       const gap = active ? 0 : (i < current ? -1 : 1) * (small ? 8 : 24);
-      const x = relative * spread * (opened ? 1 : .18) + gap;
+      const x = relative * spread * (.18 + openness * .82) + gap;
       const y = -relative * (small ? 13 : 23) - (active ? (small ? 23 : 38) : 0);
       const z = -relative * 24 + (active ? 135 : 0);
       const yaw = active ? -19 : -49;
@@ -4762,6 +4771,8 @@ sections.forEach((section) => observer.observe(section));
   function requestPose() {
     if (frame === null && !document.hidden) frame = requestAnimationFrame(pose);
   }
+  gallery.addEventListener("focusin", requestPose);
+  gallery.addEventListener("focusout", requestPose);
   catalog.addEventListener("keydown", (event) => {
     let n = current;
     if (["ArrowRight", "ArrowDown"].includes(event.key)) n = (n + 1) % items.length;
@@ -4830,16 +4841,12 @@ sections.forEach((section) => observer.observe(section));
     driftX = driftY = 0;
     details.getAnimations().forEach((animation) => animation.cancel());
     hint.textContent = coarse.matches ? "Tap a sheet, or swipe to explore." : "Hover a sheet to explore.";
-    if (motion.matches) opened = true;
     requestPose();
   }
   const observer = new IntersectionObserver((entries) => {
     visible = entries[0].isIntersecting;
-    if (visible) {
-      opened = true;
-      requestPose();
-    }
-  }, { threshold: .15 });
+    requestPose();
+  }, { rootMargin: "112px 0px", threshold: 0 });
   observer.observe(stage);
   addEventListener("scroll", () => { if (visible) requestPose(); }, { passive: true });
   addEventListener("resize", preference, { passive: true });

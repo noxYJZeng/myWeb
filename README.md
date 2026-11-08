@@ -60,7 +60,8 @@ remain original to this site; no external sprites or animation library are bundl
 The homepage also has a scroll choreography in `js/scroll.js` and `scroll.css`.
 The greeting and terminal move at different depths as the hero leaves. The paper
 index and its reading area arrive with a short vertical movement. The six sheets
-open into a fan as the section enters. The contact papers spread as their section
+open into a fan as the section enters and fold as it leaves, on every pass in
+either direction. The contact papers spread as their section
 passes through the viewport, and Interests pair text entrances with a slower
 artwork layer. A low-resolution night background
 changes its dark green tone by section. The existing navigation stays at the top;
@@ -239,6 +240,10 @@ Projects retain three subject groups: **ML & AI** (Claim2Code and LBM), **SWE**
 fan diagonally into depth, open as the section enters, and respond to pointer
 movement. Hovering a sheet pulls it forward and switches the full introduction
 below it. Descriptions and project links stay in an untransformed reading area.
+The spread follows the sheets' position in the viewport: they fold at either
+edge and stay open through the middle. This repeats on every upward or downward
+pass without resetting the selected project. Keyboard focus keeps the fan open,
+and reduced motion always shows its fully spread pose.
 
 Each sheet has its own original SVG material in `assets/project-papers/`: ivory
 cotton, lavender graph paper, sage laid stock, rose fiber paper, mint vellum, and
