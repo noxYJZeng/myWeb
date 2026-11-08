@@ -11,12 +11,15 @@ its branch, and picks at berries. No package installation or build is needed to 
 The six terminals mix a large central case, a broad shallow window, smaller
 landscape cases, and narrow portrait windows. Muted graphite, sage, blue, violet,
 and brass edges frame one or two original pixel butterflies each. Only the two
-large cases have wreaths: a wide silver-leaf floral ring around the blue pair
-and a fuller cream-and-blush flower wreath for luna. The four smaller cases keep
+large cases have wreaths: two shorter, open-topped laurel arcs beneath the blue
+pair and luna, with cream and blush flower clusters gathered along their bases.
+The complete wing-and-tail silhouettes sit at the center of their canvas,
+including the blue pair as a group. The four smaller cases keep
 loose botanical accents: flowering rosemary for swallowtail, two wildflower
 stems for the amber pair, lavender and silver leaves for the purple wings, and
 a short rosemary sprig with one pale blossom for comet. Their open space gives
-the larger wreaths more emphasis. Specimen positions and plant
+the larger wreaths more emphasis. Broader shaded leaves, larger blossoms, and
+thicker pixel stems keep these sparse accents legible on phones. Specimen positions and plant
 silhouettes are arranged together. All foliage stays inside the terminal bodies,
 with no exterior plant layer. The botanical backgrounds are cached. Wings keep a continuous slow cycle;
 hovering gently opens them without changing their animation clock. The windows
