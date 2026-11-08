@@ -17,7 +17,9 @@ The complete wing-and-tail silhouettes sit at the center of their canvas,
 including the blue pair as a group. The four smaller cases keep
 loose botanical accents: flowering rosemary for swallowtail, two wildflower
 stems for the amber pair, lavender and silver leaves for the purple wings, and
-a short rosemary sprig with one pale blossom for comet. Their open space gives
+a short rosemary sprig with one pale blossom for comet. Swallowtail and the amber
+pair use opposite diagonal arrangements; the purple pair and comet retain paired
+lower-corner accents. Their open space gives
 the larger wreaths more emphasis. Broader shaded leaves, larger blossoms, and
 thicker pixel stems keep these sparse accents legible on phones. Specimen positions and plant
 silhouettes are arranged together. All foliage stays inside the terminal bodies,

@@ -643,21 +643,21 @@
 
   // Large-case anchors center the complete wing-and-tail silhouettes.
   const arrangements = {
-    swallowtail: { botany: "a small rosemary sprig and a single cream flower", specimens: [{ x: .50, y: .42, scale: 3 }] },
+    swallowtail: { botany: "rosemary at the upper left and a cream flower at the lower right", specimens: [{ x: .50, y: .42, scale: 3 }] },
     morpho: { botany: "a shallow, open silver-leaf laurel wreath", specimens: [{ x: 132 / 420, y: 85 / 175, scale: 3 }, { x: 318 / 420, y: 91 / 175, scale: 2 }] },
     luna: { botany: "an open laurel wreath with cream and blush flower clusters", specimens: [{ x: .50, y: 140 / 330, scale: 5 }] },
-    atlas: { botany: "two loose wildflower stems and a few olive leaves", specimens: [{ x: .27, y: .41, scale: 3 }, { x: .74, y: .43, scale: 3 }] },
+    atlas: { botany: "wildflowers at the lower left and olive leaves at the upper right", specimens: [{ x: .27, y: .41, scale: 3 }, { x: .74, y: .43, scale: 3 }] },
     peacock: { botany: "a small lavender sprig and a few silver-green leaves", specimens: [{ x: .30, y: .40, scale: 2 }, { x: .70, y: .40, scale: 2 }] },
     comet: { botany: "a short rosemary sprig and a pale blossom", specimens: [{ x: .50, y: .38, scale: 2 }] },
   };
   function composePlants(surface) {
     // The two large cases have short, open laurel arcs below centered specimens.
-    // Smaller cases keep bold, loose accents, all inside their terminals.
+    // Smaller cases mix diagonal accents with paired lower-corner sprigs.
     switch (surface.original[0]) {
       case "swallowtail":
-        rosemarySprig(55, 226, .15, -.99, 57);
-        laurelLeaf(55, 222, -28, -17, foliage.silver, 1.6);
-        laurelLeaf(57, 214, 26, -19, foliage.silver, 1.6);
+        rosemarySprig(24, 59, .60, -.80, 46);
+        laurelLeaf(25, 55, -13, -25, foliage.silver, 1.6);
+        laurelLeaf(29, 50, 24, -7, foliage.silver, 1.6);
         line(158, 226, 174, 199, foliage.silver[2], 2);
         laurelLeaf(166, 215, -18, -11, foliage.silver, 1.6);
         laurelLeaf(161, 221, 18, -7, foliage.silver, 1.6);
@@ -679,13 +679,15 @@
         tiedStems(180, 300);
         break;
       case "atlas":
-        line(169, 162, 151, 133, foliage.olive[2], 2);
-        line(169, 162, 187, 138, foliage.olive[2], 2);
-        laurelLeaf(161, 152, -24, -12, foliage.olive, 1.6);
-        laurelLeaf(176, 153, 23, -11, foliage.olive, 1.6);
-        blossom(151, 133, 9, petals.cream);
-        blossom(187, 138, 7, petals.blush);
-        laurelLeaf(290, 153, 24, -15, foliage.olive, 1.6);
+        line(64, 162, 46, 133, foliage.olive[2], 2);
+        line(64, 162, 82, 138, foliage.olive[2], 2);
+        laurelLeaf(56, 152, -24, -12, foliage.olive, 1.6);
+        laurelLeaf(71, 153, 23, -11, foliage.olive, 1.6);
+        blossom(46, 133, 9, petals.cream);
+        blossom(82, 138, 7, petals.blush);
+        line(322, 48, 322, 17, foliage.olive[2], 2);
+        laurelLeaf(322, 43, -5, -27, foliage.olive, 1.6);
+        laurelLeaf(322, 45, 9, -18, foliage.olive, 1.4);
         break;
       case "peacock":
         lavenderTip(203, 160, .35, -.94, 39, 2);
