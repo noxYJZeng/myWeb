@@ -79,6 +79,22 @@ and removes scroll depth and reveal effects. The scroll layer waits for the gree
 match opening to finish, and its background redraws only when the view changes.
 No new runtime dependencies are needed.
 
+Startup avoids drawing offscreen Interests canvases or computing watercolor
+pigment cells until the artwork approaches the viewport. During the black
+opening, the six terminal backgrounds are prepared in separate tasks, and their
+wings begin animating when the homepage starts to appear. Leaf rasterization
+reuses its bounds and avoids allocating neighbor arrays for every pixel.
+Project cards preload their paper materials near the section or on navigation
+intent. Display-sized lossless WebP copies replace the original large images in
+the cards; rebuild them with `python3 scripts/build_project_thumbs.py`. Original
+images remain in `assets/`. The unused older preview strip has been removed.
+
+A three-run local cold-cache comparison in Chromium, with 4x CPU throttling,
+40 ms network latency, and 16 Mbit/s download throughput, reduced median page
+load from 1.77 s to 0.95 s and first contentful paint from 1.81 s to 0.99 s.
+Initial resource bytes fell about 56%. These are controlled local measurements;
+Cloudflare's production summary updates as new visits arrive.
+
 An opening of about six seconds shows a pixel match striking its box and lighting
 a flickering green flame against black. Green light stays around the match. The match,
 box, and flame clear before the homepage develops from the same near-black

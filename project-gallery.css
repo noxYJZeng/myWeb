@@ -73,12 +73,12 @@
   transform-style: preserve-3d;
   transition: transform .7s cubic-bezier(.2,.75,.25,1);
 }
-.paper-card[data-kind="claim2code"] { --stock: url("assets/project-papers/cotton.svg"); }
-.paper-card[data-kind="fluid"] { --stock: url("assets/project-papers/lavender.svg"); }
-.paper-card[data-kind="nasa"] { --stock: url("assets/project-papers/sage.svg"); }
-.paper-card[data-kind="health"] { --stock: url("assets/project-papers/rose.svg"); }
-.paper-card[data-kind="fashion"] { --stock: url("assets/project-papers/vellum.svg"); }
-.paper-card[data-kind="pacman"] { --stock: url("assets/project-papers/kraft.svg"); }
+.paper-gallery[data-materials-ready] .paper-card[data-kind="claim2code"] { --stock: url("assets/project-papers/cotton.svg"); }
+.paper-gallery[data-materials-ready] .paper-card[data-kind="fluid"] { --stock: url("assets/project-papers/lavender.svg"); }
+.paper-gallery[data-materials-ready] .paper-card[data-kind="nasa"] { --stock: url("assets/project-papers/sage.svg"); }
+.paper-gallery[data-materials-ready] .paper-card[data-kind="health"] { --stock: url("assets/project-papers/rose.svg"); }
+.paper-gallery[data-materials-ready] .paper-card[data-kind="fashion"] { --stock: url("assets/project-papers/vellum.svg"); }
+.paper-gallery[data-materials-ready] .paper-card[data-kind="pacman"] { --stock: url("assets/project-papers/kraft.svg"); }
 .paper-card > span {
   position: absolute;
   inset: 0;

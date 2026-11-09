@@ -14,6 +14,7 @@
   let W = canvas.width, H = canvas.height;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let reduced = reducedMotion.matches;
+  let prepared = false;
   let visible = true;
   let frameId = null;
   let time = 0;
@@ -530,10 +531,13 @@
     const outline = [[0, 0], [.18, .56], [.47, 1], [.78, .66], [1, 0], [.78, -.66], [.47, -1], [.18, -.56]]
       .map(([along, across]) => [x + dx * along - uy * width * across, y + dy * along + ux * width * across]);
     const xs = outline.map(p => p[0]), ys = outline.map(p => p[1]);
-    for (let py = Math.floor(Math.min(...ys)); py <= Math.ceil(Math.max(...ys)); py++) {
-      for (let px = Math.floor(Math.min(...xs)); px <= Math.ceil(Math.max(...xs)); px++) {
+    const minX = Math.floor(Math.min(...xs)), maxX = Math.ceil(Math.max(...xs));
+    const minY = Math.floor(Math.min(...ys)), maxY = Math.ceil(Math.max(...ys));
+    for (let py = minY; py <= maxY; py++) {
+      for (let px = minX; px <= maxX; px++) {
         if (!inside(px + .5, py + .5, outline)) continue;
-        const edge = [[-1, 0], [1, 0], [0, -1], [0, 1]].some(([ox, oy]) => !inside(px + .5 + ox, py + .5 + oy, outline));
+        const edge = !inside(px - .5, py + .5, outline) || !inside(px + 1.5, py + .5, outline)
+          || !inside(px + .5, py - .5, outline) || !inside(px + .5, py + 1.5, outline);
         const across = (px - x) * -uy + (py - y) * ux;
         pixel(px, py, palette[edge ? 0 : across < -.5 ? 2 : 1], 1);
       }
@@ -821,6 +825,7 @@
   }
   function schedule() {
     reduced = reducedMotion.matches;
+    if (!prepared) return;
     if (frameId !== null) cancelAnimationFrame(frameId);
     frameId = null;
     previous = 0;
@@ -833,7 +838,9 @@
       if (reduced) render(0);
     }
     reveal();
-    if (!reduced && visible && !document.hidden) frameId = requestAnimationFrame(tick);
+    const root = document.documentElement;
+    const opening = root.classList.contains("intro-active") && !root.classList.contains("intro-revealing");
+    if (!reduced && visible && !document.hidden && !opening) frameId = requestAnimationFrame(tick);
   }
   function move(surface, x, y) {
     const stageRect = stage.getBoundingClientRect();
@@ -846,7 +853,6 @@
   }
   for (const surface of surfaces) {
     mount(surface, surface.original);
-    makeBackground(surface);
     const bar = surface.node.querySelector(".specimen-titlebar");
     bar.addEventListener("focus", () => raise(surface));
     bar.addEventListener("click", () => raise(surface));
@@ -889,7 +895,7 @@
     surface.canvas.addEventListener("pointercancel", () => { surface.pointer = null; });
     surface.canvas.addEventListener("pointerleave", () => { surface.pointer = null; });
   }
-  const openingObserver = new MutationObserver(reveal);
+  const openingObserver = new MutationObserver(schedule);
   openingObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
   reducedMotion.addEventListener("change", schedule);
   document.addEventListener("visibilitychange", schedule);
@@ -898,6 +904,20 @@
     visible = entries[0].isIntersecting;
     schedule();
   }, { rootMargin: "100px" }).observe(stage);
-  render(0);
-  schedule();
+  function prepareBackgrounds(index = 0) {
+    makeBackground(surfaces[index]);
+    const next = index + 1;
+    // During the black opening, yield between cases so the match can paint.
+    // Direct section links and reduced motion prepare the visible artwork now.
+    if (next < surfaces.length && !reduced && document.documentElement.classList.contains("intro-active")) {
+      setTimeout(() => prepareBackgrounds(next), 0);
+      return;
+    }
+    for (let i = next; i < surfaces.length; i++) makeBackground(surfaces[i]);
+    prepared = true;
+    render(0);
+    schedule();
+  }
+  if (document.documentElement.classList.contains("intro-active")) setTimeout(prepareBackgrounds, 0);
+  else prepareBackgrounds();
 })();

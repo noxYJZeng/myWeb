@@ -77,7 +77,9 @@
     face.append(element("span", "paper-title", item.title));
     const art = element("span", "paper-art");
     const img = element("img");
-    img.src = item.image;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.dataset.src = item.image;
     img.alt = "";
     img.draggable = false;
     art.append(img);
@@ -166,6 +168,15 @@
   }
   gallery.addEventListener("focusin", requestPose);
   gallery.addEventListener("focusout", requestPose);
+  function warmMaterials() {
+    if (gallery.dataset.materialsReady) return;
+    gallery.dataset.materialsReady = "true";
+    gallery.querySelectorAll("img[data-src]").forEach((img) => {
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    });
+    materialObserver.disconnect();
+  }
   catalog.addEventListener("keydown", (event) => {
     let n = current;
     if (["ArrowRight", "ArrowDown"].includes(event.key)) n = (n + 1) % items.length;
@@ -236,8 +247,18 @@
     hint.textContent = coarse.matches ? "Tap a sheet, or swipe to explore." : "Hover a sheet to explore.";
     requestPose();
   }
+  const materialObserver = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) warmMaterials();
+  }, { rootMargin: "250px 0px" });
+  materialObserver.observe(stage);
+  document.querySelectorAll('a[href="#projects"]').forEach((link) => {
+    link.addEventListener("pointerenter", warmMaterials, { once: true, passive: true });
+    link.addEventListener("focus", warmMaterials, { once: true });
+  });
+  if (location.hash === "#projects") warmMaterials();
   const observer = new IntersectionObserver((entries) => {
     visible = entries[0].isIntersecting;
+    if (visible) warmMaterials();
     requestPose();
   }, { rootMargin: "112px 0px", threshold: 0 });
   observer.observe(stage);

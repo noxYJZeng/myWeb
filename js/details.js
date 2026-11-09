@@ -681,73 +681,79 @@
     return value - Math.floor(value);
   }
   // Cache paper-grain pigment cells and their first contact with the wet brush.
-  const watercolorCells = butterflyWings.map((wing, index) => {
-    const path = washPaths[index];
-    const lengths = [0];
-    for (let i = 1; i < path.length; i++)
-      lengths.push(
-        lengths[i - 1] +
-          Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]),
-      );
-    const cells = [];
-    const xs = wing.map((p) => p[0]),
-      ys = wing.map((p) => p[1]);
-    for (
-      let y = Math.floor((Math.min(...ys) - 3) / 2) * 2;
-      y <= Math.max(...ys) + 3;
-      y += 2
-    ) {
+  let watercolorCache = null;
+  function watercolorPigment() {
+    if (watercolorCache) return watercolorCache;
+    watercolorCache = butterflyWings.map((wing, index) => {
+      const path = washPaths[index];
+      const lengths = [0];
+      for (let i = 1; i < path.length; i++)
+        lengths.push(
+          lengths[i - 1] +
+            Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]),
+        );
+      const cells = [];
+      const xs = wing.map((p) => p[0]),
+        ys = wing.map((p) => p[1]);
       for (
-        let x = Math.floor((Math.min(...xs) - 3) / 2) * 2;
-        x <= Math.max(...xs) + 3;
-        x += 2
+        let y = Math.floor((Math.min(...ys) - 3) / 2) * 2;
+        y <= Math.max(...ys) + 3;
+        y += 2
       ) {
-        const inside = insideWing(x + 1, y + 1, wing);
-        let edge = Infinity;
-        for (let i = 0; i < wing.length; i++)
-          edge = Math.min(
-            edge,
-            segmentDistance(x, y, wing[i], wing[(i + 1) % wing.length]),
-          );
-        const grain = pigmentNoise(x, y, index);
-        if (!inside && (edge > 2.5 || grain > 0.55)) continue;
-        let firstTouch = 0.88;
-        for (let i = 0; i < path.length; i++) {
-          if (Math.hypot(x - path[i][0], y - path[i][1]) < 18) {
-            firstTouch = Math.min(
-              0.88,
-              (lengths[i] / lengths[lengths.length - 1]) * 0.88,
+        for (
+          let x = Math.floor((Math.min(...xs) - 3) / 2) * 2;
+          x <= Math.max(...xs) + 3;
+          x += 2
+        ) {
+          const inside = insideWing(x + 1, y + 1, wing);
+          let edge = Infinity;
+          for (let i = 0; i < wing.length; i++)
+            edge = Math.min(
+              edge,
+              segmentDistance(x, y, wing[i], wing[(i + 1) % wing.length]),
             );
-            break;
+          const grain = pigmentNoise(x, y, index);
+          if (!inside && (edge > 2.5 || grain > 0.55)) continue;
+          let firstTouch = 0.88;
+          for (let i = 0; i < path.length; i++) {
+            if (Math.hypot(x - path[i][0], y - path[i][1]) < 18) {
+              firstTouch = Math.min(
+                0.88,
+                (lengths[i] / lengths[lengths.length - 1]) * 0.88,
+              );
+              break;
+            }
           }
+          const cloud =
+            0.5 +
+            0.25 * Math.sin(x * 0.16 + y * 0.09) +
+            0.25 * Math.sin(y * 0.21 - x * 0.06);
+          const warmSpot =
+            index < 2 &&
+            Math.hypot(x - (index ? 226 : 114), (y - 116) * 1.2) < 12;
+          const color = warmSpot
+            ? grain > 0.45
+              ? "#ba9754"
+              : "#cfb46c"
+            : edge < 3
+              ? "#367d70"
+              : cloud > 0.6
+                ? "#4b9b91"
+                : cloud > 0.35
+                  ? "#72ac94"
+                  : "#98b59a";
+          let alpha = inside ? 0.34 + cloud * 0.2 + grain * 0.13 : 0.09;
+          if (edge < 3 && inside) alpha += 0.12;
+          if (warmSpot) alpha += 0.12;
+          if (grain > 0.94) alpha *= 0.18;
+          cells.push({ x, y, color, alpha, touch: firstTouch });
         }
-        const cloud =
-          0.5 +
-          0.25 * Math.sin(x * 0.16 + y * 0.09) +
-          0.25 * Math.sin(y * 0.21 - x * 0.06);
-        const warmSpot =
-          index < 2 &&
-          Math.hypot(x - (index ? 226 : 114), (y - 116) * 1.2) < 12;
-        const color = warmSpot
-          ? grain > 0.45
-            ? "#ba9754"
-            : "#cfb46c"
-          : edge < 3
-            ? "#367d70"
-            : cloud > 0.6
-              ? "#4b9b91"
-              : cloud > 0.35
-                ? "#72ac94"
-                : "#98b59a";
-        let alpha = inside ? 0.34 + cloud * 0.2 + grain * 0.13 : 0.09;
-        if (edge < 3 && inside) alpha += 0.12;
-        if (warmSpot) alpha += 0.12;
-        if (grain > 0.94) alpha *= 0.18;
-        cells.push({ x, y, color, alpha, touch: firstTouch });
       }
-    }
-    return cells;
-  });
+      return cells;
+    });
+    return watercolorCache;
+  }
+
   function brush(ctx, tip, angle, lifted) {
     const direction = [Math.cos(angle), Math.sin(angle)];
     const point = (along, across = 0) => [
@@ -875,6 +881,7 @@
     }
   }
   function painting(ctx, t, state) {
+    const watercolorCells = watercolorPigment();
     paintPan(ctx);
     const age = state.action ? state.action.age : state.hasPainting ? 10.5 : 0;
     const progress = clamp((age - 1.65) / 8.1);
@@ -1584,6 +1591,7 @@
       if (type === "camera") backdrop(ctx, canvas.width, canvas.height);
     }
     painters[type](ctx, time, state);
+    state.painted = true;
   }
   function startAction(state, wake = true) {
     syncMotionPreference();
@@ -1611,7 +1619,7 @@
       if (appliedMotionPreference) {
         finishAction(state);
         state.canvas.dataset.motion = "still";
-        paint(state);
+        if (state.painted) paint(state);
       } else {
         state.canvas.dataset.motion = "resting";
       }
@@ -1686,6 +1694,7 @@
             : 5
         : 0,
       visible: false,
+      painted: false,
       action: null,
       lastPaint: 0,
       hasPhoto: preference.matches,
@@ -1711,13 +1720,11 @@
         if (event.pointerType === "mouse") startAction(state);
       });
     }
-    if (state.type === "waxwing") fitScene(state);
-    paint(state);
   }
   const sceneResize = new ResizeObserver((entries) => {
     for (const entry of entries) {
       const state = states.find((state) => state.canvas === entry.target);
-      if (state) fitScene(state);
+      if (state?.visible) fitScene(state);
     }
   });
   states
@@ -1728,6 +1735,10 @@
       for (const entry of entries) {
         const state = states.find((state) => state.canvas === entry.target);
         state.visible = entry.isIntersecting;
+        if (state.visible) {
+          if (state.type === "waxwing") fitScene(state);
+          if (!state.painted) paint(state);
+        }
       }
       schedule();
     },
