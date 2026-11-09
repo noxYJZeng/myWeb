@@ -30,7 +30,8 @@
   const lift = (node, x, y, pinFocus = true) => {
     if (node) {
       const focused = pinFocus && node.contains(document.activeElement);
-      const value = focused ? "0px 0px" : `${Math.round(x)}px ${Math.round(y)}px`;
+      if (focused) return;
+      const value = `${Math.round(x)}px ${Math.round(y)}px`;
       if (node.style.translate !== value) node.style.translate = value;
     }
   };
@@ -55,7 +56,7 @@
   register(".contact-paper", { y: 30, delay: 90, solid: true, duration: 1000 });
   register(".contact-pen", { x: 32, y: -30, delay: 260, solid: true, duration: 950 });
   register(".interest-copy", { x: -30, y: 18, duration: 850 });
-  register(".interest-visual", { art: true, x: 38, y: 26, solid: true, duration: 1000 });
+  register(".interest-visual", { x: 38, y: 26, solid: true, duration: 1000 });
   register(".dedication", { y: 28, duration: 1000 });
   register(".waxwing-scene", { y: 40, solid: true, duration: 1100 });
 
@@ -188,13 +189,12 @@
     // widths where a two-column card has less outside margin than on desktop.
     const room = x < 0 ? rect.left - 8 : innerWidth - rect.right - 8;
     x = Math.sign(x) * Math.min(Math.abs(x), Math.max(0, room));
-    const property = options.art ? "transform" : "translate";
-    const position = (x, y) => options.art
-      ? `translate3d(${Math.round(x)}px,${Math.round(y)}px,0)`
-      : `${Math.round(x)}px ${Math.round(y)}px`;
-    const start = { [property]: position(x, y), opacity: options.solid ? 1 : 0.6 };
-    const middle = { [property]: position(x * 0.08, y * 0.08), opacity: 1, offset: 0.75 };
-    const end = { [property]: position(0, 0), opacity: 1 };
+    // Entrance transforms compose with the separate scroll-depth translate.
+    // A zero final transform must not replace a nonzero parallax position.
+    const position = (x, y) => `translate3d(${Math.round(x)}px,${Math.round(y)}px,0)`;
+    const start = { transform: position(x, y), opacity: options.solid ? 1 : 0.6 };
+    const middle = { transform: position(x * 0.08, y * 0.08), opacity: 1, offset: 0.75 };
+    const end = { transform: position(0, 0), opacity: 1 };
     if (options.mask && CSS.supports("clip-path", pixelMask)) {
       start.clipPath = pixelMask;
       middle.clipPath = end.clipPath = fullMask;

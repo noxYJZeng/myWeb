@@ -78,6 +78,9 @@ text and illustrations at different speeds; the closing dedication and waxwing
 also separate in depth. Focus settles the relevant reading or contact surface.
 Phones use shorter movements. Hidden tabs pause the background breath, and
 reduced motion removes the added movement and navigation trail.
+Entrance animations use `transform`, while scroll depth uses the independent
+`translate` property, so finishing an entrance leaves its scroll-depth offset
+in place. Focus holds the current depth offset instead of snapping it to zero.
 
 Entrances replay when sections return to view in either scroll direction, using
 temporary Web Animations rather than permanently hidden CSS states. Returning

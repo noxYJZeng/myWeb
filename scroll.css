@@ -67,6 +67,9 @@ html.has-scroll-scene {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .has-scroll-scene [data-scroll-reveal] {
+    transform: none !important;
+  }
   .has-scroll-scene [data-scroll-reveal],
   .has-scroll-scene [data-scroll-depth] {
     translate: none !important;
