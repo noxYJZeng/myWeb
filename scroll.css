@@ -19,6 +19,14 @@ html.has-scroll-scene {
   z-index: -2;
   pointer-events: none;
   image-rendering: pixelated;
+  animation: night-breath 18s ease-in-out infinite alternate;
+}
+@keyframes night-breath {
+  from { opacity: .78; }
+  to { opacity: 1; }
+}
+.motion-suspended .scroll-atmosphere {
+  animation-play-state: paused;
 }
 .has-scroll-scene .site-header {
   position: sticky;
@@ -28,6 +36,24 @@ html.has-scroll-scene {
 }
 .has-scroll-scene .skip-link:focus {
   z-index: 60;
+}
+.has-scroll-scene .site-header nav a {
+  position: relative;
+}
+.has-scroll-scene .site-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 6px;
+  width: calc(var(--chapter-progress, 0) * 100%);
+  height: 2px;
+  background: repeating-linear-gradient(90deg, #a9bd9d 0 2px, transparent 2px 5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.has-scroll-scene .site-header nav a.active::after {
+  opacity: .8;
 }
 .has-scroll-scene [data-scroll-art] {
   transform-origin: center;
@@ -45,6 +71,7 @@ html.has-scroll-scene {
   .has-scroll-scene [data-scroll-depth] {
     translate: none !important;
     opacity: 1 !important;
+    rotate: none !important;
   }
   .has-scroll-scene [data-scroll-mask] {
     clip-path: none !important;
@@ -52,5 +79,12 @@ html.has-scroll-scene {
   .has-scroll-scene [data-scroll-art] {
     transform: none !important;
     translate: none !important;
+  }
+  .has-scroll-scene .scroll-atmosphere {
+    animation: none;
+    opacity: 1;
+  }
+  .has-scroll-scene .site-header nav a::after {
+    display: none;
   }
 }

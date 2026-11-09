@@ -68,6 +68,17 @@ changes its dark green tone by section. The existing navigation stays at the top
 on phones its wordmark scrolls away while the navigation row remains available.
 Scrolling keeps the browser's native wheel, touch, anchor, and history behavior.
 
+Pixel light curtains drift along the page margins as chapters pass, with several
+depths of square motes. A slow compositor-only opacity breath gives the background
+some movement at rest. Its canvas stays at or below 480 × 320 pixels and redraws
+only when the view changes. A small dotted trail under the active navigation
+link shows progress through the current section. Contact's backing papers fan
+apart and rotate slightly while its pixel pen shifts with them. Interests move
+text and illustrations at different speeds; the closing dedication and waxwing
+also separate in depth. Focus settles the relevant reading or contact surface.
+Phones use shorter movements. Hidden tabs pause the background breath, and
+reduced motion removes the added movement and navigation trail.
+
 Entrances replay when sections return to view in either scroll direction, using
 temporary Web Animations rather than permanently hidden CSS states. Returning
 from below reverses their vertical movement. Observation remains active, with

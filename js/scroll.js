@@ -27,8 +27,12 @@
     lastScroll = position;
   }
   const mix = (a, b, p) => a + (b - a) * p;
-  const lift = (node, x, y) => {
-    if (node) node.style.translate = `${Math.round(x)}px ${Math.round(y)}px`;
+  const lift = (node, x, y, pinFocus = true) => {
+    if (node) {
+      const focused = pinFocus && node.contains(document.activeElement);
+      const value = focused ? "0px 0px" : `${Math.round(x)}px ${Math.round(y)}px`;
+      if (node.style.translate !== value) node.style.translate = value;
+    }
   };
   const fullMask = "polygon(0 0,100% 0,100% 100%,80% 100%,80% 100%,60% 100%,60% 100%,40% 100%,40% 100%,20% 100%,20% 100%,0 100%)";
   const pixelMask = "polygon(0 0,100% 0,100% 30%,80% 30%,80% 38%,60% 38%,60% 46%,40% 46%,40% 54%,20% 54%,20% 62%,0 62%)";
@@ -60,15 +64,22 @@
   const aboutMain = document.querySelector(".about-main");
   const paperBack = document.querySelector(".paper-layer-back");
   const paperMiddle = document.querySelector(".paper-layer-middle");
-  [heroCopy, garden, aboutMain, paperBack, paperMiddle].filter(Boolean).forEach((node) => {
+  const contactStack = document.querySelector(".contact-stack");
+  const pen = document.querySelector(".contact-pen");
+  const dedication = document.querySelector(".dedication");
+  const waxwing = document.querySelector(".waxwing-scene");
+  [heroCopy, garden, aboutMain, paperBack, paperMiddle, pen, dedication, waxwing].filter(Boolean).forEach((node) => {
     node.dataset.scrollDepth = "";
     depth.add(node);
   });
   const interests = [...document.querySelectorAll(".interest-row")].map((row) => {
     const art = row.querySelector(".interest-visual");
     art.dataset.scrollArt = "";
+    const copy = row.querySelector(".interest-copy");
+    copy.dataset.scrollDepth = "";
+    depth.add(copy);
     depth.add(art);
-    return { row, art };
+    return { row, art, copy };
   });
 
   const atmosphere = document.createElement("canvas");
@@ -84,7 +95,10 @@
     { node: document.querySelector("#offscreen"), name: "interests", color: [5, 16, 15] },
     { node: document.querySelector(".visitor-note"), name: "closing", color: [5, 11, 8] },
   ].filter((zone) => zone.node);
-  const stars = Array.from({ length: 64 }, (_, i) => ({
+  const navigation = [...header.querySelectorAll('nav a[href^="#"]')].map((link) => ({
+    link, node: document.querySelector(link.hash),
+  })).filter(({ node }) => node);
+  const stars = Array.from({ length: 88 }, (_, i) => ({
     x: ((i * 73 + 17) % 997) / 997,
     y: ((i * 139 + 53) % 991) / 991,
     depth: 0.04 + (i % 3) * 0.045,
@@ -92,8 +106,9 @@
 
   function drawAtmosphere(scroll, chapter, color) {
     if (!context) return;
-    const width = Math.ceil(innerWidth / 4);
-    const height = Math.ceil(innerHeight / 4);
+    const unit = Math.max(4, Math.ceil(Math.max(innerWidth / 480, innerHeight / 320)));
+    const width = Math.ceil(innerWidth / unit);
+    const height = Math.ceil(innerHeight / unit);
     const key = [width, height, Math.round(scroll), Math.round(chapter * 100), ...color.map(Math.round)].join(",");
     if (backdropKey === key) return;
     backdropKey = key;
@@ -104,25 +119,38 @@
     }
     context.fillStyle = `rgb(${color.map(Math.round).join(",")})`;
     context.fillRect(0, 0, width, height);
-    // A quiet, dithered light field lives at the margins, behind the content.
-    // It changes with the chapter rather than flashing over the next page.
+    // Low-resolution curtains of light travel along the margins by chapter.
+    // Row calculations and integer grain keep this scroll-only drawing small.
     const horizon = height * (0.36 + chapter * 0.045);
-    context.fillStyle = "#6e9d77";
+    const sweep = Math.sin(chapter * 1.45) * .10;
     for (let y = 0; y < height; y += 4) {
       const light = Math.max(0, 1 - Math.abs(y - horizon) / (height * 0.65));
+      const bend = Math.sin(y / height * 3.4 + chapter * .85) * width * .075;
+      const left = width * (.09 + sweep) + bend;
+      const right = width * (.91 - sweep) - bend;
+      const reach = width * .25;
       for (let x = 0; x < width; x += 4) {
-        const edge = Math.abs((x / width - 0.5) * 2) ** 4;
-        const alpha = Math.round(light * edge * 2) / 100;
+        const edge = Math.abs((x / width - 0.5) * 2);
+        const ribbon = Math.max(0, 1 - Math.min(Math.abs(x - left), Math.abs(x - right)) / reach);
+        const grain = ((x * 37 + y * 17) % 13) / 13;
+        const alpha = Math.round((light * edge ** 3 * .025 + ribbon ** 2 * edge * .095) * (0.82 + grain * .18) * 100) / 100;
         if (!alpha) continue;
         context.globalAlpha = alpha;
-        context.fillRect(x, y, 3, 3);
+        context.fillStyle = x < width / 2 ? "#59886a" : "#737e59";
+        context.fillRect(x, y, 4, 4);
       }
     }
     stars.forEach((star, i) => {
-      const y = ((star.y * height - scroll * star.depth / 4) % height + height) % height;
-      context.globalAlpha = i % 5 ? 0.1 : 0.18;
+      const drift = Math.sin(scroll * .0014 + i * 2.3) * (i % 3 + 1) * 2;
+      const y = ((star.y * height - scroll * star.depth / unit) % height + height) % height;
+      context.globalAlpha = i % 5 ? 0.16 : 0.3;
       context.fillStyle = i % 7 ? "#7da58b" : "#b6b287";
-      context.fillRect(Math.round(star.x * width), Math.round(y), 1, 1);
+      const x = Math.round(star.x * width + drift);
+      context.fillRect(x, Math.round(y), i % 9 ? 1 : 2, 1);
+      if (i % 11 === 0) {
+        context.globalAlpha *= .35;
+        context.fillRect(x, Math.round(y) + 2, 1, 2);
+      }
     });
     context.globalAlpha = 1;
   }
@@ -133,7 +161,10 @@
     root.dataset.pageMotion = reduced ? "reduced" : "full";
     if (reduced) {
       running.forEach((animation) => animation.cancel());
-      depth.forEach((node) => node.style.removeProperty("translate"));
+      depth.forEach((node) => {
+        node.style.removeProperty("translate");
+        node.style.removeProperty("rotate");
+      });
     }
   }
 
@@ -231,26 +262,46 @@
     const small = compact();
     const rects = new Map(zones.map((zone) => [zone.node, zone.node.getBoundingClientRect()]));
     const artRects = interests.map(({ row }) => row.getBoundingClientRect());
+    const entranceRects = [...running.keys()].map((node) => [node, node.getBoundingClientRect()]);
     header.classList.toggle("is-scrolled", scroll > 24);
     const heroRect = rects.get(hero);
     const exit = clamp(-heroRect.top / (heroRect.height * 0.85));
     if (!reduced) {
-      lift(heroCopy, 0, -exit * (small ? 18 : 28));
-      lift(garden, 0, exit * (small ? 16 : 40));
+      lift(heroCopy, 0, -exit * (small ? 18 : 34));
+      lift(garden, 0, exit * (small ? 20 : 62), false);
       const about = rects.get(document.querySelector("#about"));
       const aboutPassage = clamp((height - about.top) / (height + about.height));
-      lift(aboutMain, 0, (.5 - aboutPassage) * (small ? 10 : 16));
-      interests.forEach(({ art }, index) => {
+      lift(aboutMain, 0, (.5 - aboutPassage) * (small ? 14 : 28));
+      interests.forEach(({ art, copy }, index) => {
         const rect = artRects[index];
         const progress = clamp((height - rect.top) / (height + rect.height));
-        lift(art, 0, (0.5 - progress) * (small ? 14 : 26));
+        const passage = .5 - progress;
+        lift(art, 0, passage * (small ? 36 : 76));
+        lift(copy, 0, -passage * (small ? 12 : 26));
       });
       const contact = rects.get(document.querySelector("#contact"));
       const spread = Math.sin(clamp((height - contact.top) / (height + contact.height)) * Math.PI);
       const tight = innerWidth <= 900;
-      lift(paperBack, -(tight ? 4 : 14) * spread, (tight ? 6 : 14) * spread);
-      lift(paperMiddle, (tight ? 4 : 18) * spread, (tight ? 8 : 20) * spread);
+      const held = contactStack?.contains(document.activeElement);
+      const fan = held ? 0 : spread;
+      lift(paperBack, -(tight ? 6 : 25) * fan, (tight ? 8 : 22) * fan);
+      lift(paperMiddle, (tight ? 6 : 30) * fan, (tight ? 10 : 30) * fan);
+      if (paperBack) paperBack.style.rotate = `${(-fan * (tight ? 1.3 : 3)).toFixed(2)}deg`;
+      if (paperMiddle) paperMiddle.style.rotate = `${(fan * (tight ? 1.1 : 2.5)).toFixed(2)}deg`;
+      lift(pen, (tight ? 3 : 9) * fan, -(tight ? 6 : 17) * fan);
+      const closing = rects.get(document.querySelector(".visitor-note"));
+      if (closing) {
+        const passage = .5 - clamp((height - closing.top) / (height + closing.height));
+        lift(dedication, 0, -passage * (small ? 16 : 38));
+        lift(waxwing, 0, passage * (small ? 18 : 36));
+      }
     }
+    navigation.forEach(({ link, node }) => {
+      const rect = rects.get(node);
+      const progress = rect ? clamp((height * .48 - rect.top) / rect.height) : 0;
+      const value = progress.toFixed(3);
+      if (link.style.getPropertyValue("--chapter-progress") !== value) link.style.setProperty("--chapter-progress", value);
+    });
     const focus = scroll + height * 0.48;
     const tops = zones.map((zone) => rects.get(zone.node).top + scroll);
     let chapter = 0;
@@ -260,9 +311,8 @@
     const color = reduced ? zones[0].color : zones[chapter].color.map((c, i) => mix(c, zones[next].color[i], blend));
     root.dataset.scrollChapter = zones[chapter].name;
     drawAtmosphere(reduced ? 0 : scroll, reduced ? 0 : chapter + blend, color);
-    running.forEach((animation, node) => {
-      const rect = node.getBoundingClientRect();
-      if (rect.bottom < -80 || rect.top > height + 150) animation.cancel();
+    entranceRects.forEach(([node, rect]) => {
+      if (rect.bottom < -80 || rect.top > height + 150) running.get(node)?.cancel();
     });
   }
   function requestUpdate() {
@@ -271,6 +321,7 @@
   function arm() {
     if (armed || root.classList.contains("intro-active")) return;
     armed = true;
+    root.classList.toggle("motion-suspended", document.hidden);
     root.classList.add("has-scroll-scene");
     root.dataset.pageMotion = reduced ? "reduced" : "full";
     const sectionEntry = location.hash && !["#top", "#home"].includes(location.hash);
@@ -319,10 +370,12 @@
     running.forEach((animation, node) => {
       if (node.contains(event.target) || event.target.contains(node)) animation.cancel();
     });
+    requestUpdate();
   }
   document.addEventListener("focusin", settleAtTarget);
   document.addEventListener("pointerdown", settleAtTarget, { passive: true });
   document.addEventListener("visibilitychange", () => {
+    root.classList.toggle("motion-suspended", document.hidden);
     if (document.hidden) {
       if (frame !== null) cancelAnimationFrame(frame);
       frame = null;
